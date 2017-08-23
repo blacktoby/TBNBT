@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package mryurihi.tbnbt.parser;
+package mryurihi.tbnbt;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -29,18 +29,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import mryurihi.tbnbt.tag.NBTTag;
-import mryurihi.tbnbt.tag.NBTTagByte;
-import mryurihi.tbnbt.tag.NBTTagByteArray;
-import mryurihi.tbnbt.tag.NBTTagCompound;
-import mryurihi.tbnbt.tag.NBTTagDouble;
-import mryurihi.tbnbt.tag.NBTTagFloat;
-import mryurihi.tbnbt.tag.NBTTagInt;
-import mryurihi.tbnbt.tag.NBTTagList;
-import mryurihi.tbnbt.tag.NBTTagLong;
-import mryurihi.tbnbt.tag.NBTTagShort;
-import mryurihi.tbnbt.tag.NBTTagString;
 
 public class NBTParser {
 	
@@ -57,6 +45,7 @@ public class NBTParser {
 			case 8: return parseTagString(in, named);
 			case 9: return parseTagList(in, named);
 			case 10: return parseTagCompound(in, named);
+			case 11: return parseTagIntArray(in, named);
 			default: return null;
 		}
 	}
@@ -171,6 +160,20 @@ public class NBTParser {
 			typeId = in.readByte();
 		} while(typeId != 0);
 		out.setValue(aux);
+		return out;
+	}
+	
+	public static NBTTagIntArray parseTagIntArray(DataInputStream in, boolean named) throws IOException {
+		NBTTagIntArray out = new NBTTagIntArray(null);
+		if(named) {
+			out.setName(parseTagString(in, false).getValue());
+		}
+		int length = in.readInt();
+		int[] ints = new int[length];
+		for(int i = 0; i < length; i++) {
+			ints[i] = in.readInt();
+		}
+		out.setValue(ints);
 		return out;
 	}
 }

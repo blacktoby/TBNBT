@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package mryurihi.tbnbt.tag;
+package mryurihi.tbnbt;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,7 +35,7 @@ public class NBTTagCompound extends NBTTag {
 	
 	public NBTTagCompound(Map<String, NBTTag> value) {
 		this.value = new HashMap<>();
-		for(Entry<String, NBTTag> entry: value.entrySet()) {
+		if(value != null) for(Entry<String, NBTTag> entry: value.entrySet()) {
 			NBTTag tag = entry.getValue();
 			tag.setName(entry.getKey());
 			this.value.put(entry.getKey(), tag);
@@ -91,5 +91,9 @@ public class NBTTagCompound extends NBTTag {
 	byte getTagType() {
 		return 10;
 	}
-
+	
+	@Override
+	public String toString() {
+		return value.toString();
+	}
 }

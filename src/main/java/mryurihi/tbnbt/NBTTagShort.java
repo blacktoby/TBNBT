@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package mryurihi.tbnbt.tag;
+package mryurihi.tbnbt;
 
 import java.nio.ByteBuffer;
 
@@ -55,5 +55,9 @@ public class NBTTagShort extends NBTTag {
 	byte getTagType() {
 		return 2;
 	}
-
+	
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 }

@@ -21,12 +21,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package mryurihi.tbnbt.tag;
+package mryurihi.tbnbt;
 
 public abstract class NBTTag {
 	protected String name = null;
 	
-	public NBTTag setName(String name) {
+	NBTTag setName(String name) {
 		this.name = name;
 		return this;
 	}
@@ -48,5 +48,43 @@ public abstract class NBTTag {
 	
 	abstract byte getTagType();
 	
+	public NBTTagByte getAsTagByte() {
+		return NBTTagByte.class.cast(this);
+	}
 	
+	public NBTTagShort getAsTagShort() {
+		return NBTTagShort.class.cast(this);
+	}
+	
+	public NBTTagInt getAsTagInt() {
+		return NBTTagInt.class.cast(this);
+	}
+	
+	public NBTTagLong getAsTagLong() {
+		return NBTTagLong.class.cast(this);
+	}
+	
+	public NBTTagFloat getAsTagFloat() {
+		return NBTTagFloat.class.cast(this);
+	}
+	
+	public NBTTagDouble getAsTagDouble() {
+		return NBTTagDouble.class.cast(this);
+	}
+	
+	public NBTTagByteArray getAsTagByteArray() {
+		return NBTTagByteArray.class.cast(this);
+	}
+	
+	public NBTTagString getAsTagString() {
+		return NBTTagString.class.cast(this);
+	}
+	
+	public NBTTagList getAsTagList() {
+		return NBTTagList.class.cast(this);
+	}
+	
+	public NBTTagCompound getAsTagCompound() {
+		return NBTTagCompound.class.cast(this);
+	}
 }

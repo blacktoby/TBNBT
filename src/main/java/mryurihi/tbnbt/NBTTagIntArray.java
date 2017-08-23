@@ -21,30 +21,38 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package mryurihi.tbnbt.tag;
+package mryurihi.tbnbt;
 
-import java.nio.ByteBuffer;
+public class NBTTagIntArray extends NBTTag {
 
-public class NBTTagDouble extends NBTTag {
+	private int[] value;
 	
-	private double value;
-	
-	public NBTTagDouble(double value) {
+	public NBTTagIntArray(int[] value) {
 		this.value = value;
 	}
-
-	public double getValue() {
+	
+	public int[] getValue() {
 		return value;
 	}
 	
-	public void setValue(double value) {
+	public void setValue(int[] value) {
 		this.value = value;
 	}
 	
 	@Override
 	byte[] getPayloadBytes() {
-		byte[] out = new byte[8];
-		ByteBuffer.wrap(out).putDouble(value);
+		int length = value.length;
+		int[] aux = new int[length + 1];
+		byte[] out = new byte[length * 4 + 4];
+		aux[0] = length;
+		for(int i = 0; i < aux.length; i++) aux[i] = value[i];
+		for(int i = 0; i < aux.length; i++) {
+			byte[] bytes = new NBTTagInt(aux[i]).getPayloadBytes();
+			for(int i2 = 0; i < bytes.length; i++) {
+				out[i * bytes.length + i2] = bytes[i];
+			}
+		}
+		
 		if(name != null) {
 			out = addName(out);
 		}
@@ -53,7 +61,17 @@ public class NBTTagDouble extends NBTTag {
 
 	@Override
 	byte getTagType() {
-		return 6;
+		return 7;
 	}
 	
+	@Override
+	public String toString() {
+		String out = "[I;";
+		for(int i: value) {
+			out += String.valueOf(i) + ", ";
+		}
+		out = out.substring(0, out.length() - 2);
+		out += "]";
+		return out;
+	}
 }

@@ -21,40 +21,50 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package mryurihi.tbnbt.io;
+package mryurihi.tbnbt;
 
-import java.io.Closeable;
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.zip.GZIPInputStream;
+public class NBTTagByteArray extends NBTTag {
 
-import mryurihi.tbnbt.parser.NBTParser;
-import mryurihi.tbnbt.tag.NBTTag;
-
-public class NBTInputStream implements Closeable {
+	private byte[] value;
 	
-	private DataInputStream dis;
+	public NBTTagByteArray(byte[] value) {
+		this.value = value;
+	}
 	
-	public NBTInputStream(InputStream is, boolean compressed) throws IOException {
-		if(compressed) {
-			is = new GZIPInputStream(is);
+	public byte[] getValue() {
+		return value;
+	}
+	
+	public void setValue(byte[] value) {
+		this.value = value;
+	}
+	
+	@Override
+	byte[] getPayloadBytes() {
+		int length = value.length;
+		byte[] out = new byte[length + 4];
+		byte[] lengthB = new NBTTagInt(length).getPayloadBytes();
+		for(int i = 0; i < 4; i++) out[i] = lengthB[i];
+		for(int i = 4; i < out.length; i++) out[i] = value[i - 4];
+		if(name != null) {
+			out = addName(out);
 		}
-		dis = new DataInputStream(is);
-	}
-	
-	public NBTInputStream(InputStream is) throws IOException {
-		this(is, true);
-	}
-	
-	public NBTTag readTag() throws IOException {
-		byte type = dis.readByte();
-		return NBTParser.parseTagById(dis, type, true);
+		return out;
 	}
 
 	@Override
-	public void close() throws IOException {
-		dis.close();
+	byte getTagType() {
+		return 7;
 	}
-
+	
+	@Override
+	public String toString() {
+		String out = "[";
+		for(byte b: value) {
+			out += String.valueOf(b) + ", ";
+		}
+		out = out.substring(0, out.length() - 2);
+		out += "]";
+		return out;
+	}
 }

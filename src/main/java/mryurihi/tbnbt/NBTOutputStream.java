@@ -21,47 +21,37 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package mryurihi.tbnbt.tag;
+package mryurihi.tbnbt;
 
-public class NBTTagString extends NBTTag {
+import java.io.Closeable;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.zip.GZIPOutputStream;
+
+public class NBTOutputStream implements Closeable {
+
+	private OutputStream os;
 	
-	private String value;
-	
-	public NBTTagString(String value) {
-		if(value.length() > Short.MAX_VALUE) throw new IllegalArgumentException("String to long");
-		this.value = value;
+	public NBTOutputStream(OutputStream out, boolean compressed) throws IOException {
+		if(compressed) {
+			out = new GZIPOutputStream(out);
+		}
+		os = out;
 	}
 	
-	public String getValue() {
-		return value;
+	public NBTOutputStream(OutputStream out) throws IOException {
+		this(out, true);
 	}
 	
-	public void setValue(String value) {
-		if(value.length() > Short.MAX_VALUE) throw new IllegalArgumentException("String to long");
-		this.value = value;
+	public void writeTag(NBTTag tag, String name) throws IOException {
+		tag.setName(name);
+		byte[] bytes = tag.getPayloadBytes();
+		os.write(bytes);
+		os.close();
 	}
 	
 	@Override
-	byte[] getPayloadBytes() {
-		byte[] out = new byte[value.length() + 2];
-		int i = 0;
-		for(byte b: new NBTTagShort((short) value.length()).getPayloadBytes()) {
-			out[i] = b;
-			i++;
-		}
-		for(byte b: value.getBytes()) {
-			out[i] = b;
-			i++;
-		}
-		if(name != null) {
-			out = addName(out);
-		}
-		return out;
+	public void close() throws IOException {
+			os.close();
 	}
-
-	@Override
-	byte getTagType() {
-		return 8;
-	}
-
 }

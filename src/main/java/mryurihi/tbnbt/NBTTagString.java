@@ -21,27 +21,38 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package mryurihi.tbnbt.tag;
+package mryurihi.tbnbt;
 
-public class NBTTagByteArray extends NBTTag {
-
-	private byte[] value;
+public class NBTTagString extends NBTTag {
 	
-	public NBTTagByteArray(byte[] value) {
+	private String value;
+	
+	public NBTTagString(String value) {
+		if(value.length() > Short.MAX_VALUE) throw new IllegalArgumentException("String to long");
 		this.value = value;
 	}
 	
-	public byte[] getValue() {
+	public String getValue() {
 		return value;
 	}
 	
-	public void setValue(byte[] value) {
+	public void setValue(String value) {
+		if(value.length() > Short.MAX_VALUE) throw new IllegalArgumentException("String to long");
 		this.value = value;
 	}
 	
 	@Override
 	byte[] getPayloadBytes() {
-		byte[] out = value;
+		byte[] out = new byte[value.length() + 2];
+		int i = 0;
+		for(byte b: new NBTTagShort((short) value.length()).getPayloadBytes()) {
+			out[i] = b;
+			i++;
+		}
+		for(byte b: value.getBytes()) {
+			out[i] = b;
+			i++;
+		}
 		if(name != null) {
 			out = addName(out);
 		}
@@ -50,7 +61,11 @@ public class NBTTagByteArray extends NBTTag {
 
 	@Override
 	byte getTagType() {
-		return 7;
+		return 8;
 	}
-
+	
+	@Override
+	public String toString() {
+		return value;
+	}
 }
