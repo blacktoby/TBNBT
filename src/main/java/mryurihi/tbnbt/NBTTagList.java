@@ -43,6 +43,7 @@ public class NBTTagList extends NBTTag {
 	public NBTTagList(List<NBTTag> value) {
 		this.value = value;
 		this.typeId = 0;
+		if(value != null && ! value.isEmpty()) this.typeId = value.get(0).getTagType();
 	}
 	
 	public List<NBTTag> getValue() {
@@ -61,46 +62,49 @@ public class NBTTagList extends NBTTag {
 		this.value = value;
 	}
 	
-	public void setTypeId(int typeId) {
+	public NBTTagList setTypeId(int typeId) {
 		this.typeId = typeId;
+		return this;
 	}
 	
-	public void add(NBTTag tag) {
+	public NBTTagList add(NBTTag tag) {
 		tag.setName(null);
 		if(typeId == 0) typeId = tag.getTagType();
 		if(tag.getTagType() == typeId) value.add(tag);
 		else throw new IllegalArgumentException(tag.getClass().getName() + " is not the type " + typeId);
+		return this;
 	}
 	
-	public void add(int index, NBTTag tag) {
+	public NBTTagList add(int index, NBTTag tag) {
 		tag.setName(null);
 		if(typeId == 0) typeId = tag.getTagType();
 		if(tag.getTagType() == typeId) value.add(index, tag);
 		else throw new IllegalArgumentException(tag.getClass().getName() + " is not the type " + typeId);
+		return this;
 	}
 	
-	public void remove(int index) {
+	public NBTTagList remove(int index) {
 		value.remove(index);
+		return this;
+	}
+	
+	public NBTTagList set(int index, NBTTag tag) {
+		tag.setName(null);
+		if(typeId == 0) typeId = tag.getTagType();
+		if(tag.getTagType() == typeId) value.set(index, tag);
+		else throw new IllegalArgumentException(tag.getClass().getName() + " is not the type " + typeId);
+		return this;
 	}
 
 	@Override
-	byte[] getPayloadBytes() {
-		List<Byte> aux = new ArrayList<>();
-		try {
-			aux.add((byte) typeId);
-		} catch(Exception e) {
-			e.printStackTrace();
-			throw new RuntimeException(this.toString() + " does not have a typeId");
-		}
-		for(byte b: new NBTTagInt(value.size()).getPayloadBytes()) aux.add(b);
-		for(NBTTag t: value) for(byte b: t.getPayloadBytes()) aux.add(b);
-		byte[] out = new byte[aux.size()];
-		for(int i = 0; i < aux.size(); i++) {
-			out[i] = aux.get(i);
-		}
-		if(name != null) {
-			out = addName(out);
-		}
+	List<Byte> getPayloadBytes() {
+		if(typeId == 0 && ! value.isEmpty()) typeId = value.get(0).getTagType();
+		if(typeId == 0) typeId = 1;
+		List<Byte> out = new ArrayList<>();
+		if(name != null) out.addAll(new NBTTagString(name).getPayloadBytes());
+		out.add((byte) typeId);
+		out.addAll(new NBTTagInt(value.size()).getPayloadBytes());
+		for(NBTTag t: value) out.addAll(t.getPayloadBytes());
 		return out;
 	}
 

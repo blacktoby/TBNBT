@@ -50,40 +50,38 @@ public class NBTTagCompound extends NBTTag {
 		return value.get(key);
 	}
 	
-	public void setValue(Map<String, NBTTag> value) {
+	public NBTTagCompound setValue(Map<String, NBTTag> value) {
 		Map<String, NBTTag> aux = new HashMap<>();
 		value.forEach((k, v) -> {
 			v.setName(k);
 			aux.put(k, v);
 		});
 		this.value = aux;
+		return this;
 	}
 	
-	public void put(String key, NBTTag value) {
+	public NBTTagCompound put(String key, NBTTag value) {
 		value.setName(key);
 		this.value.put(key, value);
+		return this;
 	}
 	
-	public void remove(String key) {
+	public NBTTagCompound remove(String key) {
 		this.value.remove(key);
+		return this;
 	}
 	
 	@Override
-	byte[] getPayloadBytes() {
-		List<Byte> aux = new ArrayList<>();
+	List<Byte> getPayloadBytes() {
+		List<Byte> out = new ArrayList<>();
+		if(name != null) out.addAll(new NBTTagString(name).getPayloadBytes());
 		for(Entry<String, NBTTag> entry: value.entrySet()) {
-			aux.add(entry.getValue().getTagType());
+			out.add(entry.getValue().getTagType());
 			for(byte b: entry.getValue().getPayloadBytes()) {
-				aux.add(b);
+				out.add(b);
 			}
 		}
-		aux.add((byte) 0);
-		
-		byte[] out = new byte[aux.size()];
-		for(int i = 0; i < aux.size(); i++) out[i] = aux.get(i).byteValue();
-		if(name != null) {
-			out = addName(out);
-		}
+		out.add((byte) 0);
 		return out;
 	}
 

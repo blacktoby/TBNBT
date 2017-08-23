@@ -44,17 +44,11 @@ public class NBTTagIntArray extends NBTTag {
 	}
 	
 	@Override
-	byte[] getPayloadBytes() {
-		List<Byte> aux = new ArrayList<>();
-		for(byte b: ByteBuffer.allocate(4).putInt(value.length).array()) aux.add(b);
-		for(int i: value) {
-			for(byte b: ByteBuffer.allocate(4).putInt(i).array()) aux.add(b);
-		}
-		byte[] out = new byte[aux.size()];
-		for(int i = 0; i < aux.size(); i++) out[i] = aux.get(i);
-		if(name != null) {
-			out = addName(out);
-		}
+	List<Byte> getPayloadBytes() {
+		List<Byte> out = new ArrayList<>();
+		if(name != null) out.addAll(new NBTTagString(name).getPayloadBytes());
+		out.addAll(new NBTTagInt(value.length).getPayloadBytes());
+		for(int i: value) for(byte b: ByteBuffer.allocate(4).putInt(i).array()) out.add(b);
 		return out;
 	}
 

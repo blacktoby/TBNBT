@@ -24,6 +24,8 @@ SOFTWARE.
 package mryurihi.tbnbt;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
 
 public class NBTTagShort extends NBTTag {
 
@@ -42,12 +44,10 @@ public class NBTTagShort extends NBTTag {
 	}
 	
 	@Override
-	byte[] getPayloadBytes() {
-		byte[] out = new byte[2];
-		ByteBuffer.wrap(out).putShort(value);
-		if(name != null) {
-			out = addName(out);
-		}
+	List<Byte> getPayloadBytes() {
+		List<Byte> out = new ArrayList<>();
+		if(name != null) out.addAll(new NBTTagString(name).getPayloadBytes());
+		for(byte b: ByteBuffer.allocate(2).putShort(value).array()) out.add(b);
 		return out;
 	}
 

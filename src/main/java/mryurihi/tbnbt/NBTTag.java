@@ -23,6 +23,8 @@ SOFTWARE.
 */
 package mryurihi.tbnbt;
 
+import java.util.List;
+
 public abstract class NBTTag {
 	protected String name = null;
 	
@@ -31,20 +33,17 @@ public abstract class NBTTag {
 		return this;
 	}
 	
-	protected byte[] addName(byte[] payload) {
-		byte[] aux = payload.clone();
-		byte[] name = new NBTTagString(this.name).getPayloadBytes();
-		payload = new byte[aux.length + name.length];
-		System.arraycopy(name, 0, payload, 0, name.length);
-		System.arraycopy(aux, 0, payload, name.length, aux.length);
-		return payload;
+	protected byte[] listToArray(List<Byte> list) {
+		byte[] out = new byte[list.size()];
+		for(int i = 0; i < list.size(); i++) out[i] = list.get(i);
+		return out;
 	}
 	
 	public String getName() {
 		return name;
 	}
 	
-	abstract byte[] getPayloadBytes();
+	abstract List<Byte> getPayloadBytes();
 	
 	abstract byte getTagType();
 	

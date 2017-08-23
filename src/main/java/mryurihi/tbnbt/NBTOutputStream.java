@@ -26,6 +26,7 @@ package mryurihi.tbnbt;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
 import java.util.zip.GZIPOutputStream;
 
 public class NBTOutputStream implements Closeable {
@@ -45,10 +46,10 @@ public class NBTOutputStream implements Closeable {
 	
 	public void writeTag(NBTTag tag, String name) throws IOException {
 		tag.setName(name);
-		byte[] bytes = tag.getPayloadBytes();
-		byte[] out = new byte[bytes.length + 1];
-		System.arraycopy(bytes, 0, out, 1, bytes.length);
-		out[0] = tag.getTagType();
+		List<Byte> bytes = tag.getPayloadBytes();
+		bytes.add(0, tag.getTagType());
+		byte[] out = new byte[bytes.size()];
+		for(int i = 0; i < bytes.size(); i++) out[i] = bytes.get(i);
 		os.write(out);
 	}
 	
