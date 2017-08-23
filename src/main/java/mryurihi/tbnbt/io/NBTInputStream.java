@@ -21,32 +21,40 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package mryurihi.tbnbt.tag;
+package mryurihi.tbnbt.io;
 
-public abstract class NBTTag {
-	protected String name = null;
+import java.io.Closeable;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.zip.GZIPInputStream;
+
+import mryurihi.tbnbt.parser.NBTParser;
+import mryurihi.tbnbt.tag.NBTTag;
+
+public class NBTInputStream implements Closeable {
 	
-	public NBTTag setName(String name) {
-		this.name = name;
-		return this;
+	private DataInputStream dis;
+	
+	public NBTInputStream(InputStream is, boolean compressed) throws IOException {
+		if(compressed) {
+			is = new GZIPInputStream(is);
+		}
+		dis = new DataInputStream(is);
 	}
 	
-	protected byte[] addName(byte[] payload) {
-		byte[] aux = payload.clone();
-		byte[] name = new NBTTagString(this.name).getPayloadBytes();
-		payload = new byte[aux.length + name.length];
-		System.arraycopy(name, 0, payload, 0, name.length);
-		System.arraycopy(aux, 0, payload, name.length, aux.length);
-		return payload;
+	public NBTInputStream(InputStream is) throws IOException {
+		this(is, true);
 	}
 	
-	public String getName() {
-		return name;
+	public NBTTag readTag() throws IOException {
+		byte type = dis.readByte();
+		return NBTParser.parseTagById(dis, type, true);
 	}
-	
-	abstract byte[] getPayloadBytes();
-	
-	abstract byte getTagType();
-	
-	
+
+	@Override
+	public void close() throws IOException {
+		dis.close();
+	}
+
 }
