@@ -1,0 +1,85 @@
+/*
+MIT License
+
+Copyright (c) 2017 MrYurihi Redstone
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+package mryurihi.tbnbt.tag;
+
+import java.util.List;
+
+public class NBTTagList extends NBTTag {
+	
+	private List<NBTTag> value;
+	
+	private Class<? extends NBTTag> typeId;
+	
+	public NBTTagList(List<NBTTag> value) {
+		this.value = value;
+		this.typeId = null;
+	}
+	
+	public List<NBTTag> getValue() {
+		return value;
+	}
+	
+	public NBTTag get(int index) {
+		return value.get(index);
+	}
+	
+	public Class<? extends NBTTag> getTypeId() {
+		return typeId;
+	}
+	
+	public void setValue(List<NBTTag> value) {
+		this.value = value;
+	}
+	
+	public void setTypeId(Class<? extends NBTTag> typeId) {
+		this.typeId = typeId;
+	}
+	
+	public void add(NBTTag tag) {
+		if(typeId == null) typeId = tag.getClass();
+		if(tag.getClass().equals(typeId)) value.add(tag);
+		else throw new IllegalArgumentException(tag.getClass().getName() + " is not the type" + typeId.getName());
+	}
+	
+	public void add(int index, NBTTag tag) {
+		if(typeId == null) typeId = tag.getClass();
+		if(tag.getClass().equals(typeId)) value.add(index, tag);
+		else throw new IllegalArgumentException(tag.getClass().getName() + " is not the type" + typeId.getName());
+	}
+	
+	public void remove(int index) {
+		value.remove(index);
+	}
+
+	@Override
+	byte[] getPayloadBytes() {
+		return null;
+	}
+
+	@Override
+	byte getTagType() {
+		return 9;
+	}
+	
+}
