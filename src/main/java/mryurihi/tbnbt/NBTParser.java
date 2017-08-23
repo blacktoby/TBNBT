@@ -144,6 +144,8 @@ public class NBTParser {
 			aux.add(parseTagById(in, typeId, false));
 		}
 		out.setValue(aux);
+		out.setTypeId(typeId);
+		System.out.println(out);
 		return out;
 	}
 	

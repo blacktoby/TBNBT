@@ -46,8 +46,10 @@ public class NBTOutputStream implements Closeable {
 	public void writeTag(NBTTag tag, String name) throws IOException {
 		tag.setName(name);
 		byte[] bytes = tag.getPayloadBytes();
-		os.write(bytes);
-		os.close();
+		byte[] out = new byte[bytes.length + 1];
+		System.arraycopy(bytes, 0, out, 1, bytes.length);
+		out[0] = tag.getTagType();
+		os.write(out);
 	}
 	
 	@Override

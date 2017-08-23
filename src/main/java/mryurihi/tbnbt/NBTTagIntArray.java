@@ -23,6 +23,10 @@ SOFTWARE.
 */
 package mryurihi.tbnbt;
 
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
+
 public class NBTTagIntArray extends NBTTag {
 
 	private int[] value;
@@ -41,18 +45,14 @@ public class NBTTagIntArray extends NBTTag {
 	
 	@Override
 	byte[] getPayloadBytes() {
-		int length = value.length;
-		int[] aux = new int[length + 1];
-		byte[] out = new byte[length * 4 + 4];
-		aux[0] = length;
-		for(int i = 0; i < aux.length; i++) aux[i] = value[i];
-		for(int i = 0; i < aux.length; i++) {
-			byte[] bytes = new NBTTagInt(aux[i]).getPayloadBytes();
-			for(int i2 = 0; i < bytes.length; i++) {
-				out[i * bytes.length + i2] = bytes[i];
-			}
+		List<Byte> aux = new ArrayList<>();
+		for(byte b: ByteBuffer.allocate(4).putInt(value.length).array()) aux.add(b);
+		for(int i: value) {
+			for(byte b: ByteBuffer.allocate(4).putInt(i).array()) aux.add(b);
 		}
-		
+		System.out.println(aux);
+		byte[] out = new byte[aux.size()];
+		for(int i = 0; i < aux.size(); i++) out[i] = aux.get(i);
 		if(name != null) {
 			out = addName(out);
 		}
@@ -61,7 +61,7 @@ public class NBTTagIntArray extends NBTTag {
 
 	@Override
 	byte getTagType() {
-		return 7;
+		return 11;
 	}
 	
 	@Override
