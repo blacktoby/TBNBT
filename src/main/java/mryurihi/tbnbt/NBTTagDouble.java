@@ -58,6 +58,6 @@ public class NBTTagDouble extends NBTTag {
 	
 	@Override
 	public String toString() {
-		return String.valueOf(value);
+		return String.valueOf(value) + "d";
 	}
 }

@@ -145,7 +145,6 @@ public class NBTParser {
 		}
 		out.setValue(aux);
 		out.setTypeId(typeId);
-		System.out.println(out);
 		return out;
 	}
 	

@@ -50,7 +50,6 @@ public class NBTTagIntArray extends NBTTag {
 		for(int i: value) {
 			for(byte b: ByteBuffer.allocate(4).putInt(i).array()) aux.add(b);
 		}
-		System.out.println(aux);
 		byte[] out = new byte[aux.size()];
 		for(int i = 0; i < aux.size(); i++) out[i] = aux.get(i);
 		if(name != null) {

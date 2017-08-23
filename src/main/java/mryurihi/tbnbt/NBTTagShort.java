@@ -58,6 +58,6 @@ public class NBTTagShort extends NBTTag {
 	
 	@Override
 	public String toString() {
-		return String.valueOf(value);
+		return String.valueOf(value) + "s";
 	}
 }
