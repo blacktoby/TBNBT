@@ -41,7 +41,11 @@ public class NBTTagByte extends NBTTag {
 	
 	@Override
 	byte[] getPayloadBytes() {
-		return null;
+		byte[] out = new byte[] {value};
+		if(name != null) {
+			out = addName(out);
+		}
+		return out;
 	}
 
 	@Override

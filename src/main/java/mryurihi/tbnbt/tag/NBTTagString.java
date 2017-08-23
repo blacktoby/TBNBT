@@ -28,6 +28,7 @@ public class NBTTagString extends NBTTag {
 	private String value;
 	
 	public NBTTagString(String value) {
+		if(value.length() > Short.MAX_VALUE) throw new IllegalArgumentException("String to long");
 		this.value = value;
 	}
 	
@@ -36,12 +37,26 @@ public class NBTTagString extends NBTTag {
 	}
 	
 	public void setValue(String value) {
+		if(value.length() > Short.MAX_VALUE) throw new IllegalArgumentException("String to long");
 		this.value = value;
 	}
 	
 	@Override
 	byte[] getPayloadBytes() {
-		return null;
+		byte[] out = new byte[value.length() + 2];
+		int i = 0;
+		for(byte b: new NBTTagShort((short) value.length()).getPayloadBytes()) {
+			out[i] = b;
+			i++;
+		}
+		for(byte b: value.getBytes()) {
+			out[i] = b;
+			i++;
+		}
+		if(name != null) {
+			out = addName(out);
+		}
+		return out;
 	}
 
 	@Override

@@ -23,6 +23,7 @@ SOFTWARE.
 */
 package mryurihi.tbnbt.tag;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class NBTTagList extends NBTTag {
@@ -30,6 +31,11 @@ public class NBTTagList extends NBTTag {
 	private List<NBTTag> value;
 	
 	private Class<? extends NBTTag> typeId;
+	
+	public NBTTagList(List<NBTTag> value, Class<? extends NBTTag> typeId) {
+		this.value = value;
+		this.typeId = typeId;
+	}
 	
 	public NBTTagList(List<NBTTag> value) {
 		this.value = value;
@@ -57,12 +63,14 @@ public class NBTTagList extends NBTTag {
 	}
 	
 	public void add(NBTTag tag) {
+		tag.setName(null);
 		if(typeId == null) typeId = tag.getClass();
 		if(tag.getClass().equals(typeId)) value.add(tag);
 		else throw new IllegalArgumentException(tag.getClass().getName() + " is not the type" + typeId.getName());
 	}
 	
 	public void add(int index, NBTTag tag) {
+		tag.setName(null);
 		if(typeId == null) typeId = tag.getClass();
 		if(tag.getClass().equals(typeId)) value.add(index, tag);
 		else throw new IllegalArgumentException(tag.getClass().getName() + " is not the type" + typeId.getName());
@@ -74,7 +82,19 @@ public class NBTTagList extends NBTTag {
 
 	@Override
 	byte[] getPayloadBytes() {
-		return null;
+		List<Byte> aux = new ArrayList<>();
+		try {
+			aux.add(typeId.newInstance().getTagType());
+		} catch(Exception e) {
+			throw new RuntimeException(this.toString() + " does not have a typeId");
+		}
+		for(byte b: new NBTTagInt(value.size()).getPayloadBytes()) aux.add(b);
+		for(NBTTag t: value) for(byte b: t.getPayloadBytes()) aux.add(b);
+		byte[] out = new byte[aux.size()];
+		if(name != null) {
+			out = addName(out);
+		}
+		return out;
 	}
 
 	@Override

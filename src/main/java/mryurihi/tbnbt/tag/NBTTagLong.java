@@ -23,6 +23,8 @@ SOFTWARE.
 */
 package mryurihi.tbnbt.tag;
 
+import java.nio.ByteBuffer;
+
 public class NBTTagLong extends NBTTag {
 
 	private long value;
@@ -41,7 +43,12 @@ public class NBTTagLong extends NBTTag {
 	
 	@Override
 	byte[] getPayloadBytes() {
-		return null;
+		byte[] out = new byte[8];
+		ByteBuffer.wrap(out).putLong(value);
+		if(name != null) {
+			out = addName(out);
+		}
+		return out;
 	}
 
 	@Override

@@ -23,6 +23,8 @@ SOFTWARE.
 */
 package mryurihi.tbnbt.tag;
 
+import java.nio.ByteBuffer;
+
 public class NBTTagDouble extends NBTTag {
 	
 	private double value;
@@ -41,7 +43,12 @@ public class NBTTagDouble extends NBTTag {
 	
 	@Override
 	byte[] getPayloadBytes() {
-		return null;
+		byte[] out = new byte[8];
+		ByteBuffer.wrap(out).putDouble(value);
+		if(name != null) {
+			out = addName(out);
+		}
+		return out;
 	}
 
 	@Override

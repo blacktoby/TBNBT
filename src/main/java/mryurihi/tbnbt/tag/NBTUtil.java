@@ -23,37 +23,14 @@ SOFTWARE.
 */
 package mryurihi.tbnbt.tag;
 
-import java.nio.ByteBuffer;
-
-public class NBTTagShort extends NBTTag {
-
-	private short value;
-	
-	public NBTTagShort(short value) {
-		this.value = value;
+public class NBTUtil {
+	public static byte[] getBytes(NBTTag tag) {
+		tag.setName("name");
+		byte[] out = new byte[] {tag.getTagType()};
+		byte[] payload = tag.getPayloadBytes();
+		byte[] out2 = new byte[out.length + payload.length];
+		System.arraycopy(out, 0, out2, 0, out.length);
+		System.arraycopy(payload, 0, out2, out.length, payload.length);
+		return out2;
 	}
-	
-	public short getValue() {
-		return value;
-	}
-	
-	public void setValue(short value) {
-		this.value = value;
-	}
-	
-	@Override
-	byte[] getPayloadBytes() {
-		byte[] out = new byte[2];
-		ByteBuffer.wrap(out).putShort(value);
-		if(name != null) {
-			out = addName(out);
-		}
-		return out;
-	}
-
-	@Override
-	byte getTagType() {
-		return 2;
-	}
-
 }

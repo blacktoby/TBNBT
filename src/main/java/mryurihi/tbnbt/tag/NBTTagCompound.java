@@ -23,7 +23,9 @@ SOFTWARE.
 */
 package mryurihi.tbnbt.tag;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -32,7 +34,7 @@ public class NBTTagCompound extends NBTTag {
 	private Map<String, NBTTag> value;
 	
 	public NBTTagCompound(Map<String, NBTTag> value) {
-		value = new HashMap<>();
+		this.value = new HashMap<>();
 		for(Entry<String, NBTTag> entry: value.entrySet()) {
 			NBTTag tag = entry.getValue();
 			tag.setName(entry.getKey());
@@ -68,7 +70,21 @@ public class NBTTagCompound extends NBTTag {
 	
 	@Override
 	byte[] getPayloadBytes() {
-		return null;
+		List<Byte> aux = new ArrayList<>();
+		for(Entry<String, NBTTag> entry: value.entrySet()) {
+			aux.add(entry.getValue().getTagType());
+			for(byte b: entry.getValue().getPayloadBytes()) {
+				aux.add(b);
+			}
+		}
+		aux.add((byte) 0);
+		
+		byte[] out = new byte[aux.size()];
+		for(int i = 0; i < aux.size(); i++) out[i] = aux.get(i).byteValue();
+		if(name != null) {
+			out = addName(out);
+		}
+		return out;
 	}
 
 	@Override

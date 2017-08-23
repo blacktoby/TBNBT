@@ -24,10 +24,20 @@ SOFTWARE.
 package mryurihi.tbnbt.tag;
 
 public abstract class NBTTag {
-	private String name;
+	protected String name = null;
 	
-	void setName(String name) {
+	NBTTag setName(String name) {
 		this.name = name;
+		return this;
+	}
+	
+	protected byte[] addName(byte[] payload) {
+		byte[] aux = payload.clone();
+		byte[] name = new NBTTagString(this.name).getPayloadBytes();
+		payload = new byte[aux.length + name.length];
+		System.arraycopy(name, 0, payload, 0, name.length);
+		System.arraycopy(aux, 0, payload, name.length, aux.length);
+		return payload;
 	}
 	
 	public String getName() {
