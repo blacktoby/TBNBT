@@ -56,7 +56,6 @@ public class NBTParser {
 			out.setName(parseTagString(in, false).getValue());
 		}
 		out.setValue(in.readByte());
-		System.out.println(out);
 		return out;
 	}
 	
@@ -66,7 +65,6 @@ public class NBTParser {
 			out.setName(parseTagString(in, false).getValue());
 		}
 		out.setValue(in.readShort());
-		System.out.println(out);
 		return out;
 	}
 	
@@ -76,7 +74,6 @@ public class NBTParser {
 			out.setName(parseTagString(in, false).getValue());
 		}
 		out.setValue(in.readInt());
-		System.out.println(out);
 		return out;
 	}
 	
@@ -86,7 +83,6 @@ public class NBTParser {
 			out.setName(parseTagString(in, false).getValue());
 		}
 		out.setValue(in.readLong());
-		System.out.println(out);
 		return out;
 	}
 	
@@ -96,7 +92,7 @@ public class NBTParser {
 			out.setName(parseTagString(in, false).getValue());
 		}
 		out.setValue(in.readFloat());
-		System.out.println(out);
+		;
 		return out;
 	}
 	
@@ -106,7 +102,6 @@ public class NBTParser {
 			out.setName(parseTagString(in, false).getValue());
 		}
 		out.setValue(in.readDouble());
-		System.out.println(out);
 		return out;
 	}
 	
@@ -121,7 +116,7 @@ public class NBTParser {
 			b[i] = in.readByte();
 		}
 		out.setValue(b);
-		System.out.println(out);
+		;
 		return out;
 	}
 	
@@ -136,7 +131,6 @@ public class NBTParser {
 			str[i] = in.readByte();
 		}
 		out.setValue(new String(str));
-		System.out.println(out);
 		return out;
 	}
 	
@@ -153,7 +147,6 @@ public class NBTParser {
 		}
 		out.setValue(aux);
 		out.setTypeId(typeId);
-		System.out.println(out);
 		return out;
 	}
 	
@@ -184,7 +177,6 @@ public class NBTParser {
 			ints[i] = in.readInt();
 		}
 		out.setValue(ints);
-		System.out.println(out);
 		return out;
 	}
 }
