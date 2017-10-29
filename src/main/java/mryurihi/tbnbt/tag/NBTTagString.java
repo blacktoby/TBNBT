@@ -21,43 +21,45 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package mryurihi.tbnbt;
+package mryurihi.tbnbt.tag;
 
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NBTTagShort extends NBTTag {
-
-	private short value;
+public class NBTTagString extends NBTTag {
 	
-	public NBTTagShort(short value) {
+	private String value;
+	
+	public NBTTagString(String value) {
+		if(value.length() > Short.MAX_VALUE) throw new IllegalArgumentException("String to long");
 		this.value = value;
 	}
 	
-	public short getValue() {
+	public String getValue() {
 		return value;
 	}
 	
-	public void setValue(short value) {
+	public void setValue(String value) {
+		if(value.length() > Short.MAX_VALUE) throw new IllegalArgumentException("String to long");
 		this.value = value;
 	}
 	
 	@Override
-	List<Byte> getPayloadBytes() {
+	public List<Byte> getPayloadBytes() {
 		List<Byte> out = new ArrayList<>();
 		if(name != null) out.addAll(new NBTTagString(name).getPayloadBytes());
-		for(byte b: ByteBuffer.allocate(2).putShort(value).array()) out.add(b);
+		out.addAll(new NBTTagShort((short) value.length()).getPayloadBytes());
+		for(byte b: value.getBytes()) out.add(b);
 		return out;
 	}
 
 	@Override
-	byte getTagType() {
-		return 2;
+	public byte getTagType() {
+		return 8;
 	}
 	
 	@Override
 	public String toString() {
-		return String.valueOf(value) + "s";
+		return value;
 	}
 }

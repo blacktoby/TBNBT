@@ -21,42 +21,37 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package mryurihi.tbnbt;
+package mryurihi.tbnbt.adapter.impl.primitive;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 
-public class NBTTagByte extends NBTTag {
+import com.google.common.reflect.TypeToken;
 
-	private byte value;
-	
-	public NBTTagByte(byte value) {
-		this.value = value;
-	}
-	
-	public byte getValue() {
-		return value;
-	}
-	
-	public void setValue(byte value) {
-		this.value = value;
-	}
+import mryurihi.tbnbt.adapter.AdapterRegistry;
+import mryurihi.tbnbt.adapter.NBTAdapter;
+import mryurihi.tbnbt.adapter.NBTParseException;
+import mryurihi.tbnbt.adapter.impl.IntegerArrayAdapter;
+import mryurihi.tbnbt.parser.TagType;
+
+public class PrimitiveIntArrayAdapter extends NBTAdapter<int[]> {
 
 	@Override
-	byte getTagType() {
-		return 1;
-	}
-	
-	@Override
-	public String toString() {
-		return String.valueOf(value) + "b";
-	}
-
-	@Override
-	List<Byte> getPayloadBytes() {
-		List<Byte> out = new ArrayList<>();
-		if(name != null) out.addAll(new NBTTagString(name).getPayloadBytes());
-		out.add(value);
+	public int[] fromNBT(TagType id, DataInputStream payload, TypeToken<?> type, AdapterRegistry registry) throws NBTParseException {
+		Integer[] intArr = new IntegerArrayAdapter().fromNBT(id, payload, type, registry);
+		int[] out = new int[intArr.length];
+		for(int i = 0; i < intArr.length; i++) out[i] = (int) intArr[i];
 		return out;
 	}
+
+	@Override
+	public void toNBT(DataOutputStream out, Object object, TypeToken<?> type, AdapterRegistry registry) throws NBTParseException {
+		new IntegerArrayAdapter().toNBT(out, object, new TypeToken<Integer[]>() {}, registry);
+	}
+
+	@Override
+	public TagType getId() {
+		return TagType.INT_ARRAY;
+	}
+
 }

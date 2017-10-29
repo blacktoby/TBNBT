@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package mryurihi.tbnbt;
+package mryurihi.tbnbt.parser;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -30,7 +30,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class NBTParser {
+import mryurihi.tbnbt.tag.NBTTag;
+import mryurihi.tbnbt.tag.NBTTagByte;
+import mryurihi.tbnbt.tag.NBTTagByteArray;
+import mryurihi.tbnbt.tag.NBTTagCompound;
+import mryurihi.tbnbt.tag.NBTTagDouble;
+import mryurihi.tbnbt.tag.NBTTagFloat;
+import mryurihi.tbnbt.tag.NBTTagInt;
+import mryurihi.tbnbt.tag.NBTTagIntArray;
+import mryurihi.tbnbt.tag.NBTTagList;
+import mryurihi.tbnbt.tag.NBTTagLong;
+import mryurihi.tbnbt.tag.NBTTagShort;
+import mryurihi.tbnbt.tag.NBTTagString;
+
+public class TagNBTParser {
 	
 	public static NBTTag parseTagById(DataInputStream in, int id, boolean named) throws IOException {
 		switch(id) {

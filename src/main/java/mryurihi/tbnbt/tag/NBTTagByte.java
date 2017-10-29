@@ -21,37 +21,42 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package mryurihi.tbnbt;
+package mryurihi.tbnbt.tag;
 
-import java.io.Closeable;
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.zip.GZIPInputStream;
+import java.util.ArrayList;
+import java.util.List;
 
-public class NBTInputStream implements Closeable {
+public class NBTTagByte extends NBTTag {
+
+	private byte value;
 	
-	private DataInputStream dis;
-	
-	public NBTInputStream(InputStream is, boolean compressed) throws IOException {
-		if(compressed) {
-			is = new GZIPInputStream(is);
-		}
-		dis = new DataInputStream(is);
+	public NBTTagByte(byte value) {
+		this.value = value;
 	}
 	
-	public NBTInputStream(InputStream is) throws IOException {
-		this(is, true);
+	public byte getValue() {
+		return value;
 	}
 	
-	public NBTTag readTag() throws IOException {
-		byte type = dis.readByte();
-		return NBTParser.parseTagById(dis, type, true);
+	public void setValue(byte value) {
+		this.value = value;
 	}
 
 	@Override
-	public void close() throws IOException {
-		dis.close();
+	public byte getTagType() {
+		return 1;
+	}
+	
+	@Override
+	public String toString() {
+		return String.valueOf(value) + "b";
 	}
 
+	@Override
+	public List<Byte> getPayloadBytes() {
+		List<Byte> out = new ArrayList<>();
+		if(name != null) out.addAll(new NBTTagString(name).getPayloadBytes());
+		out.add(value);
+		return out;
+	}
 }

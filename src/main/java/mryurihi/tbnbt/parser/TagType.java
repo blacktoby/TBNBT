@@ -21,50 +21,34 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package mryurihi.tbnbt;
+package mryurihi.tbnbt.parser;
 
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.List;
-
-public class NBTTagIntArray extends NBTTag {
-
-	private int[] value;
+public enum TagType {
+	END(0),
+	BYTE(1),
+	SHORT(2),
+	INT(3),
+	LONG(4),
+	FLOAT(5),
+	DOUBLE(6),
+	BYTE_ARRAY(7),
+	STRING(8),
+	LIST(9),
+	COMPOUND(10),
+	INT_ARRAY(11);
 	
-	public NBTTagIntArray(int[] value) {
-		this.value = value;
+	private int id;
+	
+	private TagType(int id) {
+		this.id = id;
 	}
 	
-	public int[] getValue() {
-		return value;
+	public int getId() {
+		return id;
 	}
 	
-	public void setValue(int[] value) {
-		this.value = value;
-	}
-	
-	@Override
-	List<Byte> getPayloadBytes() {
-		List<Byte> out = new ArrayList<>();
-		if(name != null) out.addAll(new NBTTagString(name).getPayloadBytes());
-		out.addAll(new NBTTagInt(value.length).getPayloadBytes());
-		for(int i: value) for(byte b: ByteBuffer.allocate(4).putInt(i).array()) out.add(b);
-		return out;
-	}
-
-	@Override
-	byte getTagType() {
-		return 11;
-	}
-	
-	@Override
-	public String toString() {
-		String out = "[I;";
-		for(int i: value) {
-			out += String.valueOf(i) + ", ";
-		}
-		out = out.substring(0, out.length() - 2);
-		out += "]";
-		return out;
+	public static TagType getTypeById(int id) {
+		for(TagType t: TagType.values()) if(t.getId() == id) return t;
+		return null;
 	}
 }

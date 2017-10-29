@@ -21,49 +21,28 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package mryurihi.tbnbt;
+package mryurihi.tbnbt.adapter;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class NBTTagByteArray extends NBTTag {
-
-	private byte[] value;
+public class NBTParseException extends Exception {
+	private static final long serialVersionUID = 1564827538291444240L;
 	
-	public NBTTagByteArray(byte[] value) {
-		this.value = value;
+	public NBTParseException() {
+		super();
 	}
 	
-	public byte[] getValue() {
-		return value;
+	public NBTParseException(String message) {
+		super(message);
 	}
 	
-	public void setValue(byte[] value) {
-		this.value = value;
+	public NBTParseException(Throwable cause) {
+		super(cause instanceof NBTParseException? cause.getCause(): cause);
 	}
 	
-	@Override
-	List<Byte> getPayloadBytes() {
-		List<Byte> out = new ArrayList<>();
-		if(name != null) out.addAll(new NBTTagString(name).getPayloadBytes());
-		out.addAll(new NBTTagInt(value.length).getPayloadBytes());
-		for(byte b: value) out.add(b);
-		return out;
-	}
-
-	@Override
-	byte getTagType() {
-		return 7;
+	public NBTParseException(String message, Throwable cause) {
+		super(message, cause);
 	}
 	
-	@Override
-	public String toString() {
-		String out = "[";
-		for(byte b: value) {
-			out += String.valueOf(b) + ", ";
-		}
-		out = out.substring(0, out.length() - 2);
-		out += "]";
-		return out;
+	protected NBTParseException(String message, Throwable cause, boolean enableSuppresion, boolean writableStackTrace) {
+		super(message, cause, enableSuppresion, writableStackTrace);
 	}
 }

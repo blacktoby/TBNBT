@@ -21,43 +21,41 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package mryurihi.tbnbt;
+package mryurihi.tbnbt.adapter.impl.primitive;
 
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 
-public class NBTTagInt extends NBTTag {
+import com.google.common.reflect.TypeToken;
 
-	private int value;
-	
-	public NBTTagInt(int value) {
-		this.value = value;
-	}
-	
-	public int getValue() {
-		return value;
-	}
-	
-	public void setValue(int value) {
-		this.value = value;
-	}
-	
+import mryurihi.tbnbt.adapter.AdapterRegistry;
+import mryurihi.tbnbt.adapter.NBTAdapter;
+import mryurihi.tbnbt.adapter.NBTParseException;
+import mryurihi.tbnbt.parser.TagType;
+
+public class BooleanAdapter extends NBTAdapter<Boolean> {
+
 	@Override
-	List<Byte> getPayloadBytes() {
-		List<Byte> out = new ArrayList<>();
-		if(name != null) out.addAll(new NBTTagString(name).getPayloadBytes());
-		for(byte b: ByteBuffer.allocate(4).putInt(value).array()) out.add(b);
-		return out;
+	public Boolean fromNBT(TagType id, DataInputStream payload, TypeToken<?> type, AdapterRegistry registry) throws NBTParseException {
+		if(! id.equals(TagType.BYTE)) throw new NBTParseException(String.format("id %s does not match required id 1", id.getId()));
+		try {
+			return payload.readByte() == 0? false: true;
+		} catch(Exception e) {
+			throw new NBTParseException(e);
+		}
 	}
 
 	@Override
-	byte getTagType() {
-		return 3;
+	public void toNBT(DataOutputStream out, Object object, TypeToken<?> type, AdapterRegistry registry) throws NBTParseException {
+		try {
+			out.writeByte(((Boolean) object)? 1: 0);
+		} catch (Exception e) {
+			throw new NBTParseException(e);
+		}
 	}
 	
 	@Override
-	public String toString() {
-		return String.valueOf(value);
+	public TagType getId() {
+		return TagType.BYTE;
 	}
 }

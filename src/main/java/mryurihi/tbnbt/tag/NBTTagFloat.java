@@ -21,43 +21,43 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package mryurihi.tbnbt;
+package mryurihi.tbnbt.tag;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NBTTagLong extends NBTTag {
+public class NBTTagFloat extends NBTTag {
 
-	private long value;
+	private float value;
 	
-	public NBTTagLong(long value) {
+	public NBTTagFloat(float value) {
 		this.value = value;
 	}
 	
-	public long getValue() {
+	public float getValue() {
 		return value;
 	}
 	
-	public void setValue(long value) {
+	public void setValue(float value) {
 		this.value = value;
 	}
 	
 	@Override
-	List<Byte> getPayloadBytes() {
+	public List<Byte> getPayloadBytes() {
 		List<Byte> out = new ArrayList<>();
 		if(name != null) out.addAll(new NBTTagString(name).getPayloadBytes());
-		for(byte b: ByteBuffer.allocate(8).putLong(value).array()) out.add(b);
+		for(byte b: ByteBuffer.allocate(4).putFloat(value).array()) out.add(b);
 		return out;
 	}
 
 	@Override
-	byte getTagType() {
-		return 4;
+	public byte getTagType() {
+		return 5;
 	}
 	
 	@Override
 	public String toString() {
-		return String.valueOf(value) + "l";
+		return String.valueOf(value) + "f";
 	}
 }

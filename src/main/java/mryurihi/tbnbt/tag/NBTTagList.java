@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package mryurihi.tbnbt;
+package mryurihi.tbnbt.tag;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,7 +97,7 @@ public class NBTTagList extends NBTTag {
 	}
 
 	@Override
-	List<Byte> getPayloadBytes() {
+	public List<Byte> getPayloadBytes() {
 		if(typeId == 0 && ! value.isEmpty()) typeId = value.get(0).getTagType();
 		if(typeId == 0) typeId = 1;
 		List<Byte> out = new ArrayList<>();
@@ -109,7 +109,7 @@ public class NBTTagList extends NBTTag {
 	}
 
 	@Override
-	byte getTagType() {
+	public byte getTagType() {
 		return 9;
 	}
 	

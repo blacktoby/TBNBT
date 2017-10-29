@@ -21,40 +21,42 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package mryurihi.tbnbt;
+package mryurihi.tbnbt.adapter.impl.primitive;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.List;
-import java.util.zip.GZIPOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 
-public class NBTOutputStream implements Closeable {
+import com.google.common.reflect.TypeToken;
 
-	private OutputStream os;
-	
-	public NBTOutputStream(OutputStream out, boolean compressed) throws IOException {
-		if(compressed) {
-			out = new GZIPOutputStream(out);
-		}
-		os = out;
-	}
-	
-	public NBTOutputStream(OutputStream out) throws IOException {
-		this(out, true);
-	}
-	
-	public void writeTag(NBTTag tag, String name) throws IOException {
-		tag.setName(name);
-		List<Byte> bytes = tag.getPayloadBytes();
-		bytes.add(0, tag.getTagType());
-		byte[] out = new byte[bytes.size()];
-		for(int i = 0; i < bytes.size(); i++) out[i] = bytes.get(i);
-		os.write(out);
-	}
-	
+import mryurihi.tbnbt.adapter.AdapterRegistry;
+import mryurihi.tbnbt.adapter.NBTAdapter;
+import mryurihi.tbnbt.adapter.NBTParseException;
+import mryurihi.tbnbt.parser.TagType;
+
+public class FloatAdapter extends NBTAdapter<Float> {
+
 	@Override
-	public void close() throws IOException {
-			os.close();
+	public Float fromNBT(TagType id, DataInputStream payload, TypeToken<?> type, AdapterRegistry registry) throws NBTParseException {
+		if(! id.equals(TagType.FLOAT)) throw new NBTParseException(String.format("id %s does not match required id 5", id.getId()));
+		try {
+			return new Float(payload.readFloat());
+		} catch(Exception e) {
+			throw new NBTParseException(e);
+		}
 	}
+
+	@Override
+	public void toNBT(DataOutputStream out, Object object, TypeToken<?> type, AdapterRegistry registry) throws NBTParseException {
+		try {
+			out.writeFloat(((Float) object).floatValue());
+		} catch (Exception e) {
+			throw new NBTParseException(e);
+		}
+	}
+
+	@Override
+	public TagType getId() {
+		return TagType.FLOAT;
+	}
+
 }

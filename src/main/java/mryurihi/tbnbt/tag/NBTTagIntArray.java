@@ -21,77 +21,50 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package mryurihi.tbnbt;
+package mryurihi.tbnbt.tag;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
-public class NBTTagCompound extends NBTTag {
+public class NBTTagIntArray extends NBTTag {
 
-	private Map<String, NBTTag> value;
+	private int[] value;
 	
-	public NBTTagCompound(Map<String, NBTTag> value) {
-		this.value = new HashMap<>();
-		if(value != null) for(Entry<String, NBTTag> entry: value.entrySet()) {
-			NBTTag tag = entry.getValue();
-			tag.setName(entry.getKey());
-			this.value.put(entry.getKey(), tag);
-		}
+	public NBTTagIntArray(int[] value) {
+		this.value = value;
 	}
 	
-	public Map<String, NBTTag> getValue() {
+	public int[] getValue() {
 		return value;
 	}
 	
-	public NBTTag get(String key) {
-		return value.get(key);
-	}
-	
-	public NBTTagCompound setValue(Map<String, NBTTag> value) {
-		Map<String, NBTTag> aux = new HashMap<>();
-		value.forEach((k, v) -> {
-			v.setName(k);
-			aux.put(k, v);
-		});
-		this.value = aux;
-		return this;
-	}
-	
-	public NBTTagCompound put(String key, NBTTag value) {
-		value.setName(key);
-		this.value.put(key, value);
-		return this;
-	}
-	
-	public NBTTagCompound remove(String key) {
-		this.value.remove(key);
-		return this;
+	public void setValue(int[] value) {
+		this.value = value;
 	}
 	
 	@Override
-	List<Byte> getPayloadBytes() {
+	public List<Byte> getPayloadBytes() {
 		List<Byte> out = new ArrayList<>();
 		if(name != null) out.addAll(new NBTTagString(name).getPayloadBytes());
-		for(Entry<String, NBTTag> entry: value.entrySet()) {
-			out.add(entry.getValue().getTagType());
-			for(byte b: entry.getValue().getPayloadBytes()) {
-				out.add(b);
-			}
-		}
-		out.add((byte) 0);
+		out.addAll(new NBTTagInt(value.length).getPayloadBytes());
+		for(int i: value) for(byte b: ByteBuffer.allocate(4).putInt(i).array()) out.add(b);
 		return out;
 	}
 
 	@Override
-	byte getTagType() {
-		return 10;
+	public byte getTagType() {
+		return 11;
 	}
 	
 	@Override
 	public String toString() {
-		return value.toString();
+		String out = "[I;";
+		for(int i: value) {
+			out += String.valueOf(i) + ", ";
+		}
+		out = out.substring(0, out.length() - 2);
+		out += "]";
+		return out;
 	}
 }
