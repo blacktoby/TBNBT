@@ -9,5 +9,5 @@ __features__
 
 __Goal__
 Many NBT libraries are very hard to use, many include unnecessary complexity when it comes to using the provided classes.  
-That is why TBNBT is __T__he __B__etter __NBT__ library. All of the classes are very easy to use, including the serialization classes.  
+That is why TBNBT is  __T__ he __B__ etter __NBT__ library. All of the classes are very easy to use, including the serialization classes.  
 TBNBT has NBT Adapter & NBT Adapter Factories to use for (de)serializing custom objects
