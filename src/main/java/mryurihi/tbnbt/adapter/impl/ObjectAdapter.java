@@ -44,7 +44,7 @@ public class ObjectAdapter extends NBTAdapter<Object> {
 		try {
 			out = type.getRawType().newInstance();
 			byte nextTagType = payload.readByte();
-			do {
+			fieldSearch: do {
 				String tagName = registry.fromString(payload);
 				Field objField = null;
 				try {
@@ -56,7 +56,7 @@ public class ObjectAdapter extends NBTAdapter<Object> {
 						}
 						System.out.println(f);
 					}
-					if(objField == null) throw e;
+					if(objField == null) continue fieldSearch;
 				}
 				objField.setAccessible(true);
 				
