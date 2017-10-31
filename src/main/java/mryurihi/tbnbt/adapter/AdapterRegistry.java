@@ -36,6 +36,7 @@ import mryurihi.tbnbt.adapter.impl.ArrayAdapterFactory;
 import mryurihi.tbnbt.adapter.impl.ByteArrayAdapter;
 import mryurihi.tbnbt.adapter.impl.CollectionAdapterFactory;
 import mryurihi.tbnbt.adapter.impl.IntegerArrayAdapter;
+import mryurihi.tbnbt.adapter.impl.MapAdapterFactory;
 import mryurihi.tbnbt.adapter.impl.ObjectAdapter;
 import mryurihi.tbnbt.adapter.impl.StringAdapter;
 import mryurihi.tbnbt.adapter.impl.primitive.BooleanAdapter;
@@ -86,6 +87,7 @@ public class AdapterRegistry {
 		for(int i = 0; i < rClass.length; i++) registry.put(rClass[i], rAdapter[i]);
 		factory.put(Collection.class, new CollectionAdapterFactory());
 		factory.put(Object[].class, new ArrayAdapterFactory());
+		factory.put(Map.class, new MapAdapterFactory());
 	}
 	
 	private Map<Class<?>, Class<? extends NBTAdapter<?>>> registry;
