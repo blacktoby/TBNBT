@@ -55,7 +55,7 @@ public class NBTTagShort extends NBTTag {
 
 	@Override
 	public TagType getTagType() {
-		return TagType.getTypeById(2);
+		return TagType.SHORT;
 	}
 	
 	@Override

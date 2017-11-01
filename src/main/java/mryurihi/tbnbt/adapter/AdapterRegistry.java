@@ -36,6 +36,7 @@ import mryurihi.tbnbt.adapter.impl.ArrayAdapterFactory;
 import mryurihi.tbnbt.adapter.impl.ByteArrayAdapter;
 import mryurihi.tbnbt.adapter.impl.CollectionAdapterFactory;
 import mryurihi.tbnbt.adapter.impl.IntegerArrayAdapter;
+import mryurihi.tbnbt.adapter.impl.LongArrayAdapter;
 import mryurihi.tbnbt.adapter.impl.MapAdapterFactory;
 import mryurihi.tbnbt.adapter.impl.ObjectAdapter;
 import mryurihi.tbnbt.adapter.impl.StringAdapter;
@@ -47,6 +48,7 @@ import mryurihi.tbnbt.adapter.impl.primitive.IntegerAdapter;
 import mryurihi.tbnbt.adapter.impl.primitive.LongAdapter;
 import mryurihi.tbnbt.adapter.impl.primitive.PrimitiveByteArrayAdapter;
 import mryurihi.tbnbt.adapter.impl.primitive.PrimitiveIntArrayAdapter;
+import mryurihi.tbnbt.adapter.impl.primitive.PrimitiveLongArrayAdapter;
 import mryurihi.tbnbt.adapter.impl.primitive.ShortAdapter;
 import mryurihi.tbnbt.parser.TagType;
 
@@ -84,7 +86,9 @@ public class AdapterRegistry {
 			String.class,
 			Object.class,
 			Integer[].class,
-			int[].class
+			int[].class,
+			Long[].class,
+			long[].class
 		};
 		Class<? extends NBTAdapter<?>>[] rAdapter = (Class<? extends NBTAdapter<?>>[]) new Class<?>[] {
 			ByteAdapter.class, 
@@ -98,7 +102,9 @@ public class AdapterRegistry {
 			StringAdapter.class,
 			ObjectAdapter.class,
 			IntegerArrayAdapter.class,
-			PrimitiveIntArrayAdapter.class
+			PrimitiveIntArrayAdapter.class,
+			LongArrayAdapter.class,
+			PrimitiveLongArrayAdapter.class
 		};
 		for(int i = 0; i < rClass.length; i++) registry.put(rClass[i], rAdapter[i]);
 		factory.put(Collection.class, new CollectionAdapterFactory());
@@ -473,7 +479,7 @@ public class AdapterRegistry {
 	 */
 	public NBTAdapter<?> getIntArrayAdapter() {
 		try {
-			return registry.get(Byte.class).newInstance();
+			return registry.get(Long[].class).newInstance();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -501,6 +507,45 @@ public class AdapterRegistry {
 	public void writeIntArray(DataOutputStream out, Integer[] object) {
 		try {
 			registry.get(Integer[].class).newInstance().toNBT(out, object, new TypeToken<Integer[]>() {}, this);
+		} catch (Exception e) {
+			
+		}
+	}
+	
+	/**
+	 * Gets the adapter for an long array
+	 * @return
+	 */
+	public NBTAdapter<?> getLongArrayAdapter() {
+		try {
+			return registry.get(Long[].class).newInstance();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	/**
+	 * Convenience method. Writes data to an Long[] object
+	 * @param payload the stream to write to
+	 * @return the Long[] of data
+	 */
+	public Long[] fromLongArray(DataInputStream payload) {
+		try {
+			return (Long[]) registry.get(Long[].class).newInstance().fromNBT(TagType.LONG_ARRAY, payload, new TypeToken<Long[]>() {}, this);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
+	/**
+	 * Convenience method. Reads data from an Long[]
+	 * @param out the stream to write to
+	 * @param object the Long[] to read from
+	 */
+	public void writeLongArray(DataOutputStream out, Long[] object) {
+		try {
+			registry.get(Long[].class).newInstance().toNBT(out, object, new TypeToken<Long[]>() {}, this);
 		} catch (Exception e) {
 			
 		}

@@ -112,7 +112,7 @@ public class NBTTagList extends NBTTag {
 
 	@Override
 	public TagType getTagType() {
-		return TagType.getTypeById(9);
+		return TagType.LIST;
 	}
 	
 	@Override

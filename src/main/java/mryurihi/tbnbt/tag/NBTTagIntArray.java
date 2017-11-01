@@ -56,7 +56,7 @@ public class NBTTagIntArray extends NBTTag {
 
 	@Override
 	public TagType getTagType() {
-		return TagType.getTypeById(11);
+		return TagType.INT_ARRAY;
 	}
 	
 	@Override

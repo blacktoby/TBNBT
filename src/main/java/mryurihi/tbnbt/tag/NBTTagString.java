@@ -57,7 +57,7 @@ public class NBTTagString extends NBTTag {
 
 	@Override
 	public TagType getTagType() {
-		return TagType.getTypeById(8);
+		return TagType.STRING;
 	}
 	
 	@Override

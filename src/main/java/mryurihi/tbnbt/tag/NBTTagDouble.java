@@ -55,7 +55,7 @@ public class NBTTagDouble extends NBTTag {
 
 	@Override
 	public TagType getTagType() {
-		return TagType.getTypeById(6);
+		return TagType.DOUBLE;
 	}
 	
 	@Override

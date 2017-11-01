@@ -55,7 +55,7 @@ public class NBTTagInt extends NBTTag {
 
 	@Override
 	public TagType getTagType() {
-		return TagType.getTypeById(3);
+		return TagType.INT;
 	}
 	
 	@Override

@@ -55,7 +55,7 @@ public class NBTTagLong extends NBTTag {
 
 	@Override
 	public TagType getTagType() {
-		return TagType.getTypeById(4);
+		return TagType.LONG;
 	}
 	
 	@Override

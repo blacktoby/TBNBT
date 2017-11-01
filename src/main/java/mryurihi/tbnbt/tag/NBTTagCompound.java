@@ -89,7 +89,7 @@ public class NBTTagCompound extends NBTTag {
 
 	@Override
 	public TagType getTagType() {
-		return TagType.getTypeById(10);
+		return TagType.COMPOUND;
 	}
 	
 	@Override

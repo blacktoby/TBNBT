@@ -40,6 +40,7 @@ import mryurihi.tbnbt.tag.NBTTagInt;
 import mryurihi.tbnbt.tag.NBTTagIntArray;
 import mryurihi.tbnbt.tag.NBTTagList;
 import mryurihi.tbnbt.tag.NBTTagLong;
+import mryurihi.tbnbt.tag.NBTTagLongArray;
 import mryurihi.tbnbt.tag.NBTTagShort;
 import mryurihi.tbnbt.tag.NBTTagString;
 
@@ -59,6 +60,7 @@ public class TagNBTParser {
 			case 9: return parseTagList(in, named);
 			case 10: return parseTagCompound(in, named);
 			case 11: return parseTagIntArray(in, named);
+			case 12: return parseTagLongArray(in, named);
 			default: return null;
 		}
 	}
@@ -188,6 +190,20 @@ public class TagNBTParser {
 		int[] ints = new int[length];
 		for(int i = 0; i < length; i++) {
 			ints[i] = in.readInt();
+		}
+		out.setValue(ints);
+		return out;
+	}
+	
+	public static NBTTagLongArray parseTagLongArray(DataInputStream in, boolean named) throws IOException {
+		NBTTagLongArray out = new NBTTagLongArray(null);
+		if(named) {
+			out.setName(parseTagString(in, false).getValue());
+		}
+		int length = in.readInt();
+		long[] ints = new long[length];
+		for(int i = 0; i < length; i++) {
+			ints[i] = in.readLong();
 		}
 		out.setValue(ints);
 		return out;

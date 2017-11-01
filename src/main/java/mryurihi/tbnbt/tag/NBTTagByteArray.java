@@ -55,7 +55,7 @@ public class NBTTagByteArray extends NBTTag {
 
 	@Override
 	public TagType getTagType() {
-		return TagType.getTypeById(7);
+		return TagType.BYTE_ARRAY;
 	}
 	
 	@Override

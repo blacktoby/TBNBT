@@ -55,7 +55,7 @@ public class NBTTagFloat extends NBTTag {
 
 	@Override
 	public TagType getTagType() {
-		return TagType.getTypeById(5);
+		return TagType.FLOAT;
 	}
 	
 	@Override
