@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"mryurihi.tbnbt.adapter"}]

@@ -27,6 +27,8 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import mryurihi.tbnbt.parser.TagType;
+
 public class NBTTagDouble extends NBTTag {
 	
 	private double value;
@@ -52,8 +54,8 @@ public class NBTTagDouble extends NBTTag {
 	}
 
 	@Override
-	public byte getTagType() {
-		return 6;
+	public TagType getTagType() {
+		return TagType.getTypeById(6);
 	}
 	
 	@Override

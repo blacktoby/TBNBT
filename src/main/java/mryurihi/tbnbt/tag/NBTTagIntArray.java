@@ -27,6 +27,8 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import mryurihi.tbnbt.parser.TagType;
+
 public class NBTTagIntArray extends NBTTag {
 
 	private int[] value;
@@ -53,8 +55,8 @@ public class NBTTagIntArray extends NBTTag {
 	}
 
 	@Override
-	public byte getTagType() {
-		return 11;
+	public TagType getTagType() {
+		return TagType.getTypeById(11);
 	}
 	
 	@Override

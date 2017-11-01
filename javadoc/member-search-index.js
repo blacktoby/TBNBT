@@ -1,0 +1,1 @@
+memberSearchIndex = [{"p":"mryurihi.tbnbt.adapter","c":"NBTAdapterFactory","l":"create(AdapterRegistry, TypeToken<T>)","url":"create-mryurihi.tbnbt.adapter.AdapterRegistry-com.google.common.reflect.TypeToken-"}]

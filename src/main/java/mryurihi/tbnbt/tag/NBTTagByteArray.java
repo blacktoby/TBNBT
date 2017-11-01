@@ -26,6 +26,8 @@ package mryurihi.tbnbt.tag;
 import java.util.ArrayList;
 import java.util.List;
 
+import mryurihi.tbnbt.parser.TagType;
+
 public class NBTTagByteArray extends NBTTag {
 
 	private byte[] value;
@@ -52,8 +54,8 @@ public class NBTTagByteArray extends NBTTag {
 	}
 
 	@Override
-	public byte getTagType() {
-		return 7;
+	public TagType getTagType() {
+		return TagType.getTypeById(7);
 	}
 	
 	@Override

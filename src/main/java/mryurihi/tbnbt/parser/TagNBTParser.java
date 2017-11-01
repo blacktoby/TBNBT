@@ -159,7 +159,7 @@ public class TagNBTParser {
 			aux.add(parseTagById(in, typeId, false));
 		}
 		out.setValue(aux);
-		out.setTypeId(typeId);
+		out.setTypeId(TagType.getTypeById(typeId));
 		return out;
 	}
 	

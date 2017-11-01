@@ -27,6 +27,8 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import mryurihi.tbnbt.parser.TagType;
+
 public class NBTTagShort extends NBTTag {
 
 	private short value;
@@ -52,8 +54,8 @@ public class NBTTagShort extends NBTTag {
 	}
 
 	@Override
-	public byte getTagType() {
-		return 2;
+	public TagType getTagType() {
+		return TagType.getTypeById(2);
 	}
 	
 	@Override

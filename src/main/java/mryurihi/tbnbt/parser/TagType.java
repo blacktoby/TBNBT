@@ -23,6 +23,10 @@ SOFTWARE.
 */
 package mryurihi.tbnbt.parser;
 
+/**
+ * An enumeration that contains all of the NBT tag types.
+ * @author MrYurihi Redstone
+ */
 public enum TagType {
 	END(0),
 	BYTE(1),

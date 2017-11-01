@@ -37,6 +37,10 @@ import mryurihi.tbnbt.parser.TagNBTParser;
 import mryurihi.tbnbt.parser.TagType;
 import mryurihi.tbnbt.tag.NBTTag;
 
+/**
+ * An input stream that reads NBT data.
+ * @author MrYurihi Redstone
+ */
 public class NBTInputStream implements Closeable {
 	
 	private DataInputStream dis;
@@ -52,11 +56,24 @@ public class NBTInputStream implements Closeable {
 		this(is, true);
 	}
 	
+	/**
+	 * Reads an NBT tag from this stream
+	 * @return The NBTTag
+	 * @throws IOException if there are any O/I exceptions while reading
+	 */
 	public NBTTag readTag() throws IOException {
 		byte type = dis.readByte();
 		return TagNBTParser.parseTagById(dis, type, true);
 	}
 	
+	/**
+	 * Reads an NBT tag from this stream into an object
+	 * @param type the type of the object to read to
+	 * @param registry the registry to use
+	 * @return the object that has been written to
+	 * @throws IOException if an I/O exception occurs while writing to the object
+	 * @throws NBTParseException If an exception occurs while parsing NBT
+	 */
 	@SuppressWarnings("unchecked")
 	public <T> T readToType(TypeToken<T> type, AdapterRegistry registry) throws IOException, NBTParseException {
 		TagType id = TagType.getTypeById(dis.readByte());
@@ -64,6 +81,13 @@ public class NBTInputStream implements Closeable {
 		return (T) registry.getAdapterForObject(type).fromNBT(id, dis, type, registry);
 	}
 	
+	/**
+	 * Reads an NBT tag from this stream into an object. Will create a new reigstry object
+	 * @param type the type of the object to read to
+	 * @return the object that has been written to
+	 * @throws IOException if an I/O exception occurs while writing to the object
+	 * @throws NBTParseException If an exception occurs while parsing NBT
+	 */
 	public <T> T readToType(TypeToken<T> type) throws IOException, NBTParseException {
 		return readToType(type, new AdapterRegistry());
 	}

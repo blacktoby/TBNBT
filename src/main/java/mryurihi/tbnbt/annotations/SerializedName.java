@@ -26,6 +26,10 @@ package mryurihi.tbnbt.annotations;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/**
+ * An annotation that describes the real name of a tag
+ * @author MrYurihi Redstone
+ */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface SerializedName {
 	public String value();

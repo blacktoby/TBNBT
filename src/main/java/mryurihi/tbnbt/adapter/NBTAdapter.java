@@ -32,9 +32,30 @@ import mryurihi.tbnbt.parser.TagType;
 
 public abstract class NBTAdapter<T> {
 	
+	/**
+	 * Get an object from NBT data
+	 * @param id the id for input tag
+	 * @param payload the stream to be read from
+	 * @param type the type of object to be written into
+	 * @param registry the adapter registry that contains the adapters and factories available
+	 * @return an object with the type of the parameter {@code type}
+	 * @throws NBTParseException there is an exception parsing
+	 */
 	public abstract T fromNBT(TagType id, DataInputStream payload, TypeToken<?> type, AdapterRegistry registry) throws NBTParseException;
 	
+	/**
+	 * Write NBT data from an object
+	 * @param out the stream to be written to
+	 * @param object the object to read from
+	 * @param type the type of the object to be read from
+	 * @param registry the adapter registry that contains the adapters and factories available
+	 * @throws NBTParseException of there is an exception parsing
+	 */
 	public abstract void toNBT(DataOutputStream out, Object object, TypeToken<?> type, AdapterRegistry registry) throws NBTParseException;
 	
+	/**
+	 * Gets the type of tag this adapter writes.
+	 * @return the tag type
+	 */
 	public abstract TagType getId();
 }

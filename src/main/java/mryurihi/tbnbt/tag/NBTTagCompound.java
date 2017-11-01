@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import mryurihi.tbnbt.parser.TagType;
+
 public class NBTTagCompound extends NBTTag {
 
 	private Map<String, NBTTag> value;
@@ -76,7 +78,7 @@ public class NBTTagCompound extends NBTTag {
 		List<Byte> out = new ArrayList<>();
 		if(name != null) out.addAll(new NBTTagString(name).getPayloadBytes());
 		for(Entry<String, NBTTag> entry: value.entrySet()) {
-			out.add(entry.getValue().getTagType());
+			out.add((byte) entry.getValue().getTagType().getId());
 			for(byte b: entry.getValue().getPayloadBytes()) {
 				out.add(b);
 			}
@@ -86,8 +88,8 @@ public class NBTTagCompound extends NBTTag {
 	}
 
 	@Override
-	public byte getTagType() {
-		return 10;
+	public TagType getTagType() {
+		return TagType.getTypeById(10);
 	}
 	
 	@Override

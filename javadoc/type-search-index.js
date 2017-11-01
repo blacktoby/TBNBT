@@ -1,0 +1,1 @@
+typeSearchIndex = [{"p":"mryurihi.tbnbt.adapter","l":"NBTAdapterFactory"}]

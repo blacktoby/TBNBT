@@ -48,7 +48,7 @@ public class ByteArrayAdapter extends NBTAdapter<Byte[]> {
 	@Override
 	public void toNBT(DataOutputStream out, Object object, TypeToken<?> type, AdapterRegistry registry) throws NBTParseException {
 		Byte[] byteArr;
-		if(object instanceof int[]) {
+		if(object instanceof byte[]) {
 			byteArr = new Byte[((byte[]) object).length];
 			for(int i = 0; i < byteArr.length; i++) {
 				byteArr[i] = ((byte[]) object)[i];

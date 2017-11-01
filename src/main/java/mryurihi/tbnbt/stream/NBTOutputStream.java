@@ -37,6 +37,10 @@ import mryurihi.tbnbt.adapter.NBTAdapter;
 import mryurihi.tbnbt.adapter.NBTParseException;
 import mryurihi.tbnbt.tag.NBTTag;
 
+/**
+ * An output stream that writes NBT data
+ * @author MrYurihi Redstone
+ */
 public class NBTOutputStream implements Closeable {
 
 	private OutputStream os;
@@ -52,23 +56,45 @@ public class NBTOutputStream implements Closeable {
 		this(out, true);
 	}
 	
+	/**
+	 * Writes an NBTTag to the stream.
+	 * @param tag the tag to write
+	 * @param name the name of the tag. Usually not needed
+	 * @throws IOException if there are any I/O exceptions while writing data
+	 */
 	public void writeTag(NBTTag tag, String name) throws IOException {
 		tag.setName(name);
 		List<Byte> bytes = tag.getPayloadBytes();
-		bytes.add(0, tag.getTagType());
+		bytes.add(0, (byte) tag.getTagType().getId());
 		byte[] out = new byte[bytes.size()];
 		for(int i = 0; i < bytes.size(); i++) out[i] = bytes.get(i);
 		os.write(out);
 	}
 	
+	/**
+	 * Writes an object to the stream
+	 * @param type the type of the object
+	 * @param obj the object to be written
+	 * @param registry the registry to use
+	 * @throws NBTParseException if there is an exception while parsing the data
+	 * @throws IOException if there are any I/O exceptions when writing
+	 */
 	public <T> void writeFromObject(TypeToken<T> type, Object obj, AdapterRegistry registry) throws NBTParseException, IOException {
 		DataOutputStream dos = new DataOutputStream(os);
 		NBTAdapter<?> adapter = registry.getAdapterForObject(type);
 		dos.writeByte(adapter.getId().getId());
 		dos.writeShort(0);
 		adapter.toNBT(dos, obj, type, registry);
+		dos.close();
 	}
 	
+	/**
+	 * Writes an object to the stream. Will use a new registry
+	 * @param type the type of the object
+	 * @param obj the object to be written
+	 * @throws NBTParseException if there is an exception while parsing the data
+	 * @throws IOException if there are any I/O exceptions when writing
+	 */
 	public <T> void writeFromObject(TypeToken<T> type, Object obj) throws NBTParseException, IOException {
 		writeFromObject(type, obj, new AdapterRegistry());
 	}

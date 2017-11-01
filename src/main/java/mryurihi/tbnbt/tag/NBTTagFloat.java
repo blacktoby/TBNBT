@@ -27,6 +27,8 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import mryurihi.tbnbt.parser.TagType;
+
 public class NBTTagFloat extends NBTTag {
 
 	private float value;
@@ -52,8 +54,8 @@ public class NBTTagFloat extends NBTTag {
 	}
 
 	@Override
-	public byte getTagType() {
-		return 5;
+	public TagType getTagType() {
+		return TagType.getTypeById(5);
 	}
 	
 	@Override

@@ -23,6 +23,10 @@ SOFTWARE.
 */
 package mryurihi.tbnbt.adapter;
 
+/**
+ * A wrapper for exceptions passed by Adapters
+ * @author MrYurihi Redstone
+ */
 public class NBTParseException extends Exception {
 	private static final long serialVersionUID = 1564827538291444240L;
 	
@@ -39,10 +43,10 @@ public class NBTParseException extends Exception {
 	}
 	
 	public NBTParseException(String message, Throwable cause) {
-		super(message, cause);
+		super(message, cause instanceof NBTParseException? cause.getCause(): cause);
 	}
 	
 	protected NBTParseException(String message, Throwable cause, boolean enableSuppresion, boolean writableStackTrace) {
-		super(message, cause, enableSuppresion, writableStackTrace);
+		super(message, cause instanceof NBTParseException? cause.getCause(): cause, enableSuppresion, writableStackTrace);
 	}
 }

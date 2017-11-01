@@ -25,6 +25,17 @@ package mryurihi.tbnbt.adapter;
 
 import com.google.common.reflect.TypeToken;
 
+/**
+ * A factory class for creating dynamic {@link mryurihi.tbnbt.adapter.NBTAdapter}
+ * @author MrYurihi Redstone
+ */
 public interface NBTAdapterFactory {
+	
+	/**
+	 * Creates the adapter associated with this factory
+	 * @param registry the registry associated with this factory
+	 * @param type the type of the object. Similar to {@link mryurihi.tbnbt.adapter.NBTAdapter} from and to NBT method's type parameter
+	 * @return the NBTAdapter
+	 */
 	public <T> NBTAdapter<T> create(AdapterRegistry registry, TypeToken<T> type);
 }
