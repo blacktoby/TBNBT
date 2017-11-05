@@ -48,13 +48,13 @@ public class ObjectAdapter extends NBTAdapter<Object> {
 				String tagName = registry.fromString(payload);
 				Field objField = null;
 				try {
+					System.out.println(tagName);
 					objField = type.getRawType().getDeclaredField(tagName);
 				} catch(NoSuchFieldException e) {
 					for(Field f: type.getRawType().getDeclaredFields()) {
 						if(f.isAnnotationPresent(SerializedName.class) && f.getAnnotation(SerializedName.class).value().equals(tagName)) {
 							objField = f;
 						}
-						System.out.println(f);
 					}
 					if(objField == null) continue fieldSearch;
 				}
@@ -65,7 +65,6 @@ public class ObjectAdapter extends NBTAdapter<Object> {
 				nextTagType = payload.readByte();
 			} while(nextTagType != 0);
 		} catch (Exception e) {
-			System.out.println(e);
 			throw new NBTParseException(e);
 		}
 		return out;

@@ -475,7 +475,7 @@ public class AdapterRegistry {
 	
 	/**
 	 * Gets the adapter for an integer array
-	 * @return
+	 * @return the int array adapter
 	 */
 	public NBTAdapter<?> getIntArrayAdapter() {
 		try {
@@ -514,7 +514,7 @@ public class AdapterRegistry {
 	
 	/**
 	 * Gets the adapter for an long array
-	 * @return
+	 * @return the long array adapter
 	 */
 	public NBTAdapter<?> getLongArrayAdapter() {
 		try {
