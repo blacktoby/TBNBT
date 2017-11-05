@@ -67,5 +67,4 @@
 			<version>23.3-jre</version>
 		</dependency>
 	</dependencies>
-	<packaging>pom</packaging>
 </project>
