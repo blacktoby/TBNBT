@@ -62,6 +62,7 @@ public class NBTOutputStream implements Closeable {
 	 * @throws IOException if there are any I/O exceptions while writing data
 	 */
 	public void writeTag(NBTTag tag, String name) throws IOException {
+		dos.writeByte(tag.getTagType().getId());
 		new NBTTagString(name).writePayloadBytes(dos);
 		tag.writePayloadBytes(dos);
 	}
