@@ -35,6 +35,7 @@ import mryurihi.tbnbt.TagType;
 import mryurihi.tbnbt.adapter.AdapterRegistry;
 import mryurihi.tbnbt.adapter.NBTParseException;
 import mryurihi.tbnbt.tag.NBTTag;
+import mryurihi.tbnbt.tag.NBTTagString;
 
 /**
  * An input stream that reads NBT data.
@@ -57,12 +58,23 @@ public class NBTInputStream implements Closeable {
 	
 	/**
 	 * Reads an NBT tag from this stream
+	 * @param named if the tag is named
 	 * @return The NBTTag
-	 * @throws IOException if there are any O/I exceptions while reading
+	 * @throws IOException if there are any I/O exceptions while reading
+	 */
+	public NBTTag readTag(boolean named) throws IOException {
+		byte type = dis.readByte();
+		if(named) new NBTTagString("").readPayloadBytes(dis);
+		return NBTTag.newTagByType(TagType.getTypeById(type), dis);
+	}
+	
+	/**
+	 * Reads a named NBT tag from this stream
+	 * @return The NBTTag
+	 * @throws IOException if there are any I/O exceptions while reading
 	 */
 	public NBTTag readTag() throws IOException {
-		byte type = dis.readByte();
-		return NBTTag.newTagByType(TagType.getTypeById(type), dis);
+		return readTag(true);
 	}
 	
 	/**

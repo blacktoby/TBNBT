@@ -38,9 +38,15 @@ public class NBTTagList extends NBTTag {
 	private TagType typeId;
 	
 	public NBTTagList(List<NBTTag> value, TagType typeId) {
+		this.value = new ArrayList<>();
 		if(value != null) for(NBTTag tag: value) {
 			this.value.add(tag);
 		}
+		this.typeId = typeId;
+	}
+	
+	public NBTTagList(TagType typeId) {
+		value = new ArrayList<>();
 		this.typeId = typeId;
 	}
 	
