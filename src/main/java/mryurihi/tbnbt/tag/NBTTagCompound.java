@@ -75,7 +75,6 @@ public class NBTTagCompound extends NBTTag {
 	
 	@Override
 	public void writePayloadBytes(DataOutputStream out) throws IOException {
-		value = new HashMap<>();
 		for(Entry<String, NBTTag> entry: value.entrySet()) {
 			out.writeByte((byte) entry.getValue().getTagType().getId());
 			new NBTTagString(entry.getKey()).writePayloadBytes(out);
@@ -86,11 +85,12 @@ public class NBTTagCompound extends NBTTag {
 	
 	@Override
 	public NBTTag readPayloadBytes(DataInputStream in) throws IOException {
+		value = new HashMap<>();
 		byte type = in.readByte();
-		do {
+		while(type != 0) {
 			value.put(new NBTTagString().readPayloadBytes(in).getAsTagString().getValue(), NBTTag.newTagByType(TagType.getTypeById(type), in));
 			type = in.readByte();
-		} while(type != 0);
+		}
 		return this;
 	}
 
