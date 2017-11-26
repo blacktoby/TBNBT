@@ -86,10 +86,10 @@ public class NBTTagCompound extends NBTTag {
 	
 	@Override
 	public NBTTag readPayloadBytes(DataInputStream in) throws IOException {
-		byte type = 0;
+		byte type = in.readByte();
 		do {
-			type = in.readByte();
 			value.put(new NBTTagString().readPayloadBytes(in).getAsTagString().getValue(), NBTTag.newTagByType(TagType.getTypeById(type), in));
+			type = in.readByte();
 		} while(type != 0);
 		return this;
 	}
