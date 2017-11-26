@@ -73,6 +73,14 @@ public class NBTTagCompound extends NBTTag {
 		return this;
 	}
 	
+	public boolean containsKey(String key) {
+		return value.containsKey(key);
+	}
+	
+	public boolean containsValue(NBTTag value) {
+		return this.value.containsValue(value);
+	}
+	
 	@Override
 	public void writePayloadBytes(DataOutputStream out) throws IOException {
 		for(Entry<String, NBTTag> entry: value.entrySet()) {

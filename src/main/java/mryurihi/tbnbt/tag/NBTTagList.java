@@ -106,6 +106,7 @@ public class NBTTagList extends NBTTag {
 	
 	@Override
 	public NBTTag readPayloadBytes(DataInputStream in) throws IOException {
+		value = new ArrayList<>();
 		byte id = in.readByte();
 		int length = in.readInt();
 		typeId = TagType.getTypeById(id);
