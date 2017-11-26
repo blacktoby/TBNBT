@@ -28,11 +28,11 @@ import java.io.DataOutputStream;
 
 import com.google.common.reflect.TypeToken;
 
+import mryurihi.tbnbt.TagType;
 import mryurihi.tbnbt.adapter.AdapterRegistry;
 import mryurihi.tbnbt.adapter.NBTAdapter;
 import mryurihi.tbnbt.adapter.NBTParseException;
 import mryurihi.tbnbt.adapter.impl.ByteArrayAdapter;
-import mryurihi.tbnbt.parser.TagType;
 
 public class PrimitiveByteArrayAdapter extends NBTAdapter<byte[]> {
 

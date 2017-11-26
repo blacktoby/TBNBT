@@ -23,11 +23,11 @@ SOFTWARE.
 */
 package mryurihi.tbnbt.tag;
 
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
-import mryurihi.tbnbt.parser.TagType;
+import mryurihi.tbnbt.TagType;
 
 public class NBTTagShort extends NBTTag {
 
@@ -36,6 +36,8 @@ public class NBTTagShort extends NBTTag {
 	public NBTTagShort(short value) {
 		this.value = value;
 	}
+	
+	NBTTagShort() {}
 	
 	public short getValue() {
 		return value;
@@ -46,11 +48,14 @@ public class NBTTagShort extends NBTTag {
 	}
 	
 	@Override
-	public List<Byte> getPayloadBytes() {
-		List<Byte> out = new ArrayList<>();
-		if(name != null) out.addAll(new NBTTagString(name).getPayloadBytes());
-		for(byte b: ByteBuffer.allocate(2).putShort(value).array()) out.add(b);
-		return out;
+	public void writePayloadBytes(DataOutputStream out) throws IOException {
+		out.writeShort(value);
+	}
+	
+	@Override
+	public NBTTag readPayloadBytes(DataInputStream in) throws IOException {
+		value = in.readShort();
+		return this;
 	}
 
 	@Override

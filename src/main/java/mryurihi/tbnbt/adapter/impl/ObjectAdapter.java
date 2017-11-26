@@ -29,11 +29,11 @@ import java.lang.reflect.Field;
 
 import com.google.common.reflect.TypeToken;
 
+import mryurihi.tbnbt.TagType;
 import mryurihi.tbnbt.adapter.AdapterRegistry;
 import mryurihi.tbnbt.adapter.NBTAdapter;
 import mryurihi.tbnbt.adapter.NBTParseException;
 import mryurihi.tbnbt.annotations.SerializedName;
-import mryurihi.tbnbt.parser.TagType;
 
 public class ObjectAdapter extends NBTAdapter<Object> {
 

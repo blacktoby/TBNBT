@@ -28,7 +28,7 @@ import java.io.DataOutputStream;
 
 import com.google.common.reflect.TypeToken;
 
-import mryurihi.tbnbt.parser.TagType;
+import mryurihi.tbnbt.TagType;
 
 public abstract class NBTAdapter<T> {
 	

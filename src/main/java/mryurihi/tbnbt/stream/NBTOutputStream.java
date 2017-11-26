@@ -27,7 +27,6 @@ import java.io.Closeable;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.List;
 import java.util.zip.GZIPOutputStream;
 
 import com.google.common.reflect.TypeToken;
@@ -36,6 +35,7 @@ import mryurihi.tbnbt.adapter.AdapterRegistry;
 import mryurihi.tbnbt.adapter.NBTAdapter;
 import mryurihi.tbnbt.adapter.NBTParseException;
 import mryurihi.tbnbt.tag.NBTTag;
+import mryurihi.tbnbt.tag.NBTTagString;
 
 /**
  * An output stream that writes NBT data
@@ -43,13 +43,13 @@ import mryurihi.tbnbt.tag.NBTTag;
  */
 public class NBTOutputStream implements Closeable {
 
-	private OutputStream os;
+	private DataOutputStream dos;
 	
 	public NBTOutputStream(OutputStream out, boolean compressed) throws IOException {
 		if(compressed) {
 			out = new GZIPOutputStream(out);
 		}
-		os = out;
+		dos = new DataOutputStream(out);
 	}
 	
 	public NBTOutputStream(OutputStream out) throws IOException {
@@ -59,16 +59,11 @@ public class NBTOutputStream implements Closeable {
 	/**
 	 * Writes an NBTTag to the stream.
 	 * @param tag the tag to write
-	 * @param name the name of the tag. Usually not needed
 	 * @throws IOException if there are any I/O exceptions while writing data
 	 */
 	public void writeTag(NBTTag tag, String name) throws IOException {
-		tag.setName(name);
-		List<Byte> bytes = tag.getPayloadBytes();
-		bytes.add(0, (byte) tag.getTagType().getId());
-		byte[] out = new byte[bytes.size()];
-		for(int i = 0; i < bytes.size(); i++) out[i] = bytes.get(i);
-		os.write(out);
+		new NBTTagString(name).writePayloadBytes(dos);
+		tag.writePayloadBytes(dos);
 	}
 	
 	/**
@@ -80,7 +75,6 @@ public class NBTOutputStream implements Closeable {
 	 * @throws IOException if there are any I/O exceptions when writing
 	 */
 	public <T> void writeFromObject(TypeToken<T> type, Object obj, AdapterRegistry registry) throws NBTParseException, IOException {
-		DataOutputStream dos = new DataOutputStream(os);
 		NBTAdapter<?> adapter = registry.getAdapterForObject(type);
 		dos.writeByte(adapter.getId().getId());
 		dos.writeShort(0);
@@ -101,6 +95,6 @@ public class NBTOutputStream implements Closeable {
 	
 	@Override
 	public void close() throws IOException {
-			os.close();
+		dos.close();
 	}
 }

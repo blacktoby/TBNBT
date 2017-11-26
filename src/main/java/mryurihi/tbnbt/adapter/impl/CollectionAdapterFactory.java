@@ -30,11 +30,11 @@ import java.util.Collection;
 
 import com.google.common.reflect.TypeToken;
 
+import mryurihi.tbnbt.TagType;
 import mryurihi.tbnbt.adapter.AdapterRegistry;
 import mryurihi.tbnbt.adapter.NBTAdapter;
 import mryurihi.tbnbt.adapter.NBTAdapterFactory;
 import mryurihi.tbnbt.adapter.NBTParseException;
-import mryurihi.tbnbt.parser.TagType;
 
 public class CollectionAdapterFactory implements NBTAdapterFactory {
 

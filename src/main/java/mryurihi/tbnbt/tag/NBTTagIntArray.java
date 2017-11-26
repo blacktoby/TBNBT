@@ -23,11 +23,11 @@ SOFTWARE.
 */
 package mryurihi.tbnbt.tag;
 
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
-import mryurihi.tbnbt.parser.TagType;
+import mryurihi.tbnbt.TagType;
 
 public class NBTTagIntArray extends NBTTag {
 
@@ -36,6 +36,8 @@ public class NBTTagIntArray extends NBTTag {
 	public NBTTagIntArray(int[] value) {
 		this.value = value;
 	}
+	
+	NBTTagIntArray() {}
 	
 	public int[] getValue() {
 		return value;
@@ -46,12 +48,16 @@ public class NBTTagIntArray extends NBTTag {
 	}
 	
 	@Override
-	public List<Byte> getPayloadBytes() {
-		List<Byte> out = new ArrayList<>();
-		if(name != null) out.addAll(new NBTTagString(name).getPayloadBytes());
-		out.addAll(new NBTTagInt(value.length).getPayloadBytes());
-		for(int i: value) for(byte b: ByteBuffer.allocate(4).putInt(i).array()) out.add(b);
-		return out;
+	public void writePayloadBytes(DataOutputStream out) throws IOException {
+		out.writeInt(value.length);
+		for(int i: value) out.writeInt(i);
+	}
+	
+	@Override
+	public NBTTag readPayloadBytes(DataInputStream in) throws IOException {
+		value = new int[in.readInt()];
+		for(int i = 0; i < value.length; i++) value[i] = in.readInt();
+		return this;
 	}
 
 	@Override

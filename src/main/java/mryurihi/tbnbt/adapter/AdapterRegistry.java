@@ -32,6 +32,7 @@ import java.util.Map;
 
 import com.google.common.reflect.TypeToken;
 
+import mryurihi.tbnbt.TagType;
 import mryurihi.tbnbt.adapter.impl.ArrayAdapterFactory;
 import mryurihi.tbnbt.adapter.impl.ByteArrayAdapter;
 import mryurihi.tbnbt.adapter.impl.CollectionAdapterFactory;
@@ -50,7 +51,6 @@ import mryurihi.tbnbt.adapter.impl.primitive.PrimitiveByteArrayAdapter;
 import mryurihi.tbnbt.adapter.impl.primitive.PrimitiveIntArrayAdapter;
 import mryurihi.tbnbt.adapter.impl.primitive.PrimitiveLongArrayAdapter;
 import mryurihi.tbnbt.adapter.impl.primitive.ShortAdapter;
-import mryurihi.tbnbt.parser.TagType;
 
 /**
  * The registry that holds all of the {@link mryurihi.tbnbt.adapter.NBTAdapter}'s are held.

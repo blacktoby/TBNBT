@@ -23,13 +23,14 @@ SOFTWARE.
 */
 package mryurihi.tbnbt.tag;
 
-import java.util.ArrayList;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import mryurihi.tbnbt.parser.TagType;
+import mryurihi.tbnbt.TagType;
 
 public class NBTTagCompound extends NBTTag {
 
@@ -39,10 +40,11 @@ public class NBTTagCompound extends NBTTag {
 		this.value = new HashMap<>();
 		if(value != null) for(Entry<String, NBTTag> entry: value.entrySet()) {
 			NBTTag tag = entry.getValue();
-			tag.setName(entry.getKey());
 			this.value.put(entry.getKey(), tag);
 		}
 	}
+	
+	NBTTagCompound() {}
 	
 	public Map<String, NBTTag> getValue() {
 		return value;
@@ -55,7 +57,6 @@ public class NBTTagCompound extends NBTTag {
 	public NBTTagCompound setValue(Map<String, NBTTag> value) {
 		Map<String, NBTTag> aux = new HashMap<>();
 		value.forEach((k, v) -> {
-			v.setName(k);
 			aux.put(k, v);
 		});
 		this.value = aux;
@@ -63,7 +64,6 @@ public class NBTTagCompound extends NBTTag {
 	}
 	
 	public NBTTagCompound put(String key, NBTTag value) {
-		value.setName(key);
 		this.value.put(key, value);
 		return this;
 	}
@@ -74,17 +74,24 @@ public class NBTTagCompound extends NBTTag {
 	}
 	
 	@Override
-	public List<Byte> getPayloadBytes() {
-		List<Byte> out = new ArrayList<>();
-		if(name != null) out.addAll(new NBTTagString(name).getPayloadBytes());
+	public void writePayloadBytes(DataOutputStream out) throws IOException {
+		value = new HashMap<>();
 		for(Entry<String, NBTTag> entry: value.entrySet()) {
-			out.add((byte) entry.getValue().getTagType().getId());
-			for(byte b: entry.getValue().getPayloadBytes()) {
-				out.add(b);
-			}
+			out.writeByte((byte) entry.getValue().getTagType().getId());
+			new NBTTagString(entry.getKey()).writePayloadBytes(out);
+			entry.getValue().writePayloadBytes(out);
 		}
-		out.add((byte) 0);
-		return out;
+		out.writeByte(0);
+	}
+	
+	@Override
+	public NBTTag readPayloadBytes(DataInputStream in) throws IOException {
+		byte type = 0;
+		do {
+			type = in.readByte();
+			value.put(new NBTTagString().readPayloadBytes(in).getAsTagString().getValue(), NBTTag.newTagByType(TagType.getTypeById(type), in));
+		} while(type != 0);
+		return this;
 	}
 
 	@Override

@@ -23,10 +23,13 @@ SOFTWARE.
 */
 package mryurihi.tbnbt.tag;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import mryurihi.tbnbt.parser.TagType;
+import mryurihi.tbnbt.TagType;
 
 public class NBTTagList extends NBTTag {
 	
@@ -36,7 +39,6 @@ public class NBTTagList extends NBTTag {
 	
 	public NBTTagList(List<NBTTag> value, TagType typeId) {
 		if(value != null) for(NBTTag tag: value) {
-			tag.setName(null);
 			this.value.add(tag);
 		}
 		this.typeId = typeId;
@@ -44,9 +46,11 @@ public class NBTTagList extends NBTTag {
 	
 	public NBTTagList(List<NBTTag> value) {
 		this.value = value;
-		this.typeId = TagType.END;
 		if(value != null && ! value.isEmpty()) this.typeId = value.get(0).getTagType();
+		else throw new IllegalArgumentException("Cannot get tag type of list");
 	}
+	
+	NBTTagList() {}
 	
 	public List<NBTTag> getValue() {
 		return value;
@@ -70,16 +74,12 @@ public class NBTTagList extends NBTTag {
 	}
 	
 	public NBTTagList add(NBTTag tag) {
-		tag.setName(null);
-		if(typeId.equals(TagType.END)) typeId = tag.getTagType();
 		if(tag.getTagType() == typeId) value.add(tag);
 		else throw new IllegalArgumentException(tag.getClass().getName() + " is not the type " + typeId);
 		return this;
 	}
 	
 	public NBTTagList add(int index, NBTTag tag) {
-		tag.setName(null);
-		if(typeId.equals(TagType.END)) typeId = tag.getTagType();
 		if(tag.getTagType() == typeId) value.add(index, tag);
 		else throw new IllegalArgumentException(tag.getClass().getName() + " is not the type " + typeId);
 		return this;
@@ -91,7 +91,6 @@ public class NBTTagList extends NBTTag {
 	}
 	
 	public NBTTagList set(int index, NBTTag tag) {
-		tag.setName(null);
 		if(typeId.equals(TagType.END)) typeId = tag.getTagType();
 		if(tag.getTagType() == typeId) value.set(index, tag);
 		else throw new IllegalArgumentException(tag.getClass().getName() + " is not the type " + typeId);
@@ -99,15 +98,20 @@ public class NBTTagList extends NBTTag {
 	}
 
 	@Override
-	public List<Byte> getPayloadBytes() {
-		if(typeId.equals(TagType.END) && ! value.isEmpty()) typeId = value.get(0).getTagType();
-		if(typeId.equals(TagType.END)) typeId = TagType.BYTE;
-		List<Byte> out = new ArrayList<>();
-		if(name != null) out.addAll(new NBTTagString(name).getPayloadBytes());
-		out.add((byte) typeId.getId());
-		out.addAll(new NBTTagInt(value.size()).getPayloadBytes());
-		for(NBTTag t: value) out.addAll(t.getPayloadBytes());
-		return out;
+	public void writePayloadBytes(DataOutputStream out) throws IOException {
+		out.writeByte(typeId.getId());
+		out.writeInt(value.size());
+		for(NBTTag t: value) t.writePayloadBytes(out);
+	}
+	
+	@Override
+	public NBTTag readPayloadBytes(DataInputStream in) throws IOException {
+		byte id = in.readByte();
+		int length = in.readInt();
+		typeId = TagType.getTypeById(id);
+		value = new ArrayList<>();
+		for(int i = 0; i < length; i++) value.add(NBTTag.newTagByType(typeId, in));
+		return this;
 	}
 
 	@Override

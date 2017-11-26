@@ -23,10 +23,11 @@ SOFTWARE.
 */
 package mryurihi.tbnbt.tag;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
-import mryurihi.tbnbt.parser.TagType;
+import mryurihi.tbnbt.TagType;
 
 public class NBTTagString extends NBTTag {
 	
@@ -36,6 +37,8 @@ public class NBTTagString extends NBTTag {
 		if(value.length() > Short.MAX_VALUE) throw new IllegalArgumentException("String to long");
 		this.value = value;
 	}
+	
+	NBTTagString() {}
 	
 	public String getValue() {
 		return value;
@@ -47,12 +50,18 @@ public class NBTTagString extends NBTTag {
 	}
 	
 	@Override
-	public List<Byte> getPayloadBytes() {
-		List<Byte> out = new ArrayList<>();
-		if(name != null) out.addAll(new NBTTagString(name).getPayloadBytes());
-		out.addAll(new NBTTagShort((short) value.length()).getPayloadBytes());
-		for(byte b: value.getBytes()) out.add(b);
-		return out;
+	public void writePayloadBytes(DataOutputStream out) throws IOException {
+		out.writeShort(value.length());
+		out.write(value.getBytes());
+	}
+	
+	@Override
+	public NBTTag readPayloadBytes(DataInputStream in) throws IOException {
+		int length = in.readShort();
+		byte[] bytes = new byte[length];
+		in.read(bytes);
+		value = new String(bytes);
+		return this;
 	}
 
 	@Override

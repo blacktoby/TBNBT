@@ -31,10 +31,9 @@ import java.util.zip.GZIPInputStream;
 
 import com.google.common.reflect.TypeToken;
 
+import mryurihi.tbnbt.TagType;
 import mryurihi.tbnbt.adapter.AdapterRegistry;
 import mryurihi.tbnbt.adapter.NBTParseException;
-import mryurihi.tbnbt.parser.TagNBTParser;
-import mryurihi.tbnbt.parser.TagType;
 import mryurihi.tbnbt.tag.NBTTag;
 
 /**
@@ -63,7 +62,7 @@ public class NBTInputStream implements Closeable {
 	 */
 	public NBTTag readTag() throws IOException {
 		byte type = dis.readByte();
-		return TagNBTParser.parseTagById(dis, type, true);
+		return NBTTag.newTagByType(TagType.getTypeById(type), dis);
 	}
 	
 	/**

@@ -23,42 +23,25 @@ SOFTWARE.
 */
 package mryurihi.tbnbt.tag;
 
-import java.util.List;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
-import mryurihi.tbnbt.parser.TagType;
+import mryurihi.tbnbt.TagType;
 
 public abstract class NBTTag {
-	protected String name = null;
 	
 	/**
-	 * Sets the name of the tag. Not recommended to use unless you know what you are doing
-	 * @param name the name to set the tag to
-	 * @return the Tag
+	 * writes the payload bytes for this object
+	 * @param out the stream to write to
 	 */
-	public NBTTag setName(String name) {
-		this.name = name;
-		return this;
-	}
-	
-	protected byte[] listToArray(List<Byte> list) {
-		byte[] out = new byte[list.size()];
-		for(int i = 0; i < list.size(); i++) out[i] = list.get(i);
-		return out;
-	}
+	abstract public void writePayloadBytes(DataOutputStream out) throws IOException;
 	
 	/**
-	 * Gets the name of the tag
-	 * @return the name
+	 * reads the payload bytes for this object
+	 * @param in the stream to read to
 	 */
-	public String getName() {
-		return name;
-	}
-	
-	/**
-	 * Gets the payload bytes for this object
-	 * @return the bytes that make up the payload for this object
-	 */
-	abstract public List<Byte> getPayloadBytes();
+	abstract public NBTTag readPayloadBytes(DataInputStream in) throws IOException;
 	
 	/**
 	 * Gets the type of the tag
@@ -152,5 +135,23 @@ public abstract class NBTTag {
 	 */
 	public NBTTagIntArray getAsTagIntArray() {
 		return NBTTagIntArray.class.cast(this);
+	}
+	
+	public static NBTTag newTagByType(TagType type, DataInputStream in) throws IOException {
+		switch(type) {
+		case BYTE: return new NBTTagByte().readPayloadBytes(in);
+		case SHORT: return new NBTTagShort().readPayloadBytes(in);
+		case INT: return new NBTTagInt().readPayloadBytes(in);
+		case LONG: return new NBTTagLong().readPayloadBytes(in);
+		case FLOAT: return new NBTTagFloat().readPayloadBytes(in);
+		case DOUBLE: return new NBTTagDouble().readPayloadBytes(in);
+		case BYTE_ARRAY: return new NBTTagByteArray().readPayloadBytes(in);
+		case STRING: return new NBTTagString().readPayloadBytes(in);
+		case LIST: return new NBTTagList().readPayloadBytes(in);
+		case COMPOUND: return new NBTTagCompound().readPayloadBytes(in);
+		case INT_ARRAY: return new NBTTagIntArray().readPayloadBytes(in);
+		case LONG_ARRAY: return new NBTTagLongArray().readPayloadBytes(in);
+		default: return null;
+		}
 	}
 }
