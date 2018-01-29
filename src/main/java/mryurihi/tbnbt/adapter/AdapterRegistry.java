@@ -56,7 +56,7 @@ import mryurihi.tbnbt.adapter.impl.primitive.ShortAdapter;
  * The registry that holds all of the {@link mryurihi.tbnbt.adapter.NBTAdapter}'s are held.
  * To register a custom adapter all you have do do is this <br><br>
  * <pre>
- * public class PointAdapter extends NBTAdapter&ltPoint&gt {
+ * public class PointAdapter extends NBTAdapter&lt;Point&gt; {
  * 	... 
  * }
  * 
