@@ -53,79 +53,57 @@ import mryurihi.tbnbt.adapter.impl.primitive.PrimitiveLongArrayAdapter;
 import mryurihi.tbnbt.adapter.impl.primitive.ShortAdapter;
 
 /**
- * The registry that holds all of the {@link mryurihi.tbnbt.adapter.NBTAdapter}'s are held.
- * To register a custom adapter all you have do do is this <br><br>
+ * The registry that holds all of the
+ * {@link mryurihi.tbnbt.adapter.NBTAdapter}'s are held. To register a custom
+ * adapter all you have do do is this <br>
+ * <br>
+ * 
  * <pre>
  * public class PointAdapter extends NBTAdapter&lt;Point&gt; {
  * 	... 
  * }
  * 
- * AdapterRegistry.registerAdapter(Point.class, PointAdapter.class);</pre>
- * This class also comes with many convenience classes to read and write data because it is not recommended to use any methods that don't get adapters because they could change
+ * AdapterRegistry.registerAdapter(Point.class, PointAdapter.class);
+ * </pre>
+ * 
+ * This class also comes with many convenience classes to read and write data
+ * because it is not recommended to use any methods that don't get adapters
+ * because they could change
+ * 
  * @author MrYurihi Redstone
  *
  */
 public class AdapterRegistry {
 	
 	/**
-	 * Constructor for AdapterRegistry. Creates the registry along with all of the default values.
+	 * Constructor for AdapterRegistry. Creates the registry along with all of the
+	 * default values.
 	 */
-	@SuppressWarnings("unchecked")
-	public AdapterRegistry() {
+	private AdapterRegistry() {
 		registry = new HashMap<>();
 		factory = new HashMap<>();
 		Class<?>[] rClass = new Class<?>[] {
-			Byte.class,
-			Short.class,
-			Integer.class,
-			Long.class,
-			Float.class,
-			Double.class,
-			Byte[].class,
-			byte[].class,
-			String.class,
-			Object.class,
-			Integer[].class,
-			int[].class,
-			Long[].class,
-			long[].class
+			Byte.class, Short.class, Integer.class, Long.class, Float.class, Double.class, Byte[].class, byte[].class, String.class,
+			Object.class, Integer[].class, int[].class, Long[].class, long[].class
 		};
-		Class<? extends NBTAdapter<?>>[] rAdapter = (Class<? extends NBTAdapter<?>>[]) new Class<?>[] {
-			ByteAdapter.class, 
-			ShortAdapter.class,
-			IntegerAdapter.class,
-			LongAdapter.class,
-			FloatAdapter.class,
-			DoubleAdapter.class,
-			ByteArrayAdapter.class,
-			PrimitiveByteArrayAdapter.class,
-			StringAdapter.class,
-			ObjectAdapter.class,
-			IntegerArrayAdapter.class,
-			PrimitiveIntArrayAdapter.class,
-			LongArrayAdapter.class,
-			PrimitiveLongArrayAdapter.class
+		NBTAdapter<?>[] rAdapter = new NBTAdapter<?>[] {
+			new ByteAdapter(), new ShortAdapter(), new IntegerAdapter(), new LongAdapter(), new FloatAdapter(), new DoubleAdapter(),
+			new ByteArrayAdapter(), new PrimitiveByteArrayAdapter(), new StringAdapter(), new ObjectAdapter(), new IntegerArrayAdapter(),
+			new PrimitiveIntArrayAdapter(), new LongArrayAdapter(), new PrimitiveLongArrayAdapter()
 		};
-		for(int i = 0; i < rClass.length; i++) registry.put(rClass[i], rAdapter[i]);
+		for (int i = 0; i < rClass.length; i++)
+			registry.put(rClass[i], rAdapter[i]);
 		factory.put(Collection.class, new CollectionAdapterFactory());
 		factory.put(Object[].class, new ArrayAdapterFactory());
 		factory.put(Map.class, new MapAdapterFactory());
 	}
 	
-	private Map<Class<?>, Class<? extends NBTAdapter<?>>> registry;
+	private Map<Class<?>, NBTAdapter<?>> registry;
 	private Map<Class<?>, NBTAdapterFactory> factory;
 	
 	/**
-	 * Registers an adapter for this registry.
-	 * @param type the class that will be written to and read from
-	 * @param adapter the adapter that will read and write data
-	 */
-	public void registerAdapter(Class<?> type, Class<? extends NBTAdapter<?>> adapter) {
-		registry.put(type, adapter);
-	}
-	
-	/**
 	 * Gets the adapter that reads and writes data for a specific type
+	 * 
 	 * @param objectTypeToken the type associated with the adapter
 	 * @return The adapter
 	 */
@@ -135,419 +113,359 @@ public class AdapterRegistry {
 	
 	private NBTAdapter<?> getAdapterForObject(TypeToken<?> objectTypeToken, TypeToken<?> topTypeToken) {
 		Class<?> objectType = objectTypeToken.getRawType();
-		if(objectType.isPrimitive()) {
-			if(objectType.equals(byte.class)) return new ByteAdapter();
-			if(objectType.equals(short.class)) return new ShortAdapter();
-			if(objectType.equals(int.class)) return new IntegerAdapter();
-			if(objectType.equals(long.class)) return new LongAdapter();
-			if(objectType.equals(float.class)) return new FloatAdapter();
-			if(objectType.equals(double.class)) return new DoubleAdapter();
-			if(objectType.equals(boolean.class)) return new BooleanAdapter();
+		if (objectType.isPrimitive()) {
+			if (objectType.equals(byte.class)) return new ByteAdapter();
+			if (objectType.equals(short.class)) return new ShortAdapter();
+			if (objectType.equals(int.class)) return new IntegerAdapter();
+			if (objectType.equals(long.class)) return new LongAdapter();
+			if (objectType.equals(float.class)) return new FloatAdapter();
+			if (objectType.equals(double.class)) return new DoubleAdapter();
+			if (objectType.equals(boolean.class)) return new BooleanAdapter();
 		}
-		if(registry.containsKey(objectType)) try {
-			return registry.get(objectType).newInstance();
-		} catch (InstantiationException | IllegalAccessException e) {
-			e.printStackTrace();
-		} else if(factory.containsKey(objectType)) return factory.get(objectType).create(this, topTypeToken);
-		else if(objectType.getInterfaces().length != 0) {
-			for(Type t: objectType.getGenericInterfaces()) {
+		if (registry.containsKey(objectType)) return registry.get(objectType);
+		else if (factory.containsKey(objectType)) return factory.get(objectType).create(this, topTypeToken);
+		else if (objectType.getInterfaces().length != 0) {
+			for (Type t : objectType.getGenericInterfaces()) {
 				NBTAdapter<?> adapter = getAdapterForObject(TypeToken.of(t), topTypeToken);
-				if(adapter != null) return adapter;
+				if (adapter != null) return adapter;
 			}
 		}
 		Class<?> superClass = objectType.getSuperclass();
-		if(superClass == null) return null;
+		if (superClass == null) return null;
 		NBTAdapter<?> out = getAdapterForObject(TypeToken.of(superClass), topTypeToken);
 		return out;
 	}
 	
 	/**
 	 * Gets the adapter for a byte
+	 * 
 	 * @return the byte adapter
 	 */
 	public NBTAdapter<?> getByteAdapter() {
-		try {
-			return registry.get(Byte.class).newInstance();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
+		return registry.get(Byte.class);
 	}
 	
 	/**
 	 * Convenience method. Writes data to a Byte object
+	 * 
 	 * @param payload the stream to read from
 	 * @return the Byte of data
+	 * @throws NBTParseException if there was a parse exception
 	 */
-	public Byte fromByte(DataInputStream payload) {
-		try {
-			return (Byte) registry.get(Byte.class).newInstance().fromNBT(TagType.BYTE, payload, new TypeToken<Byte>() {}, this);
-		} catch (Exception e) {
-			return null;
-		}
+	public Byte fromByte(DataInputStream payload) throws NBTParseException {
+		return (Byte) registry.get(Byte.class).fromNBT(TagType.BYTE, payload, new TypeToken<Byte>() {}, this);
 	}
 	
 	/**
 	 * Convenience method. Reads data from a byte
+	 * 
 	 * @param out the stream to write to
 	 * @param object the byte to read from
+	 * @throws NBTParseException if there was a parse exception
 	 */
-	public void writeByte(DataOutputStream out, byte object) {
-		try {
-			registry.get(Byte.class).newInstance().toNBT(out, object, new TypeToken<Byte>() {}, this);
-		} catch (Exception e) {
-			
-		}
+	public void writeByte(DataOutputStream out, byte object) throws NBTParseException {
+		registry.get(Byte.class).toNBT(out, object, new TypeToken<Byte>() {}, this);
 	}
 	
 	/**
 	 * Gets the adapter for a short
+	 * 
 	 * @return the short adapter
 	 */
 	public NBTAdapter<?> getShortAdapter() {
-		try {
-			return registry.get(Short.class).newInstance();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
+		return registry.get(Short.class);
 	}
 	
 	/**
 	 * Convenience method. Writes data to a Short object
+	 * 
 	 * @param payload the stream to read from
 	 * @return the Short of data
+	 * @throws NBTParseException if there was a parse exception
 	 */
-	public Short fromShort(DataInputStream payload) {
-		try {
-			return (Short) registry.get(Short.class).newInstance().fromNBT(TagType.SHORT, payload, new TypeToken<Short>() {}, this);
-		} catch (Exception e) {
-			return null;
-		}
+	public Short fromShort(DataInputStream payload) throws NBTParseException {
+		return (Short) registry.get(Short.class).fromNBT(TagType.SHORT, payload, new TypeToken<Short>() {}, this);
 	}
 	
 	/**
 	 * Convenience method. Reads data from a short
+	 * 
 	 * @param out the stream to write to
 	 * @param object the short to read from
+	 * @throws NBTParseException if there was a parse exception
 	 */
-	public void writeShort(DataOutputStream out, short object) {
-		try {
-			registry.get(Short.class).newInstance().toNBT(out, object, new TypeToken<Short>() {}, this);
-		} catch (Exception e) {
-			
-		}
+	public void writeShort(DataOutputStream out, short object) throws NBTParseException {
+		registry.get(Short.class).toNBT(out, object, new TypeToken<Short>() {}, this);
 	}
 	
 	/**
 	 * Gets the adapter for an integer
+	 * 
 	 * @return the integer adapter
 	 */
 	public NBTAdapter<?> getIntAdapter() {
-		try {
-			return registry.get(Integer.class).newInstance();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
+		return registry.get(Integer.class);
 	}
 	
 	/**
 	 * Convenience method. Writes data to an Integer object
+	 * 
 	 * @param payload the stream to read from
 	 * @return the Integer of data
+	 * @throws NBTParseException if there was a parse exception
 	 */
-	public Integer fromInt(DataInputStream payload) {
-		try {
-			return (Integer) registry.get(Integer.class).newInstance().fromNBT(TagType.INT, payload, new TypeToken<Integer>() {}, this);
-		} catch (Exception e) {
-			return null;
-		}
+	public Integer fromInt(DataInputStream payload) throws NBTParseException {
+		return (Integer) registry.get(Integer.class).fromNBT(TagType.INT, payload, new TypeToken<Integer>() {}, this);
 	}
 	
 	/**
 	 * Convenience method. Reads data from an int
+	 * 
 	 * @param out the stream to write to
 	 * @param object the int to read from
+	 * @throws NBTParseException if there was a parse exception
 	 */
-	public void writeInt(DataOutputStream out, int object) {
-		try {
-			registry.get(Integer.class).newInstance().toNBT(out, object, new TypeToken<Integer>() {}, this);
-		} catch (Exception e) {
-			
-		}
+	public void writeInt(DataOutputStream out, int object) throws NBTParseException {
+		registry.get(Integer.class).toNBT(out, object, new TypeToken<Integer>() {}, this);
 	}
 	
 	/**
 	 * Gets the adapter for a long
+	 * 
 	 * @return the long adapter
 	 */
 	public NBTAdapter<?> getLongAdapter() {
-		try {
-			return registry.get(Long.class).newInstance();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
+		return registry.get(Long.class);
 	}
 	
 	/**
 	 * Convenience method. Writes data to a Long object
+	 * 
 	 * @param payload the stream to read from
 	 * @return the Long of data
+	 * @throws NBTParseException if there was a parse exception
 	 */
-	public Long fromLong(DataInputStream payload) {
-		try {
-			return (Long) registry.get(Long.class).newInstance().fromNBT(TagType.LONG, payload, new TypeToken<Long>() {}, this);
-		} catch (Exception e) {
-			return null;
-		}
+	public Long fromLong(DataInputStream payload) throws NBTParseException {
+		return (Long) registry.get(Long.class).fromNBT(TagType.LONG, payload, new TypeToken<Long>() {}, this);
 	}
 	
 	/**
 	 * Convenience method. Reads data from a long
+	 * 
 	 * @param out the stream to write to
 	 * @param object the long to read from
+	 * @throws NBTParseException if there was a parse exception
 	 */
-	public void writeLong(DataOutputStream out, long object) {
-		try {
-			registry.get(Long.class).newInstance().toNBT(out, object, new TypeToken<Long>() {}, this);
-		} catch (Exception e) {
-			
-		}
+	public void writeLong(DataOutputStream out, long object) throws NBTParseException {
+		registry.get(Long.class).toNBT(out, object, new TypeToken<Long>() {}, this);
 	}
 	
 	/**
 	 * Gets the adapter for a float
+	 * 
 	 * @return the float adapter
 	 */
 	public NBTAdapter<?> getFloatAdapter() {
-		try {
-			return registry.get(Float.class).newInstance();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
+		return registry.get(Float.class);
 	}
 	
 	/**
 	 * Convenience method. Writes data to a Float object
+	 * 
 	 * @param payload the stream to read from
 	 * @return the Float of data
+	 * @throws NBTParseException if there was a parse exception
 	 */
-	public Float fromFloat(DataInputStream payload) {
-		try {
-			return (Float) registry.get(Float.class).newInstance().fromNBT(TagType.FLOAT, payload, new TypeToken<Float>() {}, this);
-		} catch (Exception e) {
-			return null;
-		}
+	public Float fromFloat(DataInputStream payload) throws NBTParseException {
+		return (Float) registry.get(Float.class).fromNBT(TagType.FLOAT, payload, new TypeToken<Float>() {}, this);
 	}
 	
 	/**
 	 * Convenience method. Reads data from a float
+	 * 
 	 * @param out the stream to write to
 	 * @param object the float to read from
+	 * @throws NBTParseException if there was a parse exception
 	 */
-	public void writeFloat(DataOutputStream out, float object) {
-		try {
-			registry.get(Float.class).newInstance().toNBT(out, object, new TypeToken<Float>() {}, this);
-		} catch (Exception e) {
-			
-		}
+	public void writeFloat(DataOutputStream out, float object) throws NBTParseException {
+		registry.get(Float.class).toNBT(out, object, new TypeToken<Float>() {}, this);
 	}
 	
 	/**
 	 * Gets the adapter for a double
+	 * 
 	 * @return the double adapter
 	 */
 	public NBTAdapter<?> getDoubleAdapter() {
-		try {
-			return registry.get(Double.class).newInstance();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
+		return registry.get(Double.class);
 	}
 	
 	/**
 	 * Convenience method. Writes data to a Double object
+	 * 
 	 * @param payload the stream to read from
 	 * @return the Double of data
+	 * @throws NBTParseException if there was a parse exception
 	 */
-	public Double fromDouble(DataInputStream payload) {
-		try {
-			return (Double) registry.get(Double.class).newInstance().fromNBT(TagType.DOUBLE, payload, new TypeToken<Double>() {}, this);
-		} catch (Exception e) {
-			return null;
-		}
+	public Double fromDouble(DataInputStream payload) throws NBTParseException {
+		return (Double) registry.get(Double.class).fromNBT(TagType.DOUBLE, payload, new TypeToken<Double>() {}, this);
 	}
 	
 	/**
 	 * Convenience method. Reads data from a double
+	 * 
 	 * @param out the stream to write to
 	 * @param object the double to read from
+	 * @throws NBTParseException if there was a parse exception
 	 */
-	public void writeDouble(DataOutputStream out, double object) {
-		try {
-			registry.get(Double.class).newInstance().toNBT(out, object, new TypeToken<Double>() {}, this);
-		} catch (Exception e) {
-			
-		}
+	public void writeDouble(DataOutputStream out, double object) throws NBTParseException {
+		registry.get(Double.class).toNBT(out, object, new TypeToken<Double>() {}, this);
 	}
 	
 	/**
 	 * Gets the adapter for a byte array
+	 * 
 	 * @return the byte array adapter
 	 */
 	public NBTAdapter<?> getByteArrayAdapter() {
-		try {
-			return registry.get(Byte[].class).newInstance();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
+		return registry.get(Byte[].class);
 	}
 	
 	/**
 	 * Convenience method. Writes data to a Byte[] object
+	 * 
 	 * @param payload the stream to read from
 	 * @return the Byte[] of data
+	 * @throws NBTParseException if there was a parse exception
 	 */
-	public Byte[] fromByteArray(DataInputStream payload) {
-		try {
-			return (Byte[]) registry.get(Byte[].class).newInstance().fromNBT(TagType.BYTE_ARRAY, payload, new TypeToken<Byte[]>() {}, this);
-		} catch (Exception e) {
-			return null;
-		}
+	public Byte[] fromByteArray(DataInputStream payload) throws NBTParseException {
+		return (Byte[]) registry.get(Byte[].class).fromNBT(TagType.BYTE_ARRAY, payload, new TypeToken<Byte[]>() {}, this);
 	}
 	
 	/**
 	 * Convenience method. Reads data from a Byte[]
+	 * 
 	 * @param out the stream to write to
 	 * @param object the Byte[] to read from
+	 * @throws NBTParseException if there was a parse exception
 	 */
-	public void writeByteArray(DataOutputStream out, Byte[] object) {
-		try {
-			registry.get(Byte[].class).newInstance().toNBT(out, object, new TypeToken<Byte[]>() {}, this);
-		} catch (Exception e) {
-			
-		}
+	public void writeByteArray(DataOutputStream out, Byte[] object) throws NBTParseException {
+		registry.get(Byte[].class).toNBT(out, object, new TypeToken<Byte[]>() {}, this);
 	}
 	
 	/**
 	 * Gets the adapter for a string
+	 * 
 	 * @return the string adapter
 	 */
 	public NBTAdapter<?> getStringAdapter() {
-		try {
-			return registry.get(String.class).newInstance();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
+		return registry.get(String.class);
 	}
 	
 	/**
 	 * Convenience method. Writes data to a String object
+	 * 
 	 * @param payload the stream to write to
 	 * @return the String of data
+	 * @throws NBTParseException if there was a parse exception
 	 */
-	public String fromString(DataInputStream payload) {
-		try {
-			return (String) registry.get(String.class).newInstance().fromNBT(TagType.STRING, payload, new TypeToken<String>() {}, this);
-		} catch (Exception e) {
-			return null;
-		}
+	public String fromString(DataInputStream payload) throws NBTParseException {
+		return (String) registry.get(String.class).fromNBT(TagType.STRING, payload, new TypeToken<String>() {}, this);
 	}
 	
 	/**
 	 * Convenience method. Reads data from a String
+	 * 
 	 * @param out the stream to write to
 	 * @param object the String to read from
+	 * @throws NBTParseException if there was a parse exception
 	 */
-	public void writeString(DataOutputStream out, String object) {
-		try {
-			registry.get(String.class).newInstance().toNBT(out, object, new TypeToken<String>() {}, this);
-		} catch (Exception e) {
-			
-		}
+	public void writeString(DataOutputStream out, String object) throws NBTParseException {
+		registry.get(String.class).toNBT(out, object, new TypeToken<String>() {}, this);
 	}
 	
 	/**
 	 * Gets the adapter for an integer array
+	 * 
 	 * @return the int array adapter
 	 */
 	public NBTAdapter<?> getIntArrayAdapter() {
-		try {
-			return registry.get(Long[].class).newInstance();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
+		return registry.get(Long[].class);
 	}
 	
 	/**
 	 * Convenience method. Writes data to an Integer[] object
+	 * 
 	 * @param payload the stream to write to
 	 * @return the Integer[] of data
+	 * @throws NBTParseException if there was a parse exception
 	 */
-	public Integer[] fromIntArray(DataInputStream payload) {
-		try {
-			return (Integer[]) registry.get(Integer[].class).newInstance().fromNBT(TagType.INT_ARRAY, payload, new TypeToken<Integer[]>() {}, this);
-		} catch (Exception e) {
-			return null;
-		}
+	public Integer[] fromIntArray(DataInputStream payload) throws NBTParseException {
+		return (Integer[]) registry.get(Integer[].class).fromNBT(TagType.INT_ARRAY, payload, new TypeToken<Integer[]>() {}, this);
 	}
 	
 	/**
 	 * Convenience method. Reads data from an Integer[]
+	 * 
 	 * @param out the stream to write to
 	 * @param object the Integer[] to read from
+	 * @throws NBTParseException if there was a parse exception
 	 */
-	public void writeIntArray(DataOutputStream out, Integer[] object) {
-		try {
-			registry.get(Integer[].class).newInstance().toNBT(out, object, new TypeToken<Integer[]>() {}, this);
-		} catch (Exception e) {
-			
-		}
+	public void writeIntArray(DataOutputStream out, Integer[] object) throws NBTParseException {
+		registry.get(Integer[].class).toNBT(out, object, new TypeToken<Integer[]>() {}, this);
 	}
 	
 	/**
 	 * Gets the adapter for an long array
+	 * 
 	 * @return the long array adapter
 	 */
 	public NBTAdapter<?> getLongArrayAdapter() {
-		try {
-			return registry.get(Long[].class).newInstance();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
+		return registry.get(Long[].class);
 	}
 	
 	/**
 	 * Convenience method. Writes data to an Long[] object
+	 * 
 	 * @param payload the stream to write to
 	 * @return the Long[] of data
+	 * @throws NBTParseException if there was a parse exception
 	 */
-	public Long[] fromLongArray(DataInputStream payload) {
-		try {
-			return (Long[]) registry.get(Long[].class).newInstance().fromNBT(TagType.LONG_ARRAY, payload, new TypeToken<Long[]>() {}, this);
-		} catch (Exception e) {
-			return null;
-		}
+	public Long[] fromLongArray(DataInputStream payload) throws NBTParseException {
+		return (Long[]) registry.get(Long[].class).fromNBT(TagType.LONG_ARRAY, payload, new TypeToken<Long[]>() {}, this);
 	}
 	
 	/**
 	 * Convenience method. Reads data from an Long[]
+	 * 
 	 * @param out the stream to write to
 	 * @param object the Long[] to read from
+	 * @throws NBTParseException if there was a parse exception
 	 */
-	public void writeLongArray(DataOutputStream out, Long[] object) {
-		try {
-			registry.get(Long[].class).newInstance().toNBT(out, object, new TypeToken<Long[]>() {}, this);
-		} catch (Exception e) {
-			
+	public void writeLongArray(DataOutputStream out, Long[] object) throws NBTParseException {
+		registry.get(Long[].class).toNBT(out, object, new TypeToken<Long[]>() {}, this);
+	}
+	
+	public static class Builder {
+		
+		AdapterRegistry reg;
+		
+		public Builder() {
+			reg = new AdapterRegistry();
+		}
+		
+		public <B> Builder addAdapter(Class<B> type, NBTAdapter<B> adapter) {
+			reg.registry.put(type, adapter);
+			return this;
+		}
+		
+		public Builder addFactory(Class<?> type, NBTAdapterFactory factory) {
+			reg.factory.put(type, factory);
+			return this;
+		}
+		
+		public AdapterRegistry create() {
+			return reg;
 		}
 	}
 }

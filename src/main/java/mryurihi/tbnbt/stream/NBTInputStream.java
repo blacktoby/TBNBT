@@ -99,7 +99,7 @@ public class NBTInputStream extends InputStream {
 	 * @throws NBTParseException If an exception occurs while parsing NBT
 	 */
 	public <T> T readToType(TypeToken<T> type) throws IOException, NBTParseException {
-		return readToType(type, new AdapterRegistry());
+		return readToType(type, new AdapterRegistry.Builder().create());
 	}
 
 	@Override

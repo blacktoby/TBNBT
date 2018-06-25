@@ -90,7 +90,7 @@ public class NBTOutputStream extends OutputStream {
 	 * @throws IOException if there are any I/O exceptions when writing
 	 */
 	public <T> void writeFromObject(TypeToken<T> type, Object obj) throws NBTParseException, IOException {
-		writeFromObject(type, obj, new AdapterRegistry());
+		writeFromObject(type, obj, new AdapterRegistry.Builder().create());
 	}
 	
 	@Override

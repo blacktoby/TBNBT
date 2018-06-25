@@ -25,6 +25,7 @@ package mryurihi.tbnbt.adapter.impl;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 
 import com.google.common.reflect.TypeToken;
@@ -42,13 +43,14 @@ public class ObjectAdapter extends NBTAdapter<Object> {
 		if(! id.equals(TagType.COMPOUND)) throw new NBTParseException(String.format("id %s does not match required id 10", id.getId()));
 		Object out;
 		try {
-			out = type.getRawType().newInstance();
+			Constructor<?> constr = type.getRawType().getDeclaredConstructor();
+			constr.setAccessible(true);
+			out = constr.newInstance();
 			byte nextTagType = payload.readByte();
-			fieldSearch: do {
+			fieldSearch: while(nextTagType != 0) {
 				String tagName = registry.fromString(payload);
 				Field objField = null;
 				try {
-					System.out.println(tagName);
 					objField = type.getRawType().getDeclaredField(tagName);
 				} catch(NoSuchFieldException e) {
 					for(Field f: type.getRawType().getDeclaredFields()) {
@@ -63,7 +65,7 @@ public class ObjectAdapter extends NBTAdapter<Object> {
 				NBTAdapter<?> adapter = registry.getAdapterForObject(TypeToken.of(objField.getGenericType()));
 				objField.set(out, adapter.fromNBT(TagType.getTypeById(nextTagType), payload, TypeToken.of(objField.getGenericType()), registry));
 				nextTagType = payload.readByte();
-			} while(nextTagType != 0);
+			};
 		} catch (Exception e) {
 			throw new NBTParseException(e);
 		}
