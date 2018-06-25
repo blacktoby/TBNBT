@@ -67,4 +67,9 @@ public class NBTTagFloat extends NBTTag {
 	public String toString() {
 		return String.valueOf(value) + "f";
 	}
+	
+	@Override
+	protected boolean equalsTag(NBTTag tag) {
+		return tag.getTagType().equals(TagType.FLOAT) && tag.getAsTagFloat().getValue() == value;
+	}
 }

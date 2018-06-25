@@ -111,4 +111,9 @@ public class NBTTagCompound extends NBTTag {
 	public String toString() {
 		return value.toString();
 	}
+	
+	@Override
+	protected boolean equalsTag(NBTTag tag) {
+		return tag.getTagType().equals(TagType.COMPOUND) && tag.getAsTagCompound().getValue().equals(value);
+	}
 }

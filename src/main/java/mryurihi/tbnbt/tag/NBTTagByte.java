@@ -67,4 +67,9 @@ public class NBTTagByte extends NBTTag {
 		this.value = in.readByte();
 		return this;
 	}
+	
+	@Override
+	protected boolean equalsTag(NBTTag tag) {
+		return tag.getTagType().equals(TagType.BYTE) && tag.getAsTagByte().getValue() == value;
+	}
 }

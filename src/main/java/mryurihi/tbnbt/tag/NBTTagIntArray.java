@@ -26,6 +26,7 @@ package mryurihi.tbnbt.tag;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 
 import mryurihi.tbnbt.TagType;
 
@@ -74,5 +75,10 @@ public class NBTTagIntArray extends NBTTag {
 		out = out.substring(0, out.length() - 2);
 		out += "]";
 		return out;
+	}
+	
+	@Override
+	protected boolean equalsTag(NBTTag tag) {
+		return tag.getTagType().equals(TagType.INT_ARRAY) && Arrays.equals(tag.getAsTagIntArray().getValue(), value);
 	}
 }

@@ -23,7 +23,6 @@ SOFTWARE.
 */
 package mryurihi.tbnbt.stream;
 
-import java.io.Closeable;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,7 +40,7 @@ import mryurihi.tbnbt.tag.NBTTagString;
  * An input stream that reads NBT data.
  * @author MrYurihi Redstone
  */
-public class NBTInputStream implements Closeable {
+public class NBTInputStream extends InputStream {
 	
 	private DataInputStream dis;
 	
@@ -106,6 +105,11 @@ public class NBTInputStream implements Closeable {
 	@Override
 	public void close() throws IOException {
 		dis.close();
+	}
+
+	@Override
+	public int read() throws IOException {
+		return dis.read();
 	}
 
 }

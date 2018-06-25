@@ -23,24 +23,47 @@ SOFTWARE.
 */
 package mryurihi.tbnbt;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 class TagTypeTest {
-
-	@Test
-	void testGetId() {
-		assertEquals(6, TagType.DOUBLE.getId());
-		assertEquals(10, TagType.COMPOUND.getId());
-		assertEquals(1, TagType.BYTE.getId());
+	
+	@Nested
+	class testGetId {
+		@Test
+		void doubleTag() {
+			assertEquals(6, TagType.DOUBLE.getId());
+		}
+		
+		@Test
+		void compoundTag() {
+			assertEquals(10, TagType.COMPOUND.getId());
+		}
+		
+		@Test
+		void byteTag() {
+			assertEquals(1, TagType.BYTE.getId());
+		}
 	}
-
-	@Test
-	void testGetTypeById() {
-		assertEquals(TagType.BYTE_ARRAY, TagType.getTypeById(7));
-		assertEquals(TagType.STRING, TagType.getTypeById(8));
-		assertEquals(TagType.LIST, TagType.getTypeById(9));
+	
+	@Nested
+	class testGetTypeById {
+		
+		@Test
+		void byteArrayTag() {
+			assertEquals(TagType.BYTE_ARRAY, TagType.getTypeById(7));
+		}
+		
+		@Test
+		void stringTag() {
+			assertEquals(TagType.STRING, TagType.getTypeById(8));
+		}
+		
+		@Test
+		void listTag() {
+			assertEquals(TagType.LIST, TagType.getTypeById(9));
+		}
 	}
-
 }

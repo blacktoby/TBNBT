@@ -67,4 +67,9 @@ public class NBTTagShort extends NBTTag {
 	public String toString() {
 		return String.valueOf(value) + "s";
 	}
+	
+	@Override
+	protected boolean equalsTag(NBTTag tag) {
+		return tag.getTagType().equals(TagType.SHORT) && tag.getAsTagShort().getValue() == value;
+	}
 }

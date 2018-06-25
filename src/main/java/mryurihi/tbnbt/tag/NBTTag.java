@@ -49,6 +49,17 @@ public abstract class NBTTag {
 	 */
 	abstract public TagType getTagType();
 	
+	@Override
+	public boolean equals(Object other) {
+		if (other instanceof NBTTag) {
+			NBTTag tag = (NBTTag) other;
+			return equalsTag(tag);
+		}
+		return false;
+	}
+	
+	abstract protected boolean equalsTag(NBTTag tag);
+	
 	/**
 	 * Gets the tag as an {@link mryurihi.tbnbt.tag.NBTTagByte}
 	 * @return the tag as {@link mryurihi.tbnbt.tag.NBTTagByte}
@@ -135,6 +146,14 @@ public abstract class NBTTag {
 	 */
 	public NBTTagIntArray getAsTagIntArray() {
 		return NBTTagIntArray.class.cast(this);
+	}
+	
+	/**
+	 * Gets the tag as an {@link mryurihi.tbnbt.tag.NBTTagLongArray}
+	 * @return the tag as {@link mryurihi.tbnbt.tag.NBTTagLongArray}
+	 */
+	public NBTTagLongArray getAsTagLongArray() {
+		return NBTTagLongArray.class.cast(this);
 	}
 	
 	public static NBTTag newTagByType(TagType type, DataInputStream in) throws IOException {

@@ -26,6 +26,7 @@ package mryurihi.tbnbt.tag;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 
 import mryurihi.tbnbt.TagType;
 
@@ -66,12 +67,17 @@ public class NBTTagByteArray extends NBTTag {
 	
 	@Override
 	public String toString() {
-		String out = "[";
+		String out = "[B;";
 		for(byte b: value) {
 			out += String.valueOf(b) + ", ";
 		}
 		out = out.substring(0, out.length() - 2);
 		out += "]";
 		return out;
+	}
+	
+	@Override
+	protected boolean equalsTag(NBTTag tag) {
+		return tag.getTagType().equals(TagType.BYTE_ARRAY) && Arrays.equals(tag.getAsTagByteArray().getValue(), value);
 	}
 }

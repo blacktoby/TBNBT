@@ -73,4 +73,9 @@ public class NBTTagString extends NBTTag {
 	public String toString() {
 		return value;
 	}
+	
+	@Override
+	protected boolean equalsTag(NBTTag tag) {
+		return tag.getTagType().equals(TagType.STRING) && tag.getAsTagString().getValue().equals(value);
+	}
 }

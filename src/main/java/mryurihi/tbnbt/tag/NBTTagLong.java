@@ -67,4 +67,9 @@ public class NBTTagLong extends NBTTag {
 	public String toString() {
 		return String.valueOf(value) + "l";
 	}
+	
+	@Override
+	protected boolean equalsTag(NBTTag tag) {
+		return tag.getTagType().equals(TagType.LONG) && tag.getAsTagLong().getValue() == value;
+	}
 }

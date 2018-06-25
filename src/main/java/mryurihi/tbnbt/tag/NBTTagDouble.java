@@ -67,4 +67,9 @@ public class NBTTagDouble extends NBTTag {
 	public String toString() {
 		return String.valueOf(value) + "d";
 	}
+	
+	@Override
+	protected boolean equalsTag(NBTTag tag) {
+		return tag.getTagType().equals(TagType.DOUBLE) && tag.getAsTagDouble().getValue() == value;
+	}
 }
