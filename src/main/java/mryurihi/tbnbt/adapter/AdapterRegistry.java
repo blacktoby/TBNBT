@@ -33,24 +33,8 @@ import java.util.Map;
 import com.google.common.reflect.TypeToken;
 
 import mryurihi.tbnbt.TagType;
-import mryurihi.tbnbt.adapter.impl.ArrayAdapterFactory;
-import mryurihi.tbnbt.adapter.impl.ByteArrayAdapter;
-import mryurihi.tbnbt.adapter.impl.CollectionAdapterFactory;
-import mryurihi.tbnbt.adapter.impl.IntegerArrayAdapter;
-import mryurihi.tbnbt.adapter.impl.LongArrayAdapter;
-import mryurihi.tbnbt.adapter.impl.MapAdapterFactory;
-import mryurihi.tbnbt.adapter.impl.ObjectAdapter;
-import mryurihi.tbnbt.adapter.impl.StringAdapter;
-import mryurihi.tbnbt.adapter.impl.primitive.BooleanAdapter;
-import mryurihi.tbnbt.adapter.impl.primitive.ByteAdapter;
-import mryurihi.tbnbt.adapter.impl.primitive.DoubleAdapter;
-import mryurihi.tbnbt.adapter.impl.primitive.FloatAdapter;
-import mryurihi.tbnbt.adapter.impl.primitive.IntegerAdapter;
-import mryurihi.tbnbt.adapter.impl.primitive.LongAdapter;
-import mryurihi.tbnbt.adapter.impl.primitive.PrimitiveByteArrayAdapter;
-import mryurihi.tbnbt.adapter.impl.primitive.PrimitiveIntArrayAdapter;
-import mryurihi.tbnbt.adapter.impl.primitive.PrimitiveLongArrayAdapter;
-import mryurihi.tbnbt.adapter.impl.primitive.ShortAdapter;
+import mryurihi.tbnbt.adapter.impl.*;
+import mryurihi.tbnbt.adapter.impl.primitive.*;
 
 /**
  * The registry that holds all of the
@@ -446,24 +430,49 @@ public class AdapterRegistry {
 		registry.get(Long[].class).toNBT(out, object, new TypeToken<Long[]>() {}, this);
 	}
 	
+	/**
+	 * A Builder for {@link AdapterRegistry}
+	 * @author MrYurihi Redstone
+	 *
+	 */
 	public static class Builder {
 		
 		AdapterRegistry reg;
 		
+		/**
+		 * Creates a new {@link AdapterRegistry} Builder with all of the default adapters
+		 */
 		public Builder() {
 			reg = new AdapterRegistry();
 		}
 		
+		/**
+		 * Add an {@link NBTAdapter} to the registry
+		 * @param type the type the adapter works on
+		 * @param adapter the adapter
+		 * @param <B> the type the adapter works on
+		 * @return this
+		 */
 		public <B> Builder addAdapter(Class<B> type, NBTAdapter<B> adapter) {
 			reg.registry.put(type, adapter);
 			return this;
 		}
 		
+		/**
+		 * Add an {@link NBTAdapterFactory} to the registry
+		 * @param type the type the adapter factory works on
+		 * @param factory the adapter factory
+		 * @return this
+		 */
 		public Builder addFactory(Class<?> type, NBTAdapterFactory factory) {
 			reg.factory.put(type, factory);
 			return this;
 		}
 		
+		/**
+		 * Creates an {@link AdapterRegistry} for use
+		 * @return the registry
+		 */
 		public AdapterRegistry create() {
 			return reg;
 		}

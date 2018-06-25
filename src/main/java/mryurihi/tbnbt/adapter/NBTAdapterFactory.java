@@ -35,6 +35,7 @@ public interface NBTAdapterFactory {
 	 * Creates the adapter associated with this factory
 	 * @param registry the registry associated with this factory
 	 * @param type the type of the object. Similar to {@link mryurihi.tbnbt.adapter.NBTAdapter} from and to NBT method's type parameter
+	 * @param <T> the type the adapter should work with
 	 * @return the NBTAdapter
 	 */
 	public <T> NBTAdapter<T> create(AdapterRegistry registry, TypeToken<T> type);

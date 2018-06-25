@@ -80,6 +80,7 @@ public class NBTInputStream extends InputStream {
 	 * Reads an NBT tag from this stream into an object
 	 * @param type the type of the object to read to
 	 * @param registry the registry to use
+	 * @param <T> the type to write into
 	 * @return the object that has been written to
 	 * @throws IOException if an I/O exception occurs while writing to the object
 	 * @throws NBTParseException If an exception occurs while parsing NBT
@@ -94,6 +95,7 @@ public class NBTInputStream extends InputStream {
 	/**
 	 * Reads an NBT tag from this stream into an object. Will create a new reigstry object
 	 * @param type the type of the object to read to
+	 * @param <T> the type to read from
 	 * @return the object that has been written to
 	 * @throws IOException if an I/O exception occurs while writing to the object
 	 * @throws NBTParseException If an exception occurs while parsing NBT

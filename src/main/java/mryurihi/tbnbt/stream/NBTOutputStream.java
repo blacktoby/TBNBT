@@ -58,11 +58,12 @@ public class NBTOutputStream extends OutputStream {
 	/**
 	 * Writes an NBTTag to the stream.
 	 * @param tag the tag to write
+	 * @param name the name of the tag
 	 * @throws IOException if there are any I/O exceptions while writing data
 	 */
 	public void writeTag(NBTTag tag, String name) throws IOException {
 		dos.writeByte(tag.getTagType().getId());
-		new NBTTagString(name).writePayloadBytes(dos);
+		new NBTTagString("").writePayloadBytes(dos);
 		tag.writePayloadBytes(dos);
 	}
 	
@@ -71,13 +72,15 @@ public class NBTOutputStream extends OutputStream {
 	 * @param type the type of the object
 	 * @param obj the object to be written
 	 * @param registry the registry to use
+	 * @param name the name of the tag to write
+	 * @param <T> the type to write from
 	 * @throws NBTParseException if there is an exception while parsing the data
 	 * @throws IOException if there are any I/O exceptions when writing
 	 */
-	public <T> void writeFromObject(TypeToken<T> type, Object obj, AdapterRegistry registry) throws NBTParseException, IOException {
+	public <T> void writeFromObject(TypeToken<T> type, Object obj, String name, AdapterRegistry registry) throws NBTParseException, IOException {
 		NBTAdapter<?> adapter = registry.getAdapterForObject(type);
 		dos.writeByte(adapter.getId().getId());
-		dos.writeShort(0);
+		registry.writeString(dos, name);
 		adapter.toNBT(dos, obj, type, registry);
 		dos.close();
 	}
@@ -86,11 +89,25 @@ public class NBTOutputStream extends OutputStream {
 	 * Writes an object to the stream. Will use a new registry
 	 * @param type the type of the object
 	 * @param obj the object to be written
+	 * @param name the name of the tag to write
+	 * @param <T> the type to write from
+	 * @throws NBTParseException if there is an exception while parsing the data
+	 * @throws IOException if there are any I/O exceptions when writing
+	 */
+	public <T> void writeFromObject(TypeToken<T> type, Object obj, String name) throws NBTParseException, IOException {
+		writeFromObject(type, obj, name, new AdapterRegistry.Builder().create());
+	}
+	
+	/**
+	 * Writes an object to the stream with a name of "". Will use a new registry
+	 * @param type the type of the object
+	 * @param obj the object to be written
+	 * @param <T> the type to write from
 	 * @throws NBTParseException if there is an exception while parsing the data
 	 * @throws IOException if there are any I/O exceptions when writing
 	 */
 	public <T> void writeFromObject(TypeToken<T> type, Object obj) throws NBTParseException, IOException {
-		writeFromObject(type, obj, new AdapterRegistry.Builder().create());
+		writeFromObject(type, obj, "");
 	}
 	
 	@Override

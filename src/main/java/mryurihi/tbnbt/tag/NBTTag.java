@@ -34,12 +34,15 @@ public abstract class NBTTag {
 	/**
 	 * writes the payload bytes for this object
 	 * @param out the stream to write to
+	 * @throws IOException if an I/O exception occurs
 	 */
 	abstract public void writePayloadBytes(DataOutputStream out) throws IOException;
 	
 	/**
 	 * reads the payload bytes for this object
 	 * @param in the stream to read to
+	 * @return this
+	 * @throws IOException if an I/O exception occurs
 	 */
 	abstract public NBTTag readPayloadBytes(DataInputStream in) throws IOException;
 	
@@ -58,6 +61,11 @@ public abstract class NBTTag {
 		return false;
 	}
 	
+	/**
+	 * If this tag is equal to another tag
+	 * @param tag the other tag to test against
+	 * @return true if the other tag is equal to this tag
+	 */
 	abstract protected boolean equalsTag(NBTTag tag);
 	
 	/**
@@ -156,6 +164,13 @@ public abstract class NBTTag {
 		return NBTTagLongArray.class.cast(this);
 	}
 	
+	/**
+	 * 
+	 * @param type the type of the new tag
+	 * @param in the input stream with the data for the new tag
+	 * @return the created tag
+	 * @throws IOException if an I/O exception occurs
+	 */
 	public static NBTTag newTagByType(TagType type, DataInputStream in) throws IOException {
 		switch(type) {
 		case BYTE: return new NBTTagByte().readPayloadBytes(in);
