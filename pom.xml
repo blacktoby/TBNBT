@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.mryurihi</groupId>
 	<artifactId>tbnbt</artifactId>
-	<version>0.1.1</version>
+	<version>0.1.2</version>
 	<name>TBNBT</name>
 	<description>The Better NBT Library</description>
 	<properties>
@@ -31,7 +31,7 @@
 				<version>1.6.7</version>
 				<extensions>true</extensions>
 				<configuration>
-					<serverId>oss.sonatype.org</serverId>
+					<serverId>ossrh</serverId>
 					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
 					<autoReleaseAfterClose>true</autoReleaseAfterClose>
 				</configuration>
@@ -168,7 +168,7 @@
 						<version>1.6.7</version>
 						<extensions>true</extensions>
 						<configuration>
-							<serverId>oss.sonatype.org</serverId>
+							<serverId>ossrh</serverId>
 							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
 							<autoReleaseAfterClose>true</autoReleaseAfterClose>
 						</configuration>
@@ -185,4 +185,5 @@
 			</build>
 		</profile>
 	</profiles>
+	<url>https://github.com/MrYurihi/TBNBT</url>
 </project>

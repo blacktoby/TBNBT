@@ -1,4 +1,5 @@
 # TBNBT: The Better NBT library for Java
+[![Build Status](https://travis-ci.org/MrYurihi/TBNBT.svg?branch=master)](https://travis-ci.org/MrYurihi/TBNBT)  
 TBNBT is an NBT library for Java that is very user friendly and quick to use.
 
 __Features__
