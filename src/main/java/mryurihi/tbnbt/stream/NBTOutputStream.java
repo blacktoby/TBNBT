@@ -28,11 +28,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.zip.GZIPOutputStream;
 
-import com.google.common.reflect.TypeToken;
-
 import mryurihi.tbnbt.adapter.AdapterRegistry;
 import mryurihi.tbnbt.adapter.NBTAdapter;
 import mryurihi.tbnbt.adapter.NBTParseException;
+import mryurihi.tbnbt.adapter.TypeWrapper;
 import mryurihi.tbnbt.tag.NBTTag;
 import mryurihi.tbnbt.tag.NBTTagString;
 
@@ -77,7 +76,7 @@ public class NBTOutputStream extends OutputStream {
 	 * @throws NBTParseException if there is an exception while parsing the data
 	 * @throws IOException if there are any I/O exceptions when writing
 	 */
-	public <T> void writeFromObject(TypeToken<T> type, Object obj, String name, AdapterRegistry registry) throws NBTParseException, IOException {
+	public <T> void writeFromObject(TypeWrapper<T> type, Object obj, String name, AdapterRegistry registry) throws NBTParseException, IOException {
 		NBTAdapter<?> adapter = registry.getAdapterForObject(type);
 		dos.writeByte(adapter.getId().getId());
 		registry.writeString(dos, name);
@@ -94,7 +93,7 @@ public class NBTOutputStream extends OutputStream {
 	 * @throws NBTParseException if there is an exception while parsing the data
 	 * @throws IOException if there are any I/O exceptions when writing
 	 */
-	public <T> void writeFromObject(TypeToken<T> type, Object obj, String name) throws NBTParseException, IOException {
+	public <T> void writeFromObject(TypeWrapper<T> type, Object obj, String name) throws NBTParseException, IOException {
 		writeFromObject(type, obj, name, new AdapterRegistry.Builder().create());
 	}
 	
@@ -106,7 +105,7 @@ public class NBTOutputStream extends OutputStream {
 	 * @throws NBTParseException if there is an exception while parsing the data
 	 * @throws IOException if there are any I/O exceptions when writing
 	 */
-	public <T> void writeFromObject(TypeToken<T> type, Object obj) throws NBTParseException, IOException {
+	public <T> void writeFromObject(TypeWrapper<T> type, Object obj) throws NBTParseException, IOException {
 		writeFromObject(type, obj, "");
 	}
 	

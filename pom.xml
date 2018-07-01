@@ -8,13 +8,19 @@
 	<name>TBNBT</name>
 	<description>The Better NBT Library</description>
 	<properties>
-		<java.version>1.8</java.version>
+		<java.version>9</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<junit.jupiter.version>5.2.0</junit.jupiter.version>
 		<junit.platform.version>1.2.0</junit.platform.version>
+		<java.module.name>mryurihi.tbnbt</java.module.name>
 	</properties>
 	<build>
 		<testSourceDirectory>src/test/java</testSourceDirectory>
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+			</testResource>
+		</testResources>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<plugins>
 			<plugin>
@@ -23,26 +29,10 @@
 				<configuration>
 					<source>${java.version}</source>
 					<target>${java.version}</target>
+					<excludes>
+						<exclude>**/module-info.java</exclude>
+					</excludes>
 				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.sonatype.plugins</groupId>
-				<artifactId>nexus-staging-maven-plugin</artifactId>
-				<version>1.6.7</version>
-				<extensions>true</extensions>
-				<configuration>
-					<serverId>ossrh</serverId>
-					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
-					<autoReleaseAfterClose>true</autoReleaseAfterClose>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>deploy</goal>
-						</goals>
-						<phase>deploy</phase>
-					</execution>
-				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -65,11 +55,6 @@
 		</developer>
 	</developers>
 	<dependencies>
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>23.3-jre</version>
-		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
@@ -114,7 +99,7 @@
 	</distributionManagement>
 	<profiles>
 		<profile>
-			<id>oss-release.termjte</id>
+			<id>oss-release.tbnbt</id>
 			<activation>
 				<property>
 					<name>profile.oss-release</name>
@@ -159,6 +144,25 @@
 								<goals>
 									<goal>sign</goal>
 								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.sonatype.plugins</groupId>
+						<artifactId>nexus-staging-maven-plugin</artifactId>
+						<version>1.6.7</version>
+						<extensions>true</extensions>
+						<configuration>
+							<serverId>ossrh</serverId>
+							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+							<autoReleaseAfterClose>true</autoReleaseAfterClose>
+						</configuration>
+						<executions>
+							<execution>
+								<goals>
+									<goal>deploy</goal>
+								</goals>
+								<phase>deploy</phase>
 							</execution>
 						</executions>
 					</plugin>

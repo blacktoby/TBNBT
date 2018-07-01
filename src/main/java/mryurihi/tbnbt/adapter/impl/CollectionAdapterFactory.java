@@ -25,24 +25,24 @@ package mryurihi.tbnbt.adapter.impl;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
-
-import com.google.common.reflect.TypeToken;
 
 import mryurihi.tbnbt.TagType;
 import mryurihi.tbnbt.adapter.AdapterRegistry;
 import mryurihi.tbnbt.adapter.NBTAdapter;
 import mryurihi.tbnbt.adapter.NBTAdapterFactory;
 import mryurihi.tbnbt.adapter.NBTParseException;
+import mryurihi.tbnbt.adapter.TypeWrapper;
 
 public class CollectionAdapterFactory implements NBTAdapterFactory {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public <T> NBTAdapter<T> create(AdapterRegistry registry, TypeToken<T> type) {
+	public <T> NBTAdapter<T> create(AdapterRegistry registry, TypeWrapper<T> type) {
 		Class<?> itemClass = (Class<?>) ((ParameterizedType) type.getType()).getActualTypeArguments()[0];
-		return (NBTAdapter<T>) new Adapter(registry.getAdapterForObject(TypeToken.of(itemClass)), itemClass);
+		return (NBTAdapter<T>) new Adapter(registry.getAdapterForObject(TypeWrapper.of(itemClass)), itemClass);
 	}
 	
 	private static class Adapter<E> extends NBTAdapter<Collection<E>> {
@@ -57,13 +57,15 @@ public class CollectionAdapterFactory implements NBTAdapterFactory {
 		
 		@SuppressWarnings("unchecked")
 		@Override
-		public Collection<E> fromNBT(TagType id, DataInputStream payload, TypeToken<?> type, AdapterRegistry registry) throws NBTParseException {
+		public Collection<E> fromNBT(TagType id, DataInputStream payload, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
 			try {
-				Collection<E> out = (Collection<E>) type.getRawType().newInstance();
+				Constructor<?> constr = type.getClassType().getDeclaredConstructor();
+				constr.setAccessible(true);
+				Collection<E> out = (Collection<E>) constr.newInstance();
 				TagType itemId = TagType.getTypeById(registry.fromByte(payload));
 				int length = payload.readInt();
 				for(int i = 0; i < length; i++) {
-					out.add((E) itemAdapter.fromNBT(itemId, payload, TypeToken.of(itemClass), registry));
+					out.add((E) itemAdapter.fromNBT(itemId, payload, TypeWrapper.of(itemClass), registry));
 				}
 				return out;
 			} catch (Exception e) {
@@ -73,13 +75,13 @@ public class CollectionAdapterFactory implements NBTAdapterFactory {
 
 		@SuppressWarnings("unchecked")
 		@Override
-		public void toNBT(DataOutputStream out, Object object, TypeToken<?> type, AdapterRegistry registry) throws NBTParseException {
+		public void toNBT(DataOutputStream out, Object object, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
 			try {
 				Collection<E> col = (Collection<E>) object;
 				registry.writeByte(out, (byte) itemAdapter.getId().getId());
 				registry.writeInt(out, col.size());
 				for(E e: col) {
-					itemAdapter.toNBT(out, e, TypeToken.of(e.getClass()), registry);
+					itemAdapter.toNBT(out, e, TypeWrapper.of(e.getClass()), registry);
 				}
 			} catch(Exception e) {
 				throw new NBTParseException(e);

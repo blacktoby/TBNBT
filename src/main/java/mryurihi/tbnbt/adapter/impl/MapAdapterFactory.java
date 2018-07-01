@@ -25,24 +25,24 @@ package mryurihi.tbnbt.adapter.impl;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.ParameterizedType;
 import java.util.Map;
-
-import com.google.common.reflect.TypeToken;
 
 import mryurihi.tbnbt.TagType;
 import mryurihi.tbnbt.adapter.AdapterRegistry;
 import mryurihi.tbnbt.adapter.NBTAdapter;
 import mryurihi.tbnbt.adapter.NBTAdapterFactory;
 import mryurihi.tbnbt.adapter.NBTParseException;
+import mryurihi.tbnbt.adapter.TypeWrapper;
 
 public class MapAdapterFactory implements NBTAdapterFactory {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public <T> NBTAdapter<T> create(AdapterRegistry registry, TypeToken<T> type) {
+	public <T> NBTAdapter<T> create(AdapterRegistry registry, TypeWrapper<T> type) {
 		Class<?> itemClass = (Class<?>) ((ParameterizedType) type.getType()).getActualTypeArguments()[1];
-		return (NBTAdapter<T>) new Adapter(registry.getAdapterForObject(TypeToken.of(itemClass)), itemClass);
+		return (NBTAdapter<T>) new Adapter(registry.getAdapterForObject(TypeWrapper.of(itemClass)), itemClass);
 	}
 	
 	private static class Adapter<E> extends NBTAdapter<Map<String, E>> {
@@ -57,13 +57,15 @@ public class MapAdapterFactory implements NBTAdapterFactory {
 
 		@SuppressWarnings("unchecked")
 		@Override
-		public Map<String, E> fromNBT(TagType id, DataInputStream payload, TypeToken<?> type, AdapterRegistry registry) throws NBTParseException {
+		public Map<String, E> fromNBT(TagType id, DataInputStream payload, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
 			try {
-				Map<String, E> out = (Map<String, E>) type.getRawType().newInstance();
+				Constructor<?> constr = type.getClassType().getDeclaredConstructor();
+				constr.setAccessible(true);
+				Map<String, E> out = (Map<String, E>) constr.newInstance();
 				byte nextTagType = payload.readByte();
 				do {
 					String tagName = registry.fromString(payload);
-					out.put(tagName, itemAdapter.fromNBT(TagType.getTypeById(nextTagType), payload, TypeToken.of(itemClass), registry));
+					out.put(tagName, itemAdapter.fromNBT(TagType.getTypeById(nextTagType), payload, TypeWrapper.of(itemClass), registry));
 					nextTagType = payload.readByte();
 				} while(nextTagType != 0);
 			} catch (Exception e) {
@@ -73,13 +75,13 @@ public class MapAdapterFactory implements NBTAdapterFactory {
 		}
 
 		@Override
-		public void toNBT(DataOutputStream out, Object object, TypeToken<?> type, AdapterRegistry registry) throws NBTParseException {
+		public void toNBT(DataOutputStream out, Object object, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
 			@SuppressWarnings("unchecked")
 			Map<String, E> mapObj = (Map<String, E>) object;
 			for(Map.Entry<String, E> entry: mapObj.entrySet()) {
 				registry.writeByte(out, (byte) itemAdapter.getId().getId());
 				registry.writeString(out, entry.getKey());
-				itemAdapter.toNBT(out, entry.getValue(), TypeToken.of(itemClass), registry);
+				itemAdapter.toNBT(out, entry.getValue(), TypeWrapper.of(itemClass), registry);
 			}
 			registry.writeByte(out, (byte) 0);
 		}

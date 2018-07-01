@@ -26,21 +26,20 @@ package mryurihi.tbnbt.adapter.impl;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
-import com.google.common.reflect.TypeToken;
-
 import mryurihi.tbnbt.TagType;
 import mryurihi.tbnbt.adapter.AdapterRegistry;
 import mryurihi.tbnbt.adapter.NBTAdapter;
 import mryurihi.tbnbt.adapter.NBTAdapterFactory;
 import mryurihi.tbnbt.adapter.NBTParseException;
+import mryurihi.tbnbt.adapter.TypeWrapper;
 
 public class ArrayAdapterFactory implements NBTAdapterFactory {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public <T> NBTAdapter<T> create(AdapterRegistry registry, TypeToken<T> type) {
-		Class<?> compType = (Class<?>) type.getRawType().getComponentType();
-		return (NBTAdapter<T>) new Adapter(registry.getAdapterForObject((TypeToken<?>) TypeToken.of(compType)), compType);
+	public <T> NBTAdapter<T> create(AdapterRegistry registry, TypeWrapper<T> type) {
+		Class<?> compType = (Class<?>) type.getClassType().getComponentType();
+		return (NBTAdapter<T>) new Adapter(registry.getAdapterForObject((TypeWrapper<?>) TypeWrapper.of(compType)), compType);
 	}
 	
 	private class Adapter<T> extends NBTAdapter<T[]> {
@@ -55,12 +54,12 @@ public class ArrayAdapterFactory implements NBTAdapterFactory {
 
 		@SuppressWarnings("unchecked")
 		@Override
-		public T[] fromNBT(TagType id, DataInputStream payload, TypeToken<?> type, AdapterRegistry registry) throws NBTParseException {
+		public T[] fromNBT(TagType id, DataInputStream payload, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
 			try {
 				TagType contentId = TagType.getTypeById(payload.readByte());
 				Object[] out = new Object[registry.fromInt(payload)];
 				for(int i = 0; i < out.length; i++) {
-					out[i] = contentAdapter.fromNBT(contentId, payload, TypeToken.of(contentClass), registry);
+					out[i] = contentAdapter.fromNBT(contentId, payload, TypeWrapper.of(contentClass), registry);
 				}
 				return (T[]) out;
 			} catch (Exception e) {
@@ -69,13 +68,13 @@ public class ArrayAdapterFactory implements NBTAdapterFactory {
 		}
 
 		@Override
-		public void toNBT(DataOutputStream out, Object object, TypeToken<?> type, AdapterRegistry registry) throws NBTParseException {
+		public void toNBT(DataOutputStream out, Object object, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
 			try {
 				Object[] output = (Object[]) object;
 				registry.writeByte(out, (byte) contentAdapter.getId().getId());
 				registry.writeInt(out, output.length);
 				for(Object o: output) {
-					contentAdapter.toNBT(out, o, TypeToken.of(contentClass), registry);
+					contentAdapter.toNBT(out, o, TypeWrapper.of(contentClass), registry);
 				}
 			} catch (Exception e) {
 				throw new NBTParseException(e);

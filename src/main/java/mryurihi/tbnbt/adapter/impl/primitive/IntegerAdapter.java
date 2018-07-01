@@ -26,27 +26,26 @@ package mryurihi.tbnbt.adapter.impl.primitive;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
-import com.google.common.reflect.TypeToken;
-
 import mryurihi.tbnbt.TagType;
 import mryurihi.tbnbt.adapter.AdapterRegistry;
 import mryurihi.tbnbt.adapter.NBTAdapter;
 import mryurihi.tbnbt.adapter.NBTParseException;
+import mryurihi.tbnbt.adapter.TypeWrapper;
 
 public class IntegerAdapter extends NBTAdapter<Integer> {
 
 	@Override
-	public Integer fromNBT(TagType id, DataInputStream payload, TypeToken<?> type, AdapterRegistry registry) throws NBTParseException {
+	public Integer fromNBT(TagType id, DataInputStream payload, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
 		if(! id.equals(TagType.INT)) throw new NBTParseException(String.format("id %s does not match required id 3", id.getId()));
 		try {
-			return new Integer(payload.readInt());
+			return payload.readInt();
 		} catch(Exception e) {
 			throw new NBTParseException(e);
 		}
 	}
 
 	@Override
-	public void toNBT(DataOutputStream out, Object object, TypeToken<?> type, AdapterRegistry registry) throws NBTParseException {
+	public void toNBT(DataOutputStream out, Object object, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
 		try {
 			out.writeInt(((Integer) object).intValue());
 		} catch (Exception e) {

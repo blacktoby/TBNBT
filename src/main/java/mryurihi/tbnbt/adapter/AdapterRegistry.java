@@ -30,11 +30,25 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.common.reflect.TypeToken;
-
 import mryurihi.tbnbt.TagType;
-import mryurihi.tbnbt.adapter.impl.*;
-import mryurihi.tbnbt.adapter.impl.primitive.*;
+import mryurihi.tbnbt.adapter.impl.ArrayAdapterFactory;
+import mryurihi.tbnbt.adapter.impl.ByteArrayAdapter;
+import mryurihi.tbnbt.adapter.impl.CollectionAdapterFactory;
+import mryurihi.tbnbt.adapter.impl.IntegerArrayAdapter;
+import mryurihi.tbnbt.adapter.impl.LongArrayAdapter;
+import mryurihi.tbnbt.adapter.impl.MapAdapterFactory;
+import mryurihi.tbnbt.adapter.impl.ObjectAdapter;
+import mryurihi.tbnbt.adapter.impl.StringAdapter;
+import mryurihi.tbnbt.adapter.impl.primitive.BooleanAdapter;
+import mryurihi.tbnbt.adapter.impl.primitive.ByteAdapter;
+import mryurihi.tbnbt.adapter.impl.primitive.DoubleAdapter;
+import mryurihi.tbnbt.adapter.impl.primitive.FloatAdapter;
+import mryurihi.tbnbt.adapter.impl.primitive.IntegerAdapter;
+import mryurihi.tbnbt.adapter.impl.primitive.LongAdapter;
+import mryurihi.tbnbt.adapter.impl.primitive.PrimitiveByteArrayAdapter;
+import mryurihi.tbnbt.adapter.impl.primitive.PrimitiveIntArrayAdapter;
+import mryurihi.tbnbt.adapter.impl.primitive.PrimitiveLongArrayAdapter;
+import mryurihi.tbnbt.adapter.impl.primitive.ShortAdapter;
 
 /**
  * The registry that holds all of the
@@ -88,15 +102,15 @@ public class AdapterRegistry {
 	/**
 	 * Gets the adapter that reads and writes data for a specific type
 	 * 
-	 * @param objectTypeToken the type associated with the adapter
+	 * @param objectTypeWrapper the type associated with the adapter
 	 * @return The adapter
 	 */
-	public NBTAdapter<?> getAdapterForObject(TypeToken<?> objectTypeToken) {
-		return getAdapterForObject(objectTypeToken, objectTypeToken);
+	public NBTAdapter<?> getAdapterForObject(TypeWrapper<?> objectTypeWrapper) {
+		return getAdapterForObject(objectTypeWrapper, objectTypeWrapper);
 	}
 	
-	private NBTAdapter<?> getAdapterForObject(TypeToken<?> objectTypeToken, TypeToken<?> topTypeToken) {
-		Class<?> objectType = objectTypeToken.getRawType();
+	private NBTAdapter<?> getAdapterForObject(TypeWrapper<?> objectTypeWrapper, TypeWrapper<?> topTypeWrapper) {
+		Class<?> objectType = objectTypeWrapper.getClassType();
 		if (objectType.isPrimitive()) {
 			if (objectType.equals(byte.class)) return new ByteAdapter();
 			if (objectType.equals(short.class)) return new ShortAdapter();
@@ -107,16 +121,16 @@ public class AdapterRegistry {
 			if (objectType.equals(boolean.class)) return new BooleanAdapter();
 		}
 		if (registry.containsKey(objectType)) return registry.get(objectType);
-		else if (factory.containsKey(objectType)) return factory.get(objectType).create(this, topTypeToken);
+		else if (factory.containsKey(objectType)) return factory.get(objectType).create(this, topTypeWrapper);
 		else if (objectType.getInterfaces().length != 0) {
 			for (Type t : objectType.getGenericInterfaces()) {
-				NBTAdapter<?> adapter = getAdapterForObject(TypeToken.of(t), topTypeToken);
+				NBTAdapter<?> adapter = getAdapterForObject(TypeWrapper.of(t), topTypeWrapper);
 				if (adapter != null) return adapter;
 			}
 		}
 		Class<?> superClass = objectType.getSuperclass();
 		if (superClass == null) return null;
-		NBTAdapter<?> out = getAdapterForObject(TypeToken.of(superClass), topTypeToken);
+		NBTAdapter<?> out = getAdapterForObject(TypeWrapper.of(superClass), topTypeWrapper);
 		return out;
 	}
 	
@@ -137,7 +151,7 @@ public class AdapterRegistry {
 	 * @throws NBTParseException if there was a parse exception
 	 */
 	public Byte fromByte(DataInputStream payload) throws NBTParseException {
-		return (Byte) registry.get(Byte.class).fromNBT(TagType.BYTE, payload, new TypeToken<Byte>() {}, this);
+		return (Byte) registry.get(Byte.class).fromNBT(TagType.BYTE, payload, new TypeWrapper<Byte>() {}, this);
 	}
 	
 	/**
@@ -148,7 +162,7 @@ public class AdapterRegistry {
 	 * @throws NBTParseException if there was a parse exception
 	 */
 	public void writeByte(DataOutputStream out, byte object) throws NBTParseException {
-		registry.get(Byte.class).toNBT(out, object, new TypeToken<Byte>() {}, this);
+		registry.get(Byte.class).toNBT(out, object, new TypeWrapper<Byte>() {}, this);
 	}
 	
 	/**
@@ -168,7 +182,7 @@ public class AdapterRegistry {
 	 * @throws NBTParseException if there was a parse exception
 	 */
 	public Short fromShort(DataInputStream payload) throws NBTParseException {
-		return (Short) registry.get(Short.class).fromNBT(TagType.SHORT, payload, new TypeToken<Short>() {}, this);
+		return (Short) registry.get(Short.class).fromNBT(TagType.SHORT, payload, new TypeWrapper<Short>() {}, this);
 	}
 	
 	/**
@@ -179,7 +193,7 @@ public class AdapterRegistry {
 	 * @throws NBTParseException if there was a parse exception
 	 */
 	public void writeShort(DataOutputStream out, short object) throws NBTParseException {
-		registry.get(Short.class).toNBT(out, object, new TypeToken<Short>() {}, this);
+		registry.get(Short.class).toNBT(out, object, new TypeWrapper<Short>() {}, this);
 	}
 	
 	/**
@@ -199,7 +213,7 @@ public class AdapterRegistry {
 	 * @throws NBTParseException if there was a parse exception
 	 */
 	public Integer fromInt(DataInputStream payload) throws NBTParseException {
-		return (Integer) registry.get(Integer.class).fromNBT(TagType.INT, payload, new TypeToken<Integer>() {}, this);
+		return (Integer) registry.get(Integer.class).fromNBT(TagType.INT, payload, new TypeWrapper<Integer>() {}, this);
 	}
 	
 	/**
@@ -210,7 +224,7 @@ public class AdapterRegistry {
 	 * @throws NBTParseException if there was a parse exception
 	 */
 	public void writeInt(DataOutputStream out, int object) throws NBTParseException {
-		registry.get(Integer.class).toNBT(out, object, new TypeToken<Integer>() {}, this);
+		registry.get(Integer.class).toNBT(out, object, new TypeWrapper<Integer>() {}, this);
 	}
 	
 	/**
@@ -230,7 +244,7 @@ public class AdapterRegistry {
 	 * @throws NBTParseException if there was a parse exception
 	 */
 	public Long fromLong(DataInputStream payload) throws NBTParseException {
-		return (Long) registry.get(Long.class).fromNBT(TagType.LONG, payload, new TypeToken<Long>() {}, this);
+		return (Long) registry.get(Long.class).fromNBT(TagType.LONG, payload, new TypeWrapper<Long>() {}, this);
 	}
 	
 	/**
@@ -241,7 +255,7 @@ public class AdapterRegistry {
 	 * @throws NBTParseException if there was a parse exception
 	 */
 	public void writeLong(DataOutputStream out, long object) throws NBTParseException {
-		registry.get(Long.class).toNBT(out, object, new TypeToken<Long>() {}, this);
+		registry.get(Long.class).toNBT(out, object, new TypeWrapper<Long>() {}, this);
 	}
 	
 	/**
@@ -261,7 +275,7 @@ public class AdapterRegistry {
 	 * @throws NBTParseException if there was a parse exception
 	 */
 	public Float fromFloat(DataInputStream payload) throws NBTParseException {
-		return (Float) registry.get(Float.class).fromNBT(TagType.FLOAT, payload, new TypeToken<Float>() {}, this);
+		return (Float) registry.get(Float.class).fromNBT(TagType.FLOAT, payload, new TypeWrapper<Float>() {}, this);
 	}
 	
 	/**
@@ -272,7 +286,7 @@ public class AdapterRegistry {
 	 * @throws NBTParseException if there was a parse exception
 	 */
 	public void writeFloat(DataOutputStream out, float object) throws NBTParseException {
-		registry.get(Float.class).toNBT(out, object, new TypeToken<Float>() {}, this);
+		registry.get(Float.class).toNBT(out, object, new TypeWrapper<Float>() {}, this);
 	}
 	
 	/**
@@ -292,7 +306,7 @@ public class AdapterRegistry {
 	 * @throws NBTParseException if there was a parse exception
 	 */
 	public Double fromDouble(DataInputStream payload) throws NBTParseException {
-		return (Double) registry.get(Double.class).fromNBT(TagType.DOUBLE, payload, new TypeToken<Double>() {}, this);
+		return (Double) registry.get(Double.class).fromNBT(TagType.DOUBLE, payload, new TypeWrapper<Double>() {}, this);
 	}
 	
 	/**
@@ -303,7 +317,7 @@ public class AdapterRegistry {
 	 * @throws NBTParseException if there was a parse exception
 	 */
 	public void writeDouble(DataOutputStream out, double object) throws NBTParseException {
-		registry.get(Double.class).toNBT(out, object, new TypeToken<Double>() {}, this);
+		registry.get(Double.class).toNBT(out, object, new TypeWrapper<Double>() {}, this);
 	}
 	
 	/**
@@ -323,7 +337,7 @@ public class AdapterRegistry {
 	 * @throws NBTParseException if there was a parse exception
 	 */
 	public Byte[] fromByteArray(DataInputStream payload) throws NBTParseException {
-		return (Byte[]) registry.get(Byte[].class).fromNBT(TagType.BYTE_ARRAY, payload, new TypeToken<Byte[]>() {}, this);
+		return (Byte[]) registry.get(Byte[].class).fromNBT(TagType.BYTE_ARRAY, payload, new TypeWrapper<Byte[]>() {}, this);
 	}
 	
 	/**
@@ -334,7 +348,7 @@ public class AdapterRegistry {
 	 * @throws NBTParseException if there was a parse exception
 	 */
 	public void writeByteArray(DataOutputStream out, Byte[] object) throws NBTParseException {
-		registry.get(Byte[].class).toNBT(out, object, new TypeToken<Byte[]>() {}, this);
+		registry.get(Byte[].class).toNBT(out, object, new TypeWrapper<Byte[]>() {}, this);
 	}
 	
 	/**
@@ -354,7 +368,7 @@ public class AdapterRegistry {
 	 * @throws NBTParseException if there was a parse exception
 	 */
 	public String fromString(DataInputStream payload) throws NBTParseException {
-		return (String) registry.get(String.class).fromNBT(TagType.STRING, payload, new TypeToken<String>() {}, this);
+		return (String) registry.get(String.class).fromNBT(TagType.STRING, payload, new TypeWrapper<String>() {}, this);
 	}
 	
 	/**
@@ -365,7 +379,7 @@ public class AdapterRegistry {
 	 * @throws NBTParseException if there was a parse exception
 	 */
 	public void writeString(DataOutputStream out, String object) throws NBTParseException {
-		registry.get(String.class).toNBT(out, object, new TypeToken<String>() {}, this);
+		registry.get(String.class).toNBT(out, object, new TypeWrapper<String>() {}, this);
 	}
 	
 	/**
@@ -385,7 +399,7 @@ public class AdapterRegistry {
 	 * @throws NBTParseException if there was a parse exception
 	 */
 	public Integer[] fromIntArray(DataInputStream payload) throws NBTParseException {
-		return (Integer[]) registry.get(Integer[].class).fromNBT(TagType.INT_ARRAY, payload, new TypeToken<Integer[]>() {}, this);
+		return (Integer[]) registry.get(Integer[].class).fromNBT(TagType.INT_ARRAY, payload, new TypeWrapper<Integer[]>() {}, this);
 	}
 	
 	/**
@@ -396,7 +410,7 @@ public class AdapterRegistry {
 	 * @throws NBTParseException if there was a parse exception
 	 */
 	public void writeIntArray(DataOutputStream out, Integer[] object) throws NBTParseException {
-		registry.get(Integer[].class).toNBT(out, object, new TypeToken<Integer[]>() {}, this);
+		registry.get(Integer[].class).toNBT(out, object, new TypeWrapper<Integer[]>() {}, this);
 	}
 	
 	/**
@@ -416,7 +430,7 @@ public class AdapterRegistry {
 	 * @throws NBTParseException if there was a parse exception
 	 */
 	public Long[] fromLongArray(DataInputStream payload) throws NBTParseException {
-		return (Long[]) registry.get(Long[].class).fromNBT(TagType.LONG_ARRAY, payload, new TypeToken<Long[]>() {}, this);
+		return (Long[]) registry.get(Long[].class).fromNBT(TagType.LONG_ARRAY, payload, new TypeWrapper<Long[]>() {}, this);
 	}
 	
 	/**
@@ -427,7 +441,7 @@ public class AdapterRegistry {
 	 * @throws NBTParseException if there was a parse exception
 	 */
 	public void writeLongArray(DataOutputStream out, Long[] object) throws NBTParseException {
-		registry.get(Long[].class).toNBT(out, object, new TypeToken<Long[]>() {}, this);
+		registry.get(Long[].class).toNBT(out, object, new TypeWrapper<Long[]>() {}, this);
 	}
 	
 	/**

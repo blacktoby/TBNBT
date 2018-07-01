@@ -26,17 +26,16 @@ package mryurihi.tbnbt.adapter.impl;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
-import com.google.common.reflect.TypeToken;
-
 import mryurihi.tbnbt.TagType;
 import mryurihi.tbnbt.adapter.AdapterRegistry;
 import mryurihi.tbnbt.adapter.NBTAdapter;
 import mryurihi.tbnbt.adapter.NBTParseException;
+import mryurihi.tbnbt.adapter.TypeWrapper;
 
 public class ByteArrayAdapter extends NBTAdapter<Byte[]> {
 
 	@Override
-	public Byte[] fromNBT(TagType id, DataInputStream payload, TypeToken<?> type, AdapterRegistry registry) throws NBTParseException {
+	public Byte[] fromNBT(TagType id, DataInputStream payload, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
 		if(! id.equals(TagType.BYTE_ARRAY)) throw new NBTParseException(String.format("id %s does not match required id 7", id.getId()));
 		Byte[] out = new Byte[(Integer) registry.getIntAdapter().fromNBT(TagType.INT, payload, null, registry)];
 		for(int i = 0; i < out.length; i++) {
@@ -46,7 +45,7 @@ public class ByteArrayAdapter extends NBTAdapter<Byte[]> {
 	}
 
 	@Override
-	public void toNBT(DataOutputStream out, Object object, TypeToken<?> type, AdapterRegistry registry) throws NBTParseException {
+	public void toNBT(DataOutputStream out, Object object, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
 		Byte[] byteArr;
 		if(object instanceof byte[]) {
 			byteArr = new Byte[((byte[]) object).length];

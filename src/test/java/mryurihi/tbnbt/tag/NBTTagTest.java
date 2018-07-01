@@ -41,7 +41,7 @@ class NBTTagTest {
 	class testNewTagByType {
 		
 		DataInputStream getData(String type) {
-			return new DataInputStream(getClass().getClassLoader().getResourceAsStream("data/nbt/" + type + "data.nbt"));
+			return new DataInputStream(ClassLoader.getSystemResourceAsStream("data/nbt/" + type + "data.nbt"));
 		}
 		
 		@Test

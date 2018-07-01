@@ -26,17 +26,16 @@ package mryurihi.tbnbt.adapter.impl.primitive;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
-import com.google.common.reflect.TypeToken;
-
 import mryurihi.tbnbt.TagType;
 import mryurihi.tbnbt.adapter.AdapterRegistry;
 import mryurihi.tbnbt.adapter.NBTAdapter;
 import mryurihi.tbnbt.adapter.NBTParseException;
+import mryurihi.tbnbt.adapter.TypeWrapper;
 
 public class BooleanAdapter extends NBTAdapter<Boolean> {
 
 	@Override
-	public Boolean fromNBT(TagType id, DataInputStream payload, TypeToken<?> type, AdapterRegistry registry) throws NBTParseException {
+	public Boolean fromNBT(TagType id, DataInputStream payload, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
 		if(! id.equals(TagType.BYTE)) throw new NBTParseException(String.format("id %s does not match required id 1", id.getId()));
 		try {
 			return payload.readByte() == 0? false: true;
@@ -46,7 +45,7 @@ public class BooleanAdapter extends NBTAdapter<Boolean> {
 	}
 
 	@Override
-	public void toNBT(DataOutputStream out, Object object, TypeToken<?> type, AdapterRegistry registry) throws NBTParseException {
+	public void toNBT(DataOutputStream out, Object object, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
 		try {
 			out.writeByte(((Boolean) object)? 1: 0);
 		} catch (Exception e) {

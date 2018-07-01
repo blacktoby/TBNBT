@@ -26,26 +26,25 @@ package mryurihi.tbnbt.adapter.impl.primitive;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
-import com.google.common.reflect.TypeToken;
-
 import mryurihi.tbnbt.TagType;
 import mryurihi.tbnbt.adapter.AdapterRegistry;
 import mryurihi.tbnbt.adapter.NBTAdapter;
 import mryurihi.tbnbt.adapter.NBTParseException;
+import mryurihi.tbnbt.adapter.TypeWrapper;
 
 public class DoubleAdapter extends NBTAdapter<Double> {
 	@Override
-	public Double fromNBT(TagType id, DataInputStream payload, TypeToken<?> type, AdapterRegistry registry) throws NBTParseException {
+	public Double fromNBT(TagType id, DataInputStream payload, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
 		if(! id.equals(TagType.DOUBLE)) throw new NBTParseException(String.format("id %s does not match required id 6", id.getId()));
 		try {
-			return new Double(payload.readDouble());
+			return payload.readDouble();
 		} catch(Exception e) {
 			throw new NBTParseException(e);
 		}
 	}
 
 	@Override
-	public void toNBT(DataOutputStream out, Object object, TypeToken<?> type, AdapterRegistry registry) throws NBTParseException {
+	public void toNBT(DataOutputStream out, Object object, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
 		try {
 			out.writeDouble(((Double) object).doubleValue());
 		} catch (Exception e) {

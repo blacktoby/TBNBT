@@ -33,13 +33,11 @@ import java.io.InputStream;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-import com.google.common.reflect.TypeToken;
-
 import mryurihi.tbnbt.TagType;
 import mryurihi.tbnbt.adapter.AdapterRegistry;
 import mryurihi.tbnbt.adapter.NBTAdapter;
 import mryurihi.tbnbt.adapter.NBTParseException;
-import mryurihi.tbnbt.stream.NBTInputStreamTest.TestDataHolder2.CustomData;
+import mryurihi.tbnbt.adapter.TypeWrapper;
 import mryurihi.tbnbt.tag.NBTTagString;
 
 class NBTInputStreamTest {
@@ -69,7 +67,7 @@ class NBTInputStreamTest {
 		TestDataHolder expt = new TestDataHolder();
 		expt.int1 = 0x00000F00;
 		expt.string1 = "yay";
-		assertEquals(expt, in.readToType(TypeToken.of(TestDataHolder.class)));
+		assertEquals(expt, in.readToType(TypeWrapper.of(TestDataHolder.class)));
 	}
 	
 	@Test
@@ -113,15 +111,15 @@ class NBTInputStreamTest {
 	@Test
 	void testReadToTypeWithAdapterRegistry() throws IOException, NBTParseException {
 		AdapterRegistry reg = new AdapterRegistry.Builder()
-			.addAdapter(CustomData.class, new TestDataHolder2.CustomDataAdapter())
+			.addAdapter(TestDataHolder2.CustomData.class, new TestDataHolder2.CustomDataAdapter())
 			.create();
 		
 		TestDataHolder2 data = new TestDataHolder2();
-		data.data1 = new CustomData(0x05, 0x21);
-		data.data2 = new CustomData(0x01, 0x20);
+		data.data1 = new TestDataHolder2.CustomData(0x05, 0x21);
+		data.data2 = new TestDataHolder2.CustomData(0x01, 0x20);
 		
 		in = new NBTInputStream(getClass().getClassLoader().getResourceAsStream("data/nbt/customdata.nbt"), false);
-		assertEquals(data, in.readToType(TypeToken.of(TestDataHolder2.class), reg));
+		assertEquals(data, in.readToType(TypeWrapper.of(TestDataHolder2.class), reg));
 	}
 	
 	static class TestDataHolder2 {
@@ -159,7 +157,7 @@ class NBTInputStreamTest {
 		static class CustomDataAdapter extends NBTAdapter<CustomData> {
 			
 			@Override
-			public CustomData fromNBT(TagType id, DataInputStream payload, TypeToken<?> type, AdapterRegistry registry)
+			public CustomData fromNBT(TagType id, DataInputStream payload, TypeWrapper<?> type, AdapterRegistry registry)
 					throws NBTParseException {
 				CustomData out = new CustomData(0, 0);
 				Byte[] data = registry.fromByteArray(payload);
@@ -169,7 +167,7 @@ class NBTInputStreamTest {
 			}
 			
 			@Override
-			public void toNBT(DataOutputStream out, Object object, TypeToken<?> type, AdapterRegistry registry)
+			public void toNBT(DataOutputStream out, Object object, TypeWrapper<?> type, AdapterRegistry registry)
 					throws NBTParseException {
 				CustomData data = (CustomData) object;
 				registry.writeByteArray(out, new Byte[] {

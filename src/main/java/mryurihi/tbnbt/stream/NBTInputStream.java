@@ -28,11 +28,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.GZIPInputStream;
 
-import com.google.common.reflect.TypeToken;
-
 import mryurihi.tbnbt.TagType;
 import mryurihi.tbnbt.adapter.AdapterRegistry;
 import mryurihi.tbnbt.adapter.NBTParseException;
+import mryurihi.tbnbt.adapter.TypeWrapper;
 import mryurihi.tbnbt.tag.NBTTag;
 import mryurihi.tbnbt.tag.NBTTagString;
 
@@ -86,7 +85,7 @@ public class NBTInputStream extends InputStream {
 	 * @throws NBTParseException If an exception occurs while parsing NBT
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> T readToType(TypeToken<T> type, AdapterRegistry registry) throws IOException, NBTParseException {
+	public <T> T readToType(TypeWrapper<T> type, AdapterRegistry registry) throws IOException, NBTParseException {
 		TagType id = TagType.getTypeById(dis.readByte());
 		registry.fromString(dis);
 		return (T) registry.getAdapterForObject(type).fromNBT(id, dis, type, registry);
@@ -100,7 +99,7 @@ public class NBTInputStream extends InputStream {
 	 * @throws IOException if an I/O exception occurs while writing to the object
 	 * @throws NBTParseException If an exception occurs while parsing NBT
 	 */
-	public <T> T readToType(TypeToken<T> type) throws IOException, NBTParseException {
+	public <T> T readToType(TypeWrapper<T> type) throws IOException, NBTParseException {
 		return readToType(type, new AdapterRegistry.Builder().create());
 	}
 

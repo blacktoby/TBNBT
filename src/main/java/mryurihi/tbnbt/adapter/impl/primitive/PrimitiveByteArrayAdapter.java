@@ -26,18 +26,17 @@ package mryurihi.tbnbt.adapter.impl.primitive;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
-import com.google.common.reflect.TypeToken;
-
 import mryurihi.tbnbt.TagType;
 import mryurihi.tbnbt.adapter.AdapterRegistry;
 import mryurihi.tbnbt.adapter.NBTAdapter;
 import mryurihi.tbnbt.adapter.NBTParseException;
+import mryurihi.tbnbt.adapter.TypeWrapper;
 import mryurihi.tbnbt.adapter.impl.ByteArrayAdapter;
 
 public class PrimitiveByteArrayAdapter extends NBTAdapter<byte[]> {
 
 	@Override
-	public byte[] fromNBT(TagType id, DataInputStream payload, TypeToken<?> type, AdapterRegistry registry) throws NBTParseException {
+	public byte[] fromNBT(TagType id, DataInputStream payload, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
 		Byte[] intArr = new ByteArrayAdapter().fromNBT(id, payload, type, registry);
 		byte[] out = new byte[intArr.length];
 		for(int i = 0; i < intArr.length; i++) out[i] = (byte) intArr[i];
@@ -45,8 +44,8 @@ public class PrimitiveByteArrayAdapter extends NBTAdapter<byte[]> {
 	}
 
 	@Override
-	public void toNBT(DataOutputStream out, Object object, TypeToken<?> type, AdapterRegistry registry) throws NBTParseException {
-		new ByteArrayAdapter().toNBT(out, object, new TypeToken<byte[]>() {}, registry);
+	public void toNBT(DataOutputStream out, Object object, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
+		new ByteArrayAdapter().toNBT(out, object, new TypeWrapper<byte[]>() {}, registry);
 	}
 
 	@Override

@@ -26,8 +26,6 @@ package mryurihi.tbnbt.adapter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
-import com.google.common.reflect.TypeToken;
-
 import mryurihi.tbnbt.TagType;
 
 public abstract class NBTAdapter<T> {
@@ -41,7 +39,7 @@ public abstract class NBTAdapter<T> {
 	 * @return an object with the type of the parameter {@code type}
 	 * @throws NBTParseException there is an exception parsing
 	 */
-	public abstract T fromNBT(TagType id, DataInputStream payload, TypeToken<?> type, AdapterRegistry registry) throws NBTParseException;
+	public abstract T fromNBT(TagType id, DataInputStream payload, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException;
 	
 	/**
 	 * Write NBT data from an object
@@ -51,7 +49,7 @@ public abstract class NBTAdapter<T> {
 	 * @param registry the adapter registry that contains the adapters and factories available
 	 * @throws NBTParseException of there is an exception parsing
 	 */
-	public abstract void toNBT(DataOutputStream out, Object object, TypeToken<?> type, AdapterRegistry registry) throws NBTParseException;
+	public abstract void toNBT(DataOutputStream out, Object object, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException;
 	
 	/**
 	 * Gets the type of tag this adapter writes.

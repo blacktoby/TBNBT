@@ -26,27 +26,26 @@ package mryurihi.tbnbt.adapter.impl.primitive;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
-import com.google.common.reflect.TypeToken;
-
 import mryurihi.tbnbt.TagType;
 import mryurihi.tbnbt.adapter.AdapterRegistry;
 import mryurihi.tbnbt.adapter.NBTAdapter;
 import mryurihi.tbnbt.adapter.NBTParseException;
+import mryurihi.tbnbt.adapter.TypeWrapper;
 
 public class ByteAdapter extends NBTAdapter<Byte> {
 
 	@Override
-	public Byte fromNBT(TagType id, DataInputStream payload, TypeToken<?> type, AdapterRegistry registry) throws NBTParseException {
+	public Byte fromNBT(TagType id, DataInputStream payload, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
 		if(! id.equals(TagType.BYTE)) throw new NBTParseException(String.format("id %s does not match required id 1", id.getId()));
 		try {
-			return new Byte(payload.readByte());
+			return payload.readByte();
 		} catch(Exception e) {
 			throw new NBTParseException(e);
 		}
 	}
 
 	@Override
-	public void toNBT(DataOutputStream out, Object object, TypeToken<?> type, AdapterRegistry registry) throws NBTParseException {
+	public void toNBT(DataOutputStream out, Object object, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
 		try {
 			out.writeByte(((Byte)object).byteValue());
 		} catch (Exception e) {
