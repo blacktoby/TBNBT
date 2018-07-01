@@ -8,7 +8,7 @@
 	<name>TBNBT</name>
 	<description>The Better NBT Library</description>
 	<properties>
-		<java.version>9</java.version>
+		<java.version>10</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<junit.jupiter.version>5.2.0</junit.jupiter.version>
 		<junit.platform.version>1.2.0</junit.platform.version>
