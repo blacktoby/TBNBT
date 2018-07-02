@@ -34,6 +34,17 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import mryurihi.tbnbt.TagType;
+import mryurihi.tbnbt.tag.NBTTag;
+import mryurihi.tbnbt.tag.NBTTagByte;
+import mryurihi.tbnbt.tag.NBTTagByteArray;
+import mryurihi.tbnbt.tag.NBTTagCompound;
+import mryurihi.tbnbt.tag.NBTTagDouble;
+import mryurihi.tbnbt.tag.NBTTagFloat;
+import mryurihi.tbnbt.tag.NBTTagInt;
+import mryurihi.tbnbt.tag.NBTTagList;
+import mryurihi.tbnbt.tag.NBTTagLong;
+import mryurihi.tbnbt.tag.NBTTagShort;
+import mryurihi.tbnbt.tag.NBTTagString;
 
 class NBTTagTest {
 

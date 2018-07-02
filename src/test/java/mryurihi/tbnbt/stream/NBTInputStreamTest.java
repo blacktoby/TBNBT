@@ -38,6 +38,7 @@ import mryurihi.tbnbt.adapter.AdapterRegistry;
 import mryurihi.tbnbt.adapter.NBTAdapter;
 import mryurihi.tbnbt.adapter.NBTParseException;
 import mryurihi.tbnbt.adapter.TypeWrapper;
+import mryurihi.tbnbt.stream.NBTInputStream;
 import mryurihi.tbnbt.tag.NBTTagString;
 
 class NBTInputStreamTest {

@@ -8,7 +8,8 @@
 	<name>TBNBT</name>
 	<description>The Better NBT Library</description>
 	<properties>
-		<java.version>10</java.version>
+		<java.source.version>10</java.source.version>
+		<java.target.version>10</java.target.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<junit.jupiter.version>5.2.0</junit.jupiter.version>
 		<junit.platform.version>1.2.0</junit.platform.version>
@@ -27,11 +28,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.7.0</version>
 				<configuration>
-					<source>${java.version}</source>
-					<target>${java.version}</target>
-					<excludes>
-						<exclude>**/module-info.java</exclude>
-					</excludes>
+					<source>${java.source.version}</source>
+					<target>${java.target.version}</target>
 				</configuration>
 			</plugin>
 			<plugin>
