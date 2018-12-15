@@ -13,7 +13,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<junit.jupiter.version>5.2.0</junit.jupiter.version>
 		<junit.platform.version>1.2.0</junit.platform.version>
-		<java.module.name>mryurihi.tbnbt</java.module.name>
+		<java.module.name>com.github.mryurihi.tbnbt</java.module.name>
 	</properties>
 	<build>
 		<testSourceDirectory>src/test/java</testSourceDirectory>
