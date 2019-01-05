@@ -36,10 +36,10 @@ public class LongArrayAdapter extends NBTAdapter<Long[]> {
 
 	@Override
 	public Long[] fromNBT(TagType id, DataInputStream payload, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
-		if(! id.equals(TagType.INT_ARRAY)) throw new NBTParseException(String.format("id %s does not match required id 11", id.getId()));
-		Long[] out = new Long[(Integer) registry.getIntAdapter().fromNBT(TagType.INT, payload, null, registry)];
+		if(! id.equals(TagType.LONG_ARRAY)) throw new NBTParseException(String.format("id %s does not match required id 12", id.getId()));
+		Long[] out = new Long[(Integer) registry.getIntAdapter().fromNBT(TagType.LONG, payload, null, registry)];
 		for(int i = 0; i < out.length; i++) {
-			out[i] = (Long) registry.getIntAdapter().fromNBT(TagType.INT, payload, null, registry);
+			out[i] = (Long) registry.getIntAdapter().fromNBT(TagType.LONG, payload, null, registry);
 		}
 		return out;
 	}
@@ -59,7 +59,7 @@ public class LongArrayAdapter extends NBTAdapter<Long[]> {
 
 	@Override
 	public TagType getId() {
-		return TagType.INT_ARRAY;
+		return TagType.LONG_ARRAY;
 	}
 
 }

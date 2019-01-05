@@ -37,9 +37,9 @@ public class PrimitiveLongArrayAdapter extends NBTAdapter<long[]> {
 
 	@Override
 	public long[] fromNBT(TagType id, DataInputStream payload, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
-		Long[] intArr = new LongArrayAdapter().fromNBT(id, payload, type, registry);
-		long[] out = new long[intArr.length];
-		for(int i = 0; i < intArr.length; i++) out[i] = (long) intArr[i];
+		Long[] longArr = new LongArrayAdapter().fromNBT(id, payload, type, registry);
+		long[] out = new long[longArr.length];
+		for(int i = 0; i < longArr.length; i++) out[i] = (long) longArr[i];
 		return out;
 	}
 
