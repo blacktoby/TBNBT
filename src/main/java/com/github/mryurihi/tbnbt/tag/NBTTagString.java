@@ -51,16 +51,12 @@ public class NBTTagString extends NBTTag {
 	
 	@Override
 	public void writePayloadBytes(DataOutputStream out) throws IOException {
-		out.writeShort(value.length());
-		out.write(value.getBytes());
+		out.writeUTF(value);
 	}
 	
 	@Override
 	public NBTTag readPayloadBytes(DataInputStream in) throws IOException {
-		int length = in.readShort();
-		byte[] bytes = new byte[length];
-		in.read(bytes);
-		value = new String(bytes);
+		value = in.readUTF();
 		return this;
 	}
 
