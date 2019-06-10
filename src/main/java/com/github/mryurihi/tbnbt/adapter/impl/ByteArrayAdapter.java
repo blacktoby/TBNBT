@@ -33,19 +33,31 @@ import com.github.mryurihi.tbnbt.adapter.NBTParseException;
 import com.github.mryurihi.tbnbt.adapter.TypeWrapper;
 
 public class ByteArrayAdapter extends NBTAdapter<Byte[]> {
-
+	
 	@Override
-	public Byte[] fromNBT(TagType id, DataInputStream payload, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
-		if(! id.equals(TagType.BYTE_ARRAY)) throw new NBTParseException(String.format("id %s does not match required id 7", id.getId()));
+	public Byte[] fromNBT(
+		TagType id,
+		DataInputStream payload,
+		TypeWrapper<?> type,
+		AdapterRegistry registry
+	) throws NBTParseException {
+		if(
+			!id.equals(TagType.BYTE_ARRAY)
+		) throw new NBTParseException(String.format("id %s does not match required id 7", id.getId()));
 		Byte[] out = new Byte[(Integer) registry.getIntAdapter().fromNBT(TagType.INT, payload, null, registry)];
 		for(int i = 0; i < out.length; i++) {
 			out[i] = (Byte) registry.fromByte(payload);
 		}
 		return out;
 	}
-
+	
 	@Override
-	public void toNBT(DataOutputStream out, Object object, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
+	public void toNBT(
+		DataOutputStream out,
+		Object object,
+		TypeWrapper<?> type,
+		AdapterRegistry registry
+	) throws NBTParseException {
 		Byte[] byteArr;
 		if(object instanceof byte[]) {
 			byteArr = new Byte[((byte[]) object).length];
@@ -54,12 +66,13 @@ public class ByteArrayAdapter extends NBTAdapter<Byte[]> {
 			}
 		} else byteArr = (Byte[]) object;
 		registry.writeInt(out, byteArr.length);
-		for(Byte b: byteArr) registry.writeByte(out, b);
+		for(Byte b: byteArr)
+			registry.writeByte(out, b);
 	}
-
+	
 	@Override
 	public TagType getId() {
 		return TagType.BYTE_ARRAY;
 	}
-
+	
 }

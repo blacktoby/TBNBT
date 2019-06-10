@@ -34,24 +34,36 @@ import com.github.mryurihi.tbnbt.adapter.TypeWrapper;
 
 public class DoubleAdapter extends NBTAdapter<Double> {
 	@Override
-	public Double fromNBT(TagType id, DataInputStream payload, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
-		if(! id.equals(TagType.DOUBLE)) throw new NBTParseException(String.format("id %s does not match required id 6", id.getId()));
+	public Double fromNBT(
+		TagType id,
+		DataInputStream payload,
+		TypeWrapper<?> type,
+		AdapterRegistry registry
+	) throws NBTParseException {
+		if(
+			!id.equals(TagType.DOUBLE)
+		) throw new NBTParseException(String.format("id %s does not match required id 6", id.getId()));
 		try {
 			return payload.readDouble();
 		} catch(Exception e) {
 			throw new NBTParseException(e);
 		}
 	}
-
+	
 	@Override
-	public void toNBT(DataOutputStream out, Object object, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
+	public void toNBT(
+		DataOutputStream out,
+		Object object,
+		TypeWrapper<?> type,
+		AdapterRegistry registry
+	) throws NBTParseException {
 		try {
 			out.writeDouble(((Double) object).doubleValue());
-		} catch (Exception e) {
+		} catch(Exception e) {
 			throw new NBTParseException(e);
 		}
 	}
-
+	
 	@Override
 	public TagType getId() {
 		return TagType.DOUBLE;

@@ -33,22 +33,34 @@ import com.github.mryurihi.tbnbt.adapter.NBTParseException;
 import com.github.mryurihi.tbnbt.adapter.TypeWrapper;
 
 public class ByteAdapter extends NBTAdapter<Byte> {
-
+	
 	@Override
-	public Byte fromNBT(TagType id, DataInputStream payload, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
-		if(! id.equals(TagType.BYTE)) throw new NBTParseException(String.format("id %s does not match required id 1", id.getId()));
+	public Byte fromNBT(
+		TagType id,
+		DataInputStream payload,
+		TypeWrapper<?> type,
+		AdapterRegistry registry
+	) throws NBTParseException {
+		if(
+			!id.equals(TagType.BYTE)
+		) throw new NBTParseException(String.format("id %s does not match required id 1", id.getId()));
 		try {
 			return payload.readByte();
 		} catch(Exception e) {
 			throw new NBTParseException(e);
 		}
 	}
-
+	
 	@Override
-	public void toNBT(DataOutputStream out, Object object, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
+	public void toNBT(
+		DataOutputStream out,
+		Object object,
+		TypeWrapper<?> type,
+		AdapterRegistry registry
+	) throws NBTParseException {
 		try {
-			out.writeByte(((Byte)object).byteValue());
-		} catch (Exception e) {
+			out.writeByte(((Byte) object).byteValue());
+		} catch(Exception e) {
 			throw new NBTParseException(e);
 		}
 	}

@@ -30,14 +30,15 @@ import java.io.IOException;
 import com.github.mryurihi.tbnbt.TagType;
 
 public class NBTTagInt extends NBTTag {
-
+	
 	private int value;
 	
 	public NBTTagInt(int value) {
 		this.value = value;
 	}
 	
-	NBTTagInt() {}
+	NBTTagInt() {
+	}
 	
 	public int getValue() {
 		return value;
@@ -57,7 +58,7 @@ public class NBTTagInt extends NBTTag {
 		this.value = in.readInt();
 		return this;
 	}
-
+	
 	@Override
 	public TagType getTagType() {
 		return TagType.INT;

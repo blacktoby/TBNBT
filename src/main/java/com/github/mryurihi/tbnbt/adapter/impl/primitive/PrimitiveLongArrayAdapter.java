@@ -34,23 +34,34 @@ import com.github.mryurihi.tbnbt.adapter.TypeWrapper;
 import com.github.mryurihi.tbnbt.adapter.impl.LongArrayAdapter;
 
 public class PrimitiveLongArrayAdapter extends NBTAdapter<long[]> {
-
+	
 	@Override
-	public long[] fromNBT(TagType id, DataInputStream payload, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
+	public long[] fromNBT(
+		TagType id,
+		DataInputStream payload,
+		TypeWrapper<?> type,
+		AdapterRegistry registry
+	) throws NBTParseException {
 		Long[] longArr = new LongArrayAdapter().fromNBT(id, payload, type, registry);
 		long[] out = new long[longArr.length];
-		for(int i = 0; i < longArr.length; i++) out[i] = (long) longArr[i];
+		for(int i = 0; i < longArr.length; i++)
+			out[i] = (long) longArr[i];
 		return out;
 	}
-
+	
 	@Override
-	public void toNBT(DataOutputStream out, Object object, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
+	public void toNBT(
+		DataOutputStream out,
+		Object object,
+		TypeWrapper<?> type,
+		AdapterRegistry registry
+	) throws NBTParseException {
 		new LongArrayAdapter().toNBT(out, object, new TypeWrapper<Long[]>() {}, registry);
 	}
-
+	
 	@Override
 	public TagType getId() {
 		return TagType.LONG_ARRAY;
 	}
-
+	
 }

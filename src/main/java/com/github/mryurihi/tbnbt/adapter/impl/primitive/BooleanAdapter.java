@@ -33,22 +33,34 @@ import com.github.mryurihi.tbnbt.adapter.NBTParseException;
 import com.github.mryurihi.tbnbt.adapter.TypeWrapper;
 
 public class BooleanAdapter extends NBTAdapter<Boolean> {
-
+	
 	@Override
-	public Boolean fromNBT(TagType id, DataInputStream payload, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
-		if(! id.equals(TagType.BYTE)) throw new NBTParseException(String.format("id %s does not match required id 1", id.getId()));
+	public Boolean fromNBT(
+		TagType id,
+		DataInputStream payload,
+		TypeWrapper<?> type,
+		AdapterRegistry registry
+	) throws NBTParseException {
+		if(
+			!id.equals(TagType.BYTE)
+		) throw new NBTParseException(String.format("id %s does not match required id 1", id.getId()));
 		try {
 			return payload.readByte() == 0? false: true;
 		} catch(Exception e) {
 			throw new NBTParseException(e);
 		}
 	}
-
+	
 	@Override
-	public void toNBT(DataOutputStream out, Object object, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
+	public void toNBT(
+		DataOutputStream out,
+		Object object,
+		TypeWrapper<?> type,
+		AdapterRegistry registry
+	) throws NBTParseException {
 		try {
 			out.writeByte(((Boolean) object)? 1: 0);
-		} catch (Exception e) {
+		} catch(Exception e) {
 			throw new NBTParseException(e);
 		}
 	}

@@ -33,19 +33,31 @@ import com.github.mryurihi.tbnbt.adapter.NBTParseException;
 import com.github.mryurihi.tbnbt.adapter.TypeWrapper;
 
 public class IntegerArrayAdapter extends NBTAdapter<Integer[]> {
-
+	
 	@Override
-	public Integer[] fromNBT(TagType id, DataInputStream payload, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
-		if(! id.equals(TagType.INT_ARRAY)) throw new NBTParseException(String.format("id %s does not match required id 11", id.getId()));
+	public Integer[] fromNBT(
+		TagType id,
+		DataInputStream payload,
+		TypeWrapper<?> type,
+		AdapterRegistry registry
+	) throws NBTParseException {
+		if(
+			!id.equals(TagType.INT_ARRAY)
+		) throw new NBTParseException(String.format("id %s does not match required id 11", id.getId()));
 		Integer[] out = new Integer[(Integer) registry.getIntAdapter().fromNBT(TagType.INT, payload, null, registry)];
 		for(int i = 0; i < out.length; i++) {
 			out[i] = (Integer) registry.getIntAdapter().fromNBT(TagType.INT, payload, null, registry);
 		}
 		return out;
 	}
-
+	
 	@Override
-	public void toNBT(DataOutputStream out, Object object, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
+	public void toNBT(
+		DataOutputStream out,
+		Object object,
+		TypeWrapper<?> type,
+		AdapterRegistry registry
+	) throws NBTParseException {
 		Integer[] intArr;
 		if(object instanceof int[]) {
 			intArr = new Integer[((int[]) object).length];
@@ -54,12 +66,13 @@ public class IntegerArrayAdapter extends NBTAdapter<Integer[]> {
 			}
 		} else intArr = (Integer[]) object;
 		registry.writeInt(out, intArr.length);
-		for(Integer b: intArr) registry.writeInt(out, b);
+		for(Integer b: intArr)
+			registry.writeInt(out, b);
 	}
-
+	
 	@Override
 	public TagType getId() {
 		return TagType.INT_ARRAY;
 	}
-
+	
 }

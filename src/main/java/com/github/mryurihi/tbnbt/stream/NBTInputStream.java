@@ -37,6 +37,7 @@ import com.github.mryurihi.tbnbt.tag.NBTTagString;
 
 /**
  * An input stream that reads NBT data.
+ * 
  * @author MrYurihi Redstone
  */
 public class NBTInputStream extends InputStream {
@@ -56,6 +57,7 @@ public class NBTInputStream extends InputStream {
 	
 	/**
 	 * Reads an NBT tag from this stream
+	 * 
 	 * @param named if the tag is named
 	 * @return The NBTTag
 	 * @throws IOException if there are any I/O exceptions while reading
@@ -68,6 +70,7 @@ public class NBTInputStream extends InputStream {
 	
 	/**
 	 * Reads a named NBT tag from this stream
+	 * 
 	 * @return The NBTTag
 	 * @throws IOException if there are any I/O exceptions while reading
 	 */
@@ -77,6 +80,7 @@ public class NBTInputStream extends InputStream {
 	
 	/**
 	 * Reads an NBT tag from this stream into an object
+	 * 
 	 * @param type the type of the object to read to
 	 * @param registry the registry to use
 	 * @param <T> the type to write into
@@ -92,7 +96,9 @@ public class NBTInputStream extends InputStream {
 	}
 	
 	/**
-	 * Reads an NBT tag from this stream into an object. Will create a new reigstry object
+	 * Reads an NBT tag from this stream into an object. Will create a new reigstry
+	 * object
+	 * 
 	 * @param type the type of the object to read to
 	 * @param <T> the type to read from
 	 * @return the object that has been written to
@@ -102,15 +108,15 @@ public class NBTInputStream extends InputStream {
 	public <T> T readToType(TypeWrapper<T> type) throws IOException, NBTParseException {
 		return readToType(type, new AdapterRegistry.Builder().create());
 	}
-
+	
 	@Override
 	public void close() throws IOException {
 		dis.close();
 	}
-
+	
 	@Override
 	public int read() throws IOException {
 		return dis.read();
 	}
-
+	
 }

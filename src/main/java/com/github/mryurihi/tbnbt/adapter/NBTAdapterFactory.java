@@ -24,15 +24,20 @@ SOFTWARE.
 package com.github.mryurihi.tbnbt.adapter;
 
 /**
- * A factory class for creating dynamic {@link com.github.mryurihi.tbnbt.adapter.NBTAdapter}
+ * A factory class for creating dynamic
+ * {@link com.github.mryurihi.tbnbt.adapter.NBTAdapter}
+ * 
  * @author MrYurihi Redstone
  */
 public interface NBTAdapterFactory {
 	
 	/**
 	 * Creates the adapter associated with this factory
+	 * 
 	 * @param registry the registry associated with this factory
-	 * @param type the type of the object. Similar to {@link com.github.mryurihi.tbnbt.adapter.NBTAdapter} from and to NBT method's type parameter
+	 * @param type the type of the object. Similar to
+	 *            {@link com.github.mryurihi.tbnbt.adapter.NBTAdapter} from and to
+	 *            NBT method's type parameter
 	 * @param <T> the type the adapter should work with
 	 * @return the NBTAdapter
 	 */

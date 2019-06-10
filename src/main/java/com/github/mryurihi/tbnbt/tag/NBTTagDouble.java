@@ -37,8 +37,9 @@ public class NBTTagDouble extends NBTTag {
 		this.value = value;
 	}
 	
-	NBTTagDouble() {}
-
+	NBTTagDouble() {
+	}
+	
 	public double getValue() {
 		return value;
 	}
@@ -57,7 +58,7 @@ public class NBTTagDouble extends NBTTag {
 		this.value = in.readDouble();
 		return this;
 	}
-
+	
 	@Override
 	public TagType getTagType() {
 		return TagType.DOUBLE;

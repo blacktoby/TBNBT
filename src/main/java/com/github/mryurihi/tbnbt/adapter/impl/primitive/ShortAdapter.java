@@ -33,22 +33,34 @@ import com.github.mryurihi.tbnbt.adapter.NBTParseException;
 import com.github.mryurihi.tbnbt.adapter.TypeWrapper;
 
 public class ShortAdapter extends NBTAdapter<Short> {
-
+	
 	@Override
-	public Short fromNBT(TagType id, DataInputStream payload, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
-		if(! id.equals(TagType.SHORT)) throw new NBTParseException(String.format("id %s does not match required id 1", id.getId()));
+	public Short fromNBT(
+		TagType id,
+		DataInputStream payload,
+		TypeWrapper<?> type,
+		AdapterRegistry registry
+	) throws NBTParseException {
+		if(
+			!id.equals(TagType.SHORT)
+		) throw new NBTParseException(String.format("id %s does not match required id 1", id.getId()));
 		try {
 			return payload.readShort();
 		} catch(Exception e) {
 			throw new NBTParseException(e);
 		}
 	}
-
+	
 	@Override
-	public void toNBT(DataOutputStream out, Object object, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
+	public void toNBT(
+		DataOutputStream out,
+		Object object,
+		TypeWrapper<?> type,
+		AdapterRegistry registry
+	) throws NBTParseException {
 		try {
 			out.writeShort(((Short) object).shortValue());
-		} catch (Exception e) {
+		} catch(Exception e) {
 			throw new NBTParseException(e);
 		}
 	}

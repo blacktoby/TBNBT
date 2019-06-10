@@ -27,18 +27,20 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.stream.IntStream;
 
 import com.github.mryurihi.tbnbt.TagType;
 
 public class NBTTagIntArray extends NBTTag {
-
+	
 	private int[] value;
 	
 	public NBTTagIntArray(int[] value) {
 		this.value = value;
 	}
 	
-	NBTTagIntArray() {}
+	NBTTagIntArray() {
+	}
 	
 	public int[] getValue() {
 		return value;
@@ -51,16 +53,18 @@ public class NBTTagIntArray extends NBTTag {
 	@Override
 	public void writePayloadBytes(DataOutputStream out) throws IOException {
 		out.writeInt(value.length);
-		for(int i: value) out.writeInt(i);
+		for(int i: value)
+			out.writeInt(i);
 	}
 	
 	@Override
 	public NBTTag readPayloadBytes(DataInputStream in) throws IOException {
 		value = new int[in.readInt()];
-		for(int i = 0; i < value.length; i++) value[i] = in.readInt();
+		for(int i = 0; i < value.length; i++)
+			value[i] = in.readInt();
 		return this;
 	}
-
+	
 	@Override
 	public TagType getTagType() {
 		return TagType.INT_ARRAY;
@@ -68,13 +72,9 @@ public class NBTTagIntArray extends NBTTag {
 	
 	@Override
 	public String toString() {
-		String out = "[I;";
-		for(int i: value) {
-			out += String.valueOf(i) + ", ";
-		}
-		out = out.substring(0, out.length() - 2);
-		out += "]";
-		return out;
+		return new StringBuilder("[I;").append(
+			String.join(", ", IntStream.of(value).mapToObj(l -> String.valueOf(l)).toArray(len -> new String[len]))
+		).append("]").toString();
 	}
 	
 	@Override

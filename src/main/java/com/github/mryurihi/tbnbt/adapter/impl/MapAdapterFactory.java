@@ -37,8 +37,10 @@ import com.github.mryurihi.tbnbt.adapter.NBTParseException;
 import com.github.mryurihi.tbnbt.adapter.TypeWrapper;
 
 public class MapAdapterFactory implements NBTAdapterFactory {
-
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	
+	@SuppressWarnings({
+		"unchecked", "rawtypes"
+	})
 	@Override
 	public <T> NBTAdapter<T> create(AdapterRegistry registry, TypeWrapper<T> type) {
 		Class<?> itemClass = (Class<?>) ((ParameterizedType) type.getType()).getActualTypeArguments()[1];
@@ -54,10 +56,15 @@ public class MapAdapterFactory implements NBTAdapterFactory {
 			this.itemAdapter = itemAdapter;
 			this.itemClass = itemClass;
 		}
-
+		
 		@SuppressWarnings("unchecked")
 		@Override
-		public Map<String, E> fromNBT(TagType id, DataInputStream payload, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
+		public Map<String, E> fromNBT(
+			TagType id,
+			DataInputStream payload,
+			TypeWrapper<?> type,
+			AdapterRegistry registry
+		) throws NBTParseException {
 			try {
 				Constructor<?> constr = type.getClassType().getDeclaredConstructor();
 				constr.setAccessible(true);
@@ -65,17 +72,25 @@ public class MapAdapterFactory implements NBTAdapterFactory {
 				byte nextTagType = payload.readByte();
 				do {
 					String tagName = registry.fromString(payload);
-					out.put(tagName, itemAdapter.fromNBT(TagType.getTypeById(nextTagType), payload, TypeWrapper.of(itemClass), registry));
+					out.put(
+						tagName,
+						itemAdapter.fromNBT(TagType.getTypeById(nextTagType), payload, TypeWrapper.of(itemClass), registry)
+					);
 					nextTagType = payload.readByte();
 				} while(nextTagType != 0);
-			} catch (Exception e) {
+			} catch(Exception e) {
 				throw new NBTParseException(e);
-			} 
+			}
 			return null;
 		}
-
+		
 		@Override
-		public void toNBT(DataOutputStream out, Object object, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
+		public void toNBT(
+			DataOutputStream out,
+			Object object,
+			TypeWrapper<?> type,
+			AdapterRegistry registry
+		) throws NBTParseException {
 			@SuppressWarnings("unchecked")
 			Map<String, E> mapObj = (Map<String, E>) object;
 			for(Map.Entry<String, E> entry: mapObj.entrySet()) {
@@ -85,7 +100,7 @@ public class MapAdapterFactory implements NBTAdapterFactory {
 			}
 			registry.writeByte(out, (byte) 0);
 		}
-
+		
 		@Override
 		public TagType getId() {
 			return TagType.COMPOUND;

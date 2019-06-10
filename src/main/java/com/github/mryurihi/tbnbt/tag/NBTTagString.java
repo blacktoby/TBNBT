@@ -34,11 +34,11 @@ public class NBTTagString extends NBTTag {
 	private String value;
 	
 	public NBTTagString(String value) {
-		if(value.length() > Short.MAX_VALUE) throw new IllegalArgumentException("String to long");
-		this.value = value;
+		this.setValue(value);
 	}
 	
-	NBTTagString() {}
+	NBTTagString() {
+	}
 	
 	public String getValue() {
 		return value;
@@ -59,7 +59,7 @@ public class NBTTagString extends NBTTag {
 		value = in.readUTF();
 		return this;
 	}
-
+	
 	@Override
 	public TagType getTagType() {
 		return TagType.STRING;

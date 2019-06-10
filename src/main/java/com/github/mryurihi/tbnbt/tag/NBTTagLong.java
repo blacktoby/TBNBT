@@ -30,14 +30,15 @@ import java.io.IOException;
 import com.github.mryurihi.tbnbt.TagType;
 
 public class NBTTagLong extends NBTTag {
-
+	
 	private long value;
 	
 	public NBTTagLong(long value) {
 		this.value = value;
 	}
 	
-	NBTTagLong() {}
+	NBTTagLong() {
+	}
 	
 	public long getValue() {
 		return value;

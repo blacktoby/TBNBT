@@ -33,29 +33,41 @@ import com.github.mryurihi.tbnbt.adapter.NBTParseException;
 import com.github.mryurihi.tbnbt.adapter.TypeWrapper;
 
 public class FloatAdapter extends NBTAdapter<Float> {
-
+	
 	@Override
-	public Float fromNBT(TagType id, DataInputStream payload, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
-		if(! id.equals(TagType.FLOAT)) throw new NBTParseException(String.format("id %s does not match required id 5", id.getId()));
+	public Float fromNBT(
+		TagType id,
+		DataInputStream payload,
+		TypeWrapper<?> type,
+		AdapterRegistry registry
+	) throws NBTParseException {
+		if(
+			!id.equals(TagType.FLOAT)
+		) throw new NBTParseException(String.format("id %s does not match required id 5", id.getId()));
 		try {
 			return payload.readFloat();
 		} catch(Exception e) {
 			throw new NBTParseException(e);
 		}
 	}
-
+	
 	@Override
-	public void toNBT(DataOutputStream out, Object object, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
+	public void toNBT(
+		DataOutputStream out,
+		Object object,
+		TypeWrapper<?> type,
+		AdapterRegistry registry
+	) throws NBTParseException {
 		try {
 			out.writeFloat(((Float) object).floatValue());
-		} catch (Exception e) {
+		} catch(Exception e) {
 			throw new NBTParseException(e);
 		}
 	}
-
+	
 	@Override
 	public TagType getId() {
 		return TagType.FLOAT;
 	}
-
+	
 }

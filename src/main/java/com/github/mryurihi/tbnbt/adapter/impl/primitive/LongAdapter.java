@@ -33,29 +33,41 @@ import com.github.mryurihi.tbnbt.adapter.NBTParseException;
 import com.github.mryurihi.tbnbt.adapter.TypeWrapper;
 
 public class LongAdapter extends NBTAdapter<Long> {
-
+	
 	@Override
-	public Long fromNBT(TagType id, DataInputStream payload, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
-		if(! id.equals(TagType.LONG)) throw new NBTParseException(String.format("id %s does not match required id 4", id.getId()));
+	public Long fromNBT(
+		TagType id,
+		DataInputStream payload,
+		TypeWrapper<?> type,
+		AdapterRegistry registry
+	) throws NBTParseException {
+		if(
+			!id.equals(TagType.LONG)
+		) throw new NBTParseException(String.format("id %s does not match required id 4", id.getId()));
 		try {
 			return payload.readLong();
 		} catch(Exception e) {
 			throw new NBTParseException(e);
 		}
 	}
-
+	
 	@Override
-	public void toNBT(DataOutputStream out, Object object, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
+	public void toNBT(
+		DataOutputStream out,
+		Object object,
+		TypeWrapper<?> type,
+		AdapterRegistry registry
+	) throws NBTParseException {
 		try {
 			out.writeLong(((Long) object).longValue());
-		} catch (Exception e) {
+		} catch(Exception e) {
 			throw new NBTParseException(e);
 		}
 	}
-
+	
 	@Override
 	public TagType getId() {
 		return TagType.LONG;
 	}
-
+	
 }

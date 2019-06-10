@@ -33,6 +33,7 @@ public abstract class NBTTag {
 	
 	/**
 	 * writes the payload bytes for this object
+	 * 
 	 * @param out the stream to write to
 	 * @throws IOException if an I/O exception occurs
 	 */
@@ -40,6 +41,7 @@ public abstract class NBTTag {
 	
 	/**
 	 * reads the payload bytes for this object
+	 * 
 	 * @param in the stream to read to
 	 * @return this
 	 * @throws IOException if an I/O exception occurs
@@ -48,13 +50,14 @@ public abstract class NBTTag {
 	
 	/**
 	 * Gets the type of the tag
+	 * 
 	 * @return the tag type
 	 */
 	abstract public TagType getTagType();
 	
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof NBTTag) {
+		if(other instanceof NBTTag) {
 			NBTTag tag = (NBTTag) other;
 			return equalsTag(tag);
 		}
@@ -63,6 +66,7 @@ public abstract class NBTTag {
 	
 	/**
 	 * If this tag is equal to another tag
+	 * 
 	 * @param tag the other tag to test against
 	 * @return true if the other tag is equal to this tag
 	 */
@@ -70,6 +74,7 @@ public abstract class NBTTag {
 	
 	/**
 	 * Gets the tag as an {@link com.github.mryurihi.tbnbt.tag.NBTTagByte}
+	 * 
 	 * @return the tag as {@link com.github.mryurihi.tbnbt.tag.NBTTagByte}
 	 */
 	public NBTTagByte getAsTagByte() {
@@ -78,6 +83,7 @@ public abstract class NBTTag {
 	
 	/**
 	 * Gets the tag as an {@link com.github.mryurihi.tbnbt.tag.NBTTagShort}
+	 * 
 	 * @return the tag as {@link com.github.mryurihi.tbnbt.tag.NBTTagShort}
 	 */
 	public NBTTagShort getAsTagShort() {
@@ -86,6 +92,7 @@ public abstract class NBTTag {
 	
 	/**
 	 * Gets the tag as an {@link com.github.mryurihi.tbnbt.tag.NBTTagInt}
+	 * 
 	 * @return the tag as {@link com.github.mryurihi.tbnbt.tag.NBTTagInt}
 	 */
 	public NBTTagInt getAsTagInt() {
@@ -94,6 +101,7 @@ public abstract class NBTTag {
 	
 	/**
 	 * Gets the tag as an {@link com.github.mryurihi.tbnbt.tag.NBTTagLong}
+	 * 
 	 * @return the tag as {@link com.github.mryurihi.tbnbt.tag.NBTTagLong}
 	 */
 	public NBTTagLong getAsTagLong() {
@@ -102,6 +110,7 @@ public abstract class NBTTag {
 	
 	/**
 	 * Gets the tag as an {@link com.github.mryurihi.tbnbt.tag.NBTTagFloat}
+	 * 
 	 * @return the tag as {@link com.github.mryurihi.tbnbt.tag.NBTTagFloat}
 	 */
 	public NBTTagFloat getAsTagFloat() {
@@ -110,6 +119,7 @@ public abstract class NBTTag {
 	
 	/**
 	 * Gets the tag as an {@link com.github.mryurihi.tbnbt.tag.NBTTagDouble}
+	 * 
 	 * @return the tag as {@link com.github.mryurihi.tbnbt.tag.NBTTagDouble}
 	 */
 	public NBTTagDouble getAsTagDouble() {
@@ -118,6 +128,7 @@ public abstract class NBTTag {
 	
 	/**
 	 * Gets the tag as an {@link com.github.mryurihi.tbnbt.tag.NBTTagByteArray}
+	 * 
 	 * @return the tag as {@link com.github.mryurihi.tbnbt.tag.NBTTagByteArray}
 	 */
 	public NBTTagByteArray getAsTagByteArray() {
@@ -126,6 +137,7 @@ public abstract class NBTTag {
 	
 	/**
 	 * Gets the tag as an {@link com.github.mryurihi.tbnbt.tag.NBTTagString}
+	 * 
 	 * @return the tag as {@link com.github.mryurihi.tbnbt.tag.NBTTagString}
 	 */
 	public NBTTagString getAsTagString() {
@@ -134,6 +146,7 @@ public abstract class NBTTag {
 	
 	/**
 	 * Gets the tag as an {@link com.github.mryurihi.tbnbt.tag.NBTTagList}
+	 * 
 	 * @return the tag as {@link com.github.mryurihi.tbnbt.tag.NBTTagList}
 	 */
 	public NBTTagList getAsTagList() {
@@ -142,6 +155,7 @@ public abstract class NBTTag {
 	
 	/**
 	 * Gets the tag as an {@link com.github.mryurihi.tbnbt.tag.NBTTagCompound}
+	 * 
 	 * @return the tag as {@link com.github.mryurihi.tbnbt.tag.NBTTagCompound}
 	 */
 	public NBTTagCompound getAsTagCompound() {
@@ -150,6 +164,7 @@ public abstract class NBTTag {
 	
 	/**
 	 * Gets the tag as an {@link com.github.mryurihi.tbnbt.tag.NBTTagIntArray}
+	 * 
 	 * @return the tag as {@link com.github.mryurihi.tbnbt.tag.NBTTagIntArray}
 	 */
 	public NBTTagIntArray getAsTagIntArray() {
@@ -158,6 +173,7 @@ public abstract class NBTTag {
 	
 	/**
 	 * Gets the tag as an {@link com.github.mryurihi.tbnbt.tag.NBTTagLongArray}
+	 * 
 	 * @return the tag as {@link com.github.mryurihi.tbnbt.tag.NBTTagLongArray}
 	 */
 	public NBTTagLongArray getAsTagLongArray() {
@@ -173,19 +189,32 @@ public abstract class NBTTag {
 	 */
 	public static NBTTag newTagByType(TagType type, DataInputStream in) throws IOException {
 		switch(type) {
-		case BYTE: return new NBTTagByte().readPayloadBytes(in);
-		case SHORT: return new NBTTagShort().readPayloadBytes(in);
-		case INT: return new NBTTagInt().readPayloadBytes(in);
-		case LONG: return new NBTTagLong().readPayloadBytes(in);
-		case FLOAT: return new NBTTagFloat().readPayloadBytes(in);
-		case DOUBLE: return new NBTTagDouble().readPayloadBytes(in);
-		case BYTE_ARRAY: return new NBTTagByteArray().readPayloadBytes(in);
-		case STRING: return new NBTTagString().readPayloadBytes(in);
-		case LIST: return new NBTTagList().readPayloadBytes(in);
-		case COMPOUND: return new NBTTagCompound().readPayloadBytes(in);
-		case INT_ARRAY: return new NBTTagIntArray().readPayloadBytes(in);
-		case LONG_ARRAY: return new NBTTagLongArray().readPayloadBytes(in);
-		default: return null;
+			case BYTE:
+				return new NBTTagByte().readPayloadBytes(in);
+			case SHORT:
+				return new NBTTagShort().readPayloadBytes(in);
+			case INT:
+				return new NBTTagInt().readPayloadBytes(in);
+			case LONG:
+				return new NBTTagLong().readPayloadBytes(in);
+			case FLOAT:
+				return new NBTTagFloat().readPayloadBytes(in);
+			case DOUBLE:
+				return new NBTTagDouble().readPayloadBytes(in);
+			case BYTE_ARRAY:
+				return new NBTTagByteArray().readPayloadBytes(in);
+			case STRING:
+				return new NBTTagString().readPayloadBytes(in);
+			case LIST:
+				return new NBTTagList().readPayloadBytes(in);
+			case COMPOUND:
+				return new NBTTagCompound().readPayloadBytes(in);
+			case INT_ARRAY:
+				return new NBTTagIntArray().readPayloadBytes(in);
+			case LONG_ARRAY:
+				return new NBTTagLongArray().readPayloadBytes(in);
+			default:
+				return null;
 		}
 	}
 }

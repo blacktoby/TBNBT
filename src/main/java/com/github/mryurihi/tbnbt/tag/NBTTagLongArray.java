@@ -27,6 +27,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.stream.LongStream;
 
 import com.github.mryurihi.tbnbt.TagType;
 
@@ -38,7 +39,8 @@ public class NBTTagLongArray extends NBTTag {
 		this.value = value;
 	}
 	
-	NBTTagLongArray() {}
+	NBTTagLongArray() {
+	}
 	
 	public long[] getValue() {
 		return value;
@@ -51,16 +53,18 @@ public class NBTTagLongArray extends NBTTag {
 	@Override
 	public void writePayloadBytes(DataOutputStream out) throws IOException {
 		out.writeInt(value.length);
-		for(long l: value) out.writeLong(l);
+		for(long l: value)
+			out.writeLong(l);
 	}
 	
 	@Override
 	public NBTTag readPayloadBytes(DataInputStream in) throws IOException {
 		value = new long[in.readInt()];
-		for(int i = 0; i < value.length; i++) value[i] = in.readLong();
+		for(int i = 0; i < value.length; i++)
+			value[i] = in.readLong();
 		return this;
 	}
-
+	
 	@Override
 	public TagType getTagType() {
 		return TagType.LONG_ARRAY;
@@ -68,13 +72,9 @@ public class NBTTagLongArray extends NBTTag {
 	
 	@Override
 	public String toString() {
-		String out = "[L;";
-		for(long i: value) {
-			out += String.valueOf(i) + ", ";
-		}
-		out = out.substring(0, out.length() - 2);
-		out += "]";
-		return out;
+		return new StringBuilder("[L;").append(
+			String.join(", ", LongStream.of(value).mapToObj(l -> String.valueOf(l)).toArray(len -> new String[len]))
+		).append("]").toString();
 	}
 	
 	@Override

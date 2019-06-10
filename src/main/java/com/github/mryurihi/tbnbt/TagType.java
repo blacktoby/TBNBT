@@ -25,6 +25,7 @@ package com.github.mryurihi.tbnbt;
 
 /**
  * An enumeration that contains all of the NBT tag types.
+ * 
  * @author MrYurihi Redstone
  */
 public enum TagType {
@@ -53,7 +54,8 @@ public enum TagType {
 	}
 	
 	public static TagType getTypeById(int id) {
-		for(TagType t: TagType.values()) if(t.getId() == id) return t;
-		return null;
+		for(TagType t: TagType.values())
+			if(t.getId() == id) return t;
+		throw new IllegalArgumentException("Illegal id '" + id + "'");
 	}
 }

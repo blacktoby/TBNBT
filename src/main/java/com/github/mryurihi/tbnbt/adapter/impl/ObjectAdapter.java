@@ -36,10 +36,17 @@ import com.github.mryurihi.tbnbt.adapter.TypeWrapper;
 import com.github.mryurihi.tbnbt.annotations.SerializedName;
 
 public class ObjectAdapter extends NBTAdapter<Object> {
-
+	
 	@Override
-	public Object fromNBT(TagType id, DataInputStream payload, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
-		if(! id.equals(TagType.COMPOUND)) throw new NBTParseException(String.format("id %s does not match required id 10", id.getId()));
+	public Object fromNBT(
+		TagType id,
+		DataInputStream payload,
+		TypeWrapper<?> type,
+		AdapterRegistry registry
+	) throws NBTParseException {
+		if(
+			!id.equals(TagType.COMPOUND)
+		) throw new NBTParseException(String.format("id %s does not match required id 10", id.getId()));
 		Object out;
 		try {
 			Constructor<?> constr = type.getClassType().getDeclaredConstructor();
@@ -53,7 +60,10 @@ public class ObjectAdapter extends NBTAdapter<Object> {
 					objField = type.getClassType().getDeclaredField(tagName);
 				} catch(NoSuchFieldException e) {
 					for(Field f: type.getClassType().getDeclaredFields()) {
-						if(f.isAnnotationPresent(SerializedName.class) && f.getAnnotation(SerializedName.class).value().equals(tagName)) {
+						if(
+							f.isAnnotationPresent(SerializedName.class) &&
+								f.getAnnotation(SerializedName.class).value().equals(tagName)
+						) {
 							objField = f;
 						}
 					}
@@ -62,34 +72,44 @@ public class ObjectAdapter extends NBTAdapter<Object> {
 				objField.setAccessible(true);
 				
 				NBTAdapter<?> adapter = registry.getAdapterForObject(TypeWrapper.of(objField.getGenericType()));
-				objField.set(out, adapter.fromNBT(TagType.getTypeById(nextTagType), payload, TypeWrapper.of(objField.getGenericType()), registry));
+				objField.set(
+					out,
+					adapter.fromNBT(TagType.getTypeById(nextTagType), payload, TypeWrapper.of(objField.getGenericType()), registry)
+				);
 				nextTagType = payload.readByte();
-			};
-		} catch (Exception e) {
+			}
+			;
+		} catch(Exception e) {
 			throw new NBTParseException(e);
 		}
 		return out;
 	}
 	
 	@Override
-	public void toNBT(DataOutputStream out, Object object, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
+	public void toNBT(
+		DataOutputStream out,
+		Object object,
+		TypeWrapper<?> type,
+		AdapterRegistry registry
+	) throws NBTParseException {
 		try {
 			for(Field f: type.getClassType().getDeclaredFields()) {
 				f.setAccessible(true);
 				NBTAdapter<?> adapter = registry.getAdapterForObject(TypeWrapper.of(f.getGenericType()));
 				out.writeByte(adapter.getId().getId());
-				registry.writeString(out, f.isAnnotationPresent(SerializedName.class)? f.getAnnotation(SerializedName.class).value(): f.getName());
+				registry
+					.writeString(out, f.isAnnotationPresent(SerializedName.class)? f.getAnnotation(SerializedName.class).value(): f.getName());
 				adapter.toNBT(out, f.get(object), TypeWrapper.of(f.getGenericType()), registry);
 			}
 			out.writeByte(0);
-		} catch (Exception e) {
+		} catch(Exception e) {
 			throw new NBTParseException(e);
 		}
 	}
-
+	
 	@Override
 	public TagType getId() {
 		return TagType.COMPOUND;
 	}
-
+	
 }

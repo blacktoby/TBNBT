@@ -26,37 +26,39 @@ package com.github.mryurihi.tbnbt.tag;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 import com.github.mryurihi.tbnbt.TagType;
+import com.github.mryurihi.tbnbt.exceptions.MalformedNBTException;
+import com.github.mryurihi.tbnbt.tag.internal.NBTListBacker;
 
-public class NBTTagList extends NBTTag {
+public class NBTTagList extends NBTTag implements Iterable<NBTTag> {
 	
-	private List<NBTTag> value;
+	private NBTListBacker value;
 	
 	private TagType typeId;
 	
 	public NBTTagList(List<NBTTag> value, TagType typeId) {
-		this.value = new ArrayList<>();
-		if(value != null) for(NBTTag tag: value) {
-			this.value.add(tag);
-		}
+		this.value = new NBTListBacker();
+		this.value.addAll(Objects.requireNonNull(value));
 		this.typeId = typeId;
 	}
 	
 	public NBTTagList(TagType typeId) {
-		value = new ArrayList<>();
+		this.value = new NBTListBacker();
 		this.typeId = typeId;
 	}
 	
 	public NBTTagList(List<NBTTag> value) {
-		this.value = value;
-		if(value != null && ! value.isEmpty()) this.typeId = value.get(0).getTagType();
-		else throw new IllegalArgumentException("Cannot get tag type of list");
+		this.value = new NBTListBacker();
+		this.value.addAll(Objects.requireNonNull(value));
+		this.typeId = value.isEmpty()? TagType.END: value.get(0).getTagType();
 	}
 	
-	NBTTagList() {}
+	NBTTagList() {
+	}
 	
 	public List<NBTTag> getValue() {
 		return value;
@@ -66,61 +68,37 @@ public class NBTTagList extends NBTTag {
 		return value.get(index);
 	}
 	
+	public boolean add(NBTTag tag) {
+		return value.add(tag);
+	}
+	
 	public TagType getTypeId() {
 		return typeId;
 	}
 	
-	public void setValue(List<NBTTag> value) {
-		this.value = value;
-	}
-	
-	public NBTTagList setTypeId(TagType typeId) {
-		this.typeId = typeId;
-		return this;
-	}
-	
-	public NBTTagList add(NBTTag tag) {
-		if(tag.getTagType() == typeId) value.add(tag);
-		else throw new IllegalArgumentException(tag.getClass().getName() + " is not the type " + typeId);
-		return this;
-	}
-	
-	public NBTTagList add(int index, NBTTag tag) {
-		if(tag.getTagType() == typeId) value.add(index, tag);
-		else throw new IllegalArgumentException(tag.getClass().getName() + " is not the type " + typeId);
-		return this;
-	}
-	
-	public NBTTagList remove(int index) {
-		value.remove(index);
-		return this;
-	}
-	
-	public NBTTagList set(int index, NBTTag tag) {
-		if(typeId.equals(TagType.END)) typeId = tag.getTagType();
-		if(tag.getTagType() == typeId) value.set(index, tag);
-		else throw new IllegalArgumentException(tag.getClass().getName() + " is not the type " + typeId);
-		return this;
-	}
-
 	@Override
 	public void writePayloadBytes(DataOutputStream out) throws IOException {
 		out.writeByte(typeId.getId());
 		out.writeInt(value.size());
-		for(NBTTag t: value) t.writePayloadBytes(out);
+		for(NBTTag t: value)
+			t.writePayloadBytes(out);
 	}
 	
 	@Override
 	public NBTTag readPayloadBytes(DataInputStream in) throws IOException {
-		value = new ArrayList<>();
-		byte id = in.readByte();
-		int length = in.readInt();
-		typeId = TagType.getTypeById(id);
-		value = new ArrayList<>();
-		for(int i = 0; i < length; i++) value.add(NBTTag.newTagByType(typeId, in));
-		return this;
+		try {
+			byte id = in.readByte();
+			int length = in.readInt();
+			typeId = TagType.getTypeById(id);
+			value = new NBTListBacker();
+			for(int i = 0; i < length; i++)
+				value.add(NBTTag.newTagByType(typeId, in));
+			return this;
+		} catch(IllegalArgumentException e) {
+			throw new MalformedNBTException(e);
+		}
 	}
-
+	
 	@Override
 	public TagType getTagType() {
 		return TagType.LIST;
@@ -134,5 +112,10 @@ public class NBTTagList extends NBTTag {
 	@Override
 	protected boolean equalsTag(NBTTag tag) {
 		return tag.getTagType().equals(TagType.LIST) && tag.getAsTagList().getValue().equals(value);
+	}
+	
+	@Override
+	public Iterator<NBTTag> iterator() {
+		return value.iterator();
 	}
 }

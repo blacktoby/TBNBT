@@ -33,52 +33,35 @@ import java.util.Map.Entry;
 import com.github.mryurihi.tbnbt.TagType;
 
 public class NBTTagCompound extends NBTTag {
-
+	
 	private Map<String, NBTTag> value;
 	
 	public NBTTagCompound(Map<String, NBTTag> value) {
 		this.value = new HashMap<>();
-		if(value != null) for(Entry<String, NBTTag> entry: value.entrySet()) {
-			NBTTag tag = entry.getValue();
-			this.value.put(entry.getKey(), tag);
-		}
+		this.value.putAll(value);
 	}
 	
-	NBTTagCompound() {}
+	NBTTagCompound() {
+	}
 	
 	public Map<String, NBTTag> getValue() {
 		return value;
 	}
 	
-	public NBTTag get(String key) {
-		return value.get(key);
+	public boolean isEmpty() {
+		return this.value.isEmpty();
 	}
 	
-	public NBTTagCompound setValue(Map<String, NBTTag> value) {
-		Map<String, NBTTag> aux = new HashMap<>();
-		value.forEach((k, v) -> {
-			aux.put(k, v);
-		});
-		this.value = aux;
-		return this;
+	public boolean containsKey(Object key) {
+		return this.value.containsKey(key);
 	}
 	
-	public NBTTagCompound put(String key, NBTTag value) {
-		this.value.put(key, value);
-		return this;
+	public NBTTag get(Object key) {
+		return this.value.get(key);
 	}
 	
-	public NBTTagCompound remove(String key) {
-		this.value.remove(key);
-		return this;
-	}
-	
-	public boolean containsKey(String key) {
-		return value.containsKey(key);
-	}
-	
-	public boolean containsValue(NBTTag value) {
-		return this.value.containsValue(value);
+	public NBTTag put(String key, NBTTag value) {
+		return this.value.put(key, value);
 	}
 	
 	@Override
@@ -96,12 +79,15 @@ public class NBTTagCompound extends NBTTag {
 		value = new HashMap<>();
 		byte type = in.readByte();
 		while(type != 0) {
-			value.put(new NBTTagString().readPayloadBytes(in).getAsTagString().getValue(), NBTTag.newTagByType(TagType.getTypeById(type), in));
+			value.put(
+				new NBTTagString().readPayloadBytes(in).getAsTagString().getValue(),
+				NBTTag.newTagByType(TagType.getTypeById(type), in)
+			);
 			type = in.readByte();
 		}
 		return this;
 	}
-
+	
 	@Override
 	public TagType getTagType() {
 		return TagType.COMPOUND;

@@ -28,6 +28,7 @@ import java.lang.annotation.RetentionPolicy;
 
 /**
  * An annotation that describes the real name of a tag
+ * 
  * @author MrYurihi Redstone
  */
 @Retention(RetentionPolicy.RUNTIME)

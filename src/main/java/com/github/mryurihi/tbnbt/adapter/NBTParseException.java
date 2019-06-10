@@ -25,6 +25,7 @@ package com.github.mryurihi.tbnbt.adapter;
 
 /**
  * A wrapper for exceptions passed by Adapters
+ * 
  * @author MrYurihi Redstone
  */
 public class NBTParseException extends Exception {
@@ -47,6 +48,11 @@ public class NBTParseException extends Exception {
 	}
 	
 	protected NBTParseException(String message, Throwable cause, boolean enableSuppresion, boolean writableStackTrace) {
-		super(message, cause instanceof NBTParseException? cause.getCause(): cause, enableSuppresion, writableStackTrace);
+		super(
+			message,
+			cause instanceof NBTParseException? cause.getCause(): cause,
+			enableSuppresion,
+			writableStackTrace
+		);
 	}
 }

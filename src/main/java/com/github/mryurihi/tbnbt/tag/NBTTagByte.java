@@ -30,14 +30,15 @@ import java.io.IOException;
 import com.github.mryurihi.tbnbt.TagType;
 
 public class NBTTagByte extends NBTTag {
-
+	
 	private byte value;
 	
 	public NBTTagByte(byte value) {
 		this.value = value;
 	}
 	
-	NBTTagByte() {}
+	NBTTagByte() {
+	}
 	
 	public byte getValue() {
 		return value;
@@ -46,7 +47,7 @@ public class NBTTagByte extends NBTTag {
 	public void setValue(byte value) {
 		this.value = value;
 	}
-
+	
 	@Override
 	public TagType getTagType() {
 		return TagType.BYTE;
@@ -56,7 +57,7 @@ public class NBTTagByte extends NBTTag {
 	public String toString() {
 		return String.valueOf(value) + "b";
 	}
-
+	
 	@Override
 	public void writePayloadBytes(DataOutputStream out) throws IOException {
 		out.writeByte(value);

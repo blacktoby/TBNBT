@@ -37,10 +37,11 @@ import com.github.mryurihi.tbnbt.tag.NBTTagString;
 
 /**
  * An output stream that writes NBT data
+ * 
  * @author MrYurihi Redstone
  */
 public class NBTOutputStream extends OutputStream {
-
+	
 	private DataOutputStream dos;
 	
 	public NBTOutputStream(OutputStream out, boolean compressed) throws IOException {
@@ -56,6 +57,7 @@ public class NBTOutputStream extends OutputStream {
 	
 	/**
 	 * Writes an NBTTag to the stream.
+	 * 
 	 * @param tag the tag to write
 	 * @param name the name of the tag
 	 * @throws IOException if there are any I/O exceptions while writing data
@@ -68,6 +70,7 @@ public class NBTOutputStream extends OutputStream {
 	
 	/**
 	 * Writes an object to the stream
+	 * 
 	 * @param type the type of the object
 	 * @param obj the object to be written
 	 * @param registry the registry to use
@@ -76,7 +79,12 @@ public class NBTOutputStream extends OutputStream {
 	 * @throws NBTParseException if there is an exception while parsing the data
 	 * @throws IOException if there are any I/O exceptions when writing
 	 */
-	public <T> void writeFromObject(TypeWrapper<T> type, Object obj, String name, AdapterRegistry registry) throws NBTParseException, IOException {
+	public <T> void writeFromObject(
+		TypeWrapper<T> type,
+		Object obj,
+		String name,
+		AdapterRegistry registry
+	) throws NBTParseException, IOException {
 		NBTAdapter<?> adapter = registry.getAdapterForObject(type);
 		dos.writeByte(adapter.getId().getId());
 		registry.writeString(dos, name);
@@ -86,6 +94,7 @@ public class NBTOutputStream extends OutputStream {
 	
 	/**
 	 * Writes an object to the stream. Will use a new registry
+	 * 
 	 * @param type the type of the object
 	 * @param obj the object to be written
 	 * @param name the name of the tag to write
@@ -93,12 +102,14 @@ public class NBTOutputStream extends OutputStream {
 	 * @throws NBTParseException if there is an exception while parsing the data
 	 * @throws IOException if there are any I/O exceptions when writing
 	 */
-	public <T> void writeFromObject(TypeWrapper<T> type, Object obj, String name) throws NBTParseException, IOException {
+	public <
+		T> void writeFromObject(TypeWrapper<T> type, Object obj, String name) throws NBTParseException, IOException {
 		writeFromObject(type, obj, name, new AdapterRegistry.Builder().create());
 	}
 	
 	/**
 	 * Writes an object to the stream with a name of "". Will use a new registry
+	 * 
 	 * @param type the type of the object
 	 * @param obj the object to be written
 	 * @param <T> the type to write from
@@ -113,7 +124,7 @@ public class NBTOutputStream extends OutputStream {
 	public void close() throws IOException {
 		dos.close();
 	}
-
+	
 	@Override
 	public void write(int b) throws IOException {
 		dos.write(b);

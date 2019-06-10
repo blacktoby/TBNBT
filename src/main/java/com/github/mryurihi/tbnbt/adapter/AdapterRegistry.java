@@ -52,8 +52,8 @@ import com.github.mryurihi.tbnbt.adapter.impl.primitive.ShortAdapter;
 
 /**
  * The registry that holds all of the
- * {@link com.github.mryurihi.tbnbt.adapter.NBTAdapter}'s are held. To register a custom
- * adapter all you have do do is this <br>
+ * {@link com.github.mryurihi.tbnbt.adapter.NBTAdapter}'s are held. To register
+ * a custom adapter all you have do do is this <br>
  * <br>
  * 
  * <pre>
@@ -81,15 +81,38 @@ public class AdapterRegistry {
 		registry = new HashMap<>();
 		factory = new HashMap<>();
 		Class<?>[] rClass = new Class<?>[] {
-			Byte.class, Short.class, Integer.class, Long.class, Float.class, Double.class, Byte[].class, byte[].class, String.class,
-			Object.class, Integer[].class, int[].class, Long[].class, long[].class
+			Byte.class,
+			Short.class,
+			Integer.class,
+			Long.class,
+			Float.class,
+			Double.class,
+			Byte[].class,
+			byte[].class,
+			String.class,
+			Object.class,
+			Integer[].class,
+			int[].class,
+			Long[].class,
+			long[].class
 		};
 		NBTAdapter<?>[] rAdapter = new NBTAdapter<?>[] {
-			new ByteAdapter(), new ShortAdapter(), new IntegerAdapter(), new LongAdapter(), new FloatAdapter(), new DoubleAdapter(),
-			new ByteArrayAdapter(), new PrimitiveByteArrayAdapter(), new StringAdapter(), new ObjectAdapter(), new IntegerArrayAdapter(),
-			new PrimitiveIntArrayAdapter(), new LongArrayAdapter(), new PrimitiveLongArrayAdapter()
+			new ByteAdapter(),
+			new ShortAdapter(),
+			new IntegerAdapter(),
+			new LongAdapter(),
+			new FloatAdapter(),
+			new DoubleAdapter(),
+			new ByteArrayAdapter(),
+			new PrimitiveByteArrayAdapter(),
+			new StringAdapter(),
+			new ObjectAdapter(),
+			new IntegerArrayAdapter(),
+			new PrimitiveIntArrayAdapter(),
+			new LongArrayAdapter(),
+			new PrimitiveLongArrayAdapter()
 		};
-		for (int i = 0; i < rClass.length; i++)
+		for(int i = 0; i < rClass.length; i++)
 			registry.put(rClass[i], rAdapter[i]);
 		factory.put(Collection.class, new CollectionAdapterFactory());
 		factory.put(Object[].class, new ArrayAdapterFactory());
@@ -111,25 +134,25 @@ public class AdapterRegistry {
 	
 	private NBTAdapter<?> getAdapterForObject(TypeWrapper<?> objectTypeWrapper, TypeWrapper<?> topTypeWrapper) {
 		Class<?> objectType = objectTypeWrapper.getClassType();
-		if (objectType.isPrimitive()) {
-			if (objectType.equals(byte.class)) return new ByteAdapter();
-			if (objectType.equals(short.class)) return new ShortAdapter();
-			if (objectType.equals(int.class)) return new IntegerAdapter();
-			if (objectType.equals(long.class)) return new LongAdapter();
-			if (objectType.equals(float.class)) return new FloatAdapter();
-			if (objectType.equals(double.class)) return new DoubleAdapter();
-			if (objectType.equals(boolean.class)) return new BooleanAdapter();
+		if(objectType.isPrimitive()) {
+			if(objectType.equals(byte.class)) return new ByteAdapter();
+			if(objectType.equals(short.class)) return new ShortAdapter();
+			if(objectType.equals(int.class)) return new IntegerAdapter();
+			if(objectType.equals(long.class)) return new LongAdapter();
+			if(objectType.equals(float.class)) return new FloatAdapter();
+			if(objectType.equals(double.class)) return new DoubleAdapter();
+			if(objectType.equals(boolean.class)) return new BooleanAdapter();
 		}
-		if (registry.containsKey(objectType)) return registry.get(objectType);
-		else if (factory.containsKey(objectType)) return factory.get(objectType).create(this, topTypeWrapper);
-		else if (objectType.getInterfaces().length != 0) {
-			for (Type t : objectType.getGenericInterfaces()) {
+		if(registry.containsKey(objectType)) return registry.get(objectType);
+		else if(factory.containsKey(objectType)) return factory.get(objectType).create(this, topTypeWrapper);
+		else if(objectType.getInterfaces().length != 0) {
+			for(Type t: objectType.getGenericInterfaces()) {
 				NBTAdapter<?> adapter = getAdapterForObject(TypeWrapper.of(t), topTypeWrapper);
-				if (adapter != null) return adapter;
+				if(adapter != null) return adapter;
 			}
 		}
 		Class<?> superClass = objectType.getSuperclass();
-		if (superClass == null) return null;
+		if(superClass == null) return null;
 		NBTAdapter<?> out = getAdapterForObject(TypeWrapper.of(superClass), topTypeWrapper);
 		return out;
 	}
@@ -337,7 +360,8 @@ public class AdapterRegistry {
 	 * @throws NBTParseException if there was a parse exception
 	 */
 	public Byte[] fromByteArray(DataInputStream payload) throws NBTParseException {
-		return (Byte[]) registry.get(Byte[].class).fromNBT(TagType.BYTE_ARRAY, payload, new TypeWrapper<Byte[]>() {}, this);
+		return (Byte[]) registry.get(Byte[].class)
+			.fromNBT(TagType.BYTE_ARRAY, payload, new TypeWrapper<Byte[]>() {}, this);
 	}
 	
 	/**
@@ -399,7 +423,8 @@ public class AdapterRegistry {
 	 * @throws NBTParseException if there was a parse exception
 	 */
 	public Integer[] fromIntArray(DataInputStream payload) throws NBTParseException {
-		return (Integer[]) registry.get(Integer[].class).fromNBT(TagType.INT_ARRAY, payload, new TypeWrapper<Integer[]>() {}, this);
+		return (Integer[]) registry.get(Integer[].class)
+			.fromNBT(TagType.INT_ARRAY, payload, new TypeWrapper<Integer[]>() {}, this);
 	}
 	
 	/**
@@ -430,7 +455,8 @@ public class AdapterRegistry {
 	 * @throws NBTParseException if there was a parse exception
 	 */
 	public Long[] fromLongArray(DataInputStream payload) throws NBTParseException {
-		return (Long[]) registry.get(Long[].class).fromNBT(TagType.LONG_ARRAY, payload, new TypeWrapper<Long[]>() {}, this);
+		return (Long[]) registry.get(Long[].class)
+			.fromNBT(TagType.LONG_ARRAY, payload, new TypeWrapper<Long[]>() {}, this);
 	}
 	
 	/**
@@ -446,6 +472,7 @@ public class AdapterRegistry {
 	
 	/**
 	 * A Builder for {@link AdapterRegistry}
+	 * 
 	 * @author MrYurihi Redstone
 	 *
 	 */
@@ -454,7 +481,8 @@ public class AdapterRegistry {
 		AdapterRegistry reg;
 		
 		/**
-		 * Creates a new {@link AdapterRegistry} Builder with all of the default adapters
+		 * Creates a new {@link AdapterRegistry} Builder with all of the default
+		 * adapters
 		 */
 		public Builder() {
 			reg = new AdapterRegistry();
@@ -462,6 +490,7 @@ public class AdapterRegistry {
 		
 		/**
 		 * Add an {@link NBTAdapter} to the registry
+		 * 
 		 * @param type the type the adapter works on
 		 * @param adapter the adapter
 		 * @param <B> the type the adapter works on
@@ -474,6 +503,7 @@ public class AdapterRegistry {
 		
 		/**
 		 * Add an {@link NBTAdapterFactory} to the registry
+		 * 
 		 * @param type the type the adapter factory works on
 		 * @param factory the adapter factory
 		 * @return this
@@ -485,6 +515,7 @@ public class AdapterRegistry {
 		
 		/**
 		 * Creates an {@link AdapterRegistry} for use
+		 * 
 		 * @return the registry
 		 */
 		public AdapterRegistry create() {

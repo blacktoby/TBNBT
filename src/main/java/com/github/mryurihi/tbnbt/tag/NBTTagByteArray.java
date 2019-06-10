@@ -27,18 +27,20 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.stream.IntStream;
 
 import com.github.mryurihi.tbnbt.TagType;
 
 public class NBTTagByteArray extends NBTTag {
-
+	
 	private byte[] value;
 	
 	public NBTTagByteArray(byte[] value) {
 		this.value = value;
 	}
 	
-	NBTTagByteArray() {}
+	NBTTagByteArray() {
+	}
 	
 	public byte[] getValue() {
 		return value;
@@ -50,16 +52,19 @@ public class NBTTagByteArray extends NBTTag {
 	
 	@Override
 	public void writePayloadBytes(DataOutputStream out) throws IOException {
-		for(byte b: value) out.writeByte(b);
+		out.writeInt(value.length);
+		for(byte b: value)
+			out.writeByte(b);
 	}
 	
 	@Override
 	public NBTTag readPayloadBytes(DataInputStream in) throws IOException {
 		value = new byte[in.readInt()];
-		for(int i = 0; i < value.length; i++) value[i] = in.readByte();
+		for(int i = 0; i < value.length; i++)
+			value[i] = in.readByte();
 		return this;
 	}
-
+	
 	@Override
 	public TagType getTagType() {
 		return TagType.BYTE_ARRAY;
@@ -67,13 +72,12 @@ public class NBTTagByteArray extends NBTTag {
 	
 	@Override
 	public String toString() {
-		String out = "[B;";
-		for(byte b: value) {
-			out += String.valueOf(b) + ", ";
-		}
-		out = out.substring(0, out.length() - 2);
-		out += "]";
-		return out;
+		return new StringBuilder("[B;").append(
+			String.join(", ", IntStream.range(0, value.length) // Slightly different because ByteStream does not exist
+				.mapToObj(i -> String.valueOf(value[i]))
+				.toArray(len -> new String[len])
+			)
+		).append("]").toString();
 	}
 	
 	@Override

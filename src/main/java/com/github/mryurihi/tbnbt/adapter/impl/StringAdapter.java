@@ -33,10 +33,17 @@ import com.github.mryurihi.tbnbt.adapter.NBTParseException;
 import com.github.mryurihi.tbnbt.adapter.TypeWrapper;
 
 public class StringAdapter extends NBTAdapter<String> {
-
+	
 	@Override
-	public String fromNBT(TagType id, DataInputStream payload, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
-		if(! id.equals(TagType.STRING)) throw new NBTParseException(String.format("id %s does not match required id 8", id.getId()));
+	public String fromNBT(
+		TagType id,
+		DataInputStream payload,
+		TypeWrapper<?> type,
+		AdapterRegistry registry
+	) throws NBTParseException {
+		if(
+			!id.equals(TagType.STRING)
+		) throw new NBTParseException(String.format("id %s does not match required id 8", id.getId()));
 		short length = (short) registry.fromShort(payload);
 		byte[] out = new byte[length];
 		for(int i = 0; i < length; i++) {
@@ -44,13 +51,19 @@ public class StringAdapter extends NBTAdapter<String> {
 		}
 		return new String(out);
 	}
-
+	
 	@Override
-	public void toNBT(DataOutputStream out, Object object, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
+	public void toNBT(
+		DataOutputStream out,
+		Object object,
+		TypeWrapper<?> type,
+		AdapterRegistry registry
+	) throws NBTParseException {
 		String string = (String) object;
 		try {
 			registry.getShortAdapter().toNBT(out, (short) string.length(), null, registry);
-			for(byte b: string.getBytes()) out.writeByte(b);
+			for(byte b: string.getBytes())
+				out.writeByte(b);
 		} catch(Exception e) {
 			throw new NBTParseException(e);
 		}

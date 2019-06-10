@@ -23,49 +23,24 @@ SOFTWARE.
 */
 package com.github.mryurihi.tbnbt;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import com.github.mryurihi.tbnbt.TagType;
-
 class TagTypeTest {
-	
-	@Nested
-	class testGetId {
-		@Test
-		void doubleTag() {
-			assertEquals(6, TagType.DOUBLE.getId());
-		}
-		
-		@Test
-		void compoundTag() {
-			assertEquals(10, TagType.COMPOUND.getId());
-		}
-		
-		@Test
-		void byteTag() {
-			assertEquals(1, TagType.BYTE.getId());
-		}
-	}
 	
 	@Nested
 	class testGetTypeById {
 		
 		@Test
-		void byteArrayTag() {
-			assertEquals(TagType.BYTE_ARRAY, TagType.getTypeById(7));
+		void shouldGetCorrectType() {
+			assertEquals(TagType.FLOAT, TagType.getTypeById(5));
 		}
 		
 		@Test
-		void stringTag() {
-			assertEquals(TagType.STRING, TagType.getTypeById(8));
-		}
-		
-		@Test
-		void listTag() {
-			assertEquals(TagType.LIST, TagType.getTypeById(9));
+		void shouldThrowError() {
+			assertThrows(IllegalArgumentException.class, () -> TagType.getTypeById(57));
 		}
 	}
 }

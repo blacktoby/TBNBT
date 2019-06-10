@@ -37,8 +37,10 @@ import com.github.mryurihi.tbnbt.adapter.NBTParseException;
 import com.github.mryurihi.tbnbt.adapter.TypeWrapper;
 
 public class CollectionAdapterFactory implements NBTAdapterFactory {
-
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	
+	@SuppressWarnings({
+		"unchecked", "rawtypes"
+	})
 	@Override
 	public <T> NBTAdapter<T> create(AdapterRegistry registry, TypeWrapper<T> type) {
 		Class<?> itemClass = (Class<?>) ((ParameterizedType) type.getType()).getActualTypeArguments()[0];
@@ -57,7 +59,12 @@ public class CollectionAdapterFactory implements NBTAdapterFactory {
 		
 		@SuppressWarnings("unchecked")
 		@Override
-		public Collection<E> fromNBT(TagType id, DataInputStream payload, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
+		public Collection<E> fromNBT(
+			TagType id,
+			DataInputStream payload,
+			TypeWrapper<?> type,
+			AdapterRegistry registry
+		) throws NBTParseException {
 			try {
 				Constructor<?> constr = type.getClassType().getDeclaredConstructor();
 				constr.setAccessible(true);
@@ -68,14 +75,19 @@ public class CollectionAdapterFactory implements NBTAdapterFactory {
 					out.add((E) itemAdapter.fromNBT(itemId, payload, TypeWrapper.of(itemClass), registry));
 				}
 				return out;
-			} catch (Exception e) {
+			} catch(Exception e) {
 				throw new NBTParseException(e);
 			}
 		}
-
+		
 		@SuppressWarnings("unchecked")
 		@Override
-		public void toNBT(DataOutputStream out, Object object, TypeWrapper<?> type, AdapterRegistry registry) throws NBTParseException {
+		public void toNBT(
+			DataOutputStream out,
+			Object object,
+			TypeWrapper<?> type,
+			AdapterRegistry registry
+		) throws NBTParseException {
 			try {
 				Collection<E> col = (Collection<E>) object;
 				registry.writeByte(out, (byte) itemAdapter.getId().getId());
@@ -87,7 +99,7 @@ public class CollectionAdapterFactory implements NBTAdapterFactory {
 				throw new NBTParseException(e);
 			}
 		}
-
+		
 		@Override
 		public TagType getId() {
 			return TagType.LIST;

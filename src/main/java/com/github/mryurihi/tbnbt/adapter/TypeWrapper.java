@@ -39,8 +39,10 @@ public class TypeWrapper<E> {
 	protected TypeWrapper() {
 		try {
 			this.type = ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-		} catch (ClassCastException e) {
-			throw new RuntimeException("This class is not parameterized somehow. If this appears, you have messed up badly");
+		} catch(ClassCastException e) {
+			throw new RuntimeException(
+				"This class is not parameterized somehow. If this appears, you have messed up badly"
+			);
 		}
 		this.classType = (Class<E>) getTypeAsClassType(type);
 	}
@@ -75,6 +77,8 @@ public class TypeWrapper<E> {
 			return Array.newInstance(getTypeAsClassType(arrayType), 0).getClass();
 		} else if(type instanceof TypeVariable) return Object.class;
 		else if(type instanceof WildcardType) return getTypeAsClassType(((WildcardType) type).getUpperBounds()[0]);
-		throw new RuntimeException(String.format("%s is not an instance of any type implemented by this method", type.getTypeName()));
+		throw new RuntimeException(
+			String.format("%s is not an instance of any type implemented by this method", type.getTypeName())
+		);
 	}
 }
